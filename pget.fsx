@@ -82,7 +82,17 @@ module IPack =
         let ipackDllFiles = getLibDllFilesCompatibleByName pack framework
         let fname = fullName pack        
         Seq.map  (fun ip -> System.IO.Path.Combine(repoPath, fname, IPFile.path ip))
-                 ipackDllFiles        
+                 ipackDllFiles
+
+    let getDllFilesRefsCompatibleUnique repoPath framework (pack: T)   =
+        let ipackDllFiles = getLibDllFilesCompatibleByName pack framework
+        let fname = fullName pack
+
+        ipackDllFiles
+        |> Seq.groupBy (fun (p: NuGet.IPackageFile) -> p.EffectivePath)
+        |> Seq.map (fun (k, v) -> System.IO.Path.Combine(repoPath, fname, IPFile.path <| Seq.last v))
+
+
 
                 
 
