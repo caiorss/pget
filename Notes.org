@@ -1,0 +1,276 @@
+* Notes 
+** References 
+
+#+BEGIN_SRC fsharp 
+> IPack.references p ;; 
+val it : Collections.Generic.IEnumerable<IPackageAssemblyReference> =
+  seq
+    [lib/net40/FSharp.Data.dll
+       {EffectivePath = "FSharp.Data.dll";
+        Name = "FSharp.Data.dll";
+        Path = "lib/net40/FSharp.Data.dll";
+        SourcePath = "/tmp/NuGetScratch/28ef2788-769b-4abc-818b-987b5dd6bd4a/8wxxmfag.pjt/lib/net40/FSharp.Data.dll";
+        SupportedFrameworks = seq [.NETFramework,Version=v4.0];
+        TargetFramework = .NETFramework,Version=v4.0;
+        TargetPath = "lib/net40/FSharp.Data.dll";};
+     lib/net40/FSharp.Data.DesignTime.dll
+       {EffectivePath = "FSharp.Data.DesignTime.dll";
+        Name = "FSharp.Data.DesignTime.dll";
+        Path = "lib/net40/FSharp.Data.DesignTime.dll";
+        SourcePath = "/tmp/NuGetScratch/28ef2788-769b-4abc-818b-987b5dd6bd4a/8wxxmfag.pjt/lib/net40/FSharp.Data.DesignTime.dll";
+        SupportedFrameworks = seq [.NETFramework,Version=v4.0];
+        TargetFramework = .NETFramework,Version=v4.0;
+        TargetPath = "lib/net40/FSharp.Data.DesignTime.dll";};
+     lib/portable-net45+sl50+netcore45/FSharp.Data.dll
+       {EffectivePath = "FSharp.Data.dll";
+        Name = "FSharp.Data.dll";
+        Path = "lib/portable-net45+sl50+netcore45/FSharp.Data.dll";
+        SourcePath = "/tmp/NuGetScratch/28ef2788-769b-4abc-818b-987b5dd6bd4a/8wxxmfag.pjt/lib/portable-net45+sl50+netcore45/FSharp.Data.dll";
+        SupportedFrameworks = seq
+                                [.NETPortable,Version=v0.0,Profile=net45+sl50+netcore45];
+        TargetFramework = .NETPortable,Version=v0.0,Profile=net45+sl50+netcore45;
+        TargetPath = "lib/portable-net45+sl50+netcore45/FSharp.Data.dll";};
+     lib/portable-net45+sl50+netcore45/FSharp.Data.DesignTime.dll
+       {EffectivePath = "FSharp.Data.DesignTime.dll";
+        Name = "FSharp.Data.DesignTime.dll";
+        Path = "lib/portable-net45+sl50+netcore45/FSharp.Data.DesignTime.dll";
+        SourcePath = "/tmp/NuGetScratch/28ef2788-769b-4abc-818b-987b5dd6bd4a/8wxxmfag.pjt/lib/portable-net45+sl50+netcore45/FSharp.Data.DesignTime.dll";
+        SupportedFrameworks = seq
+                                [.NETPortable,Version=v0.0,Profile=net45+sl50+netcore45];
+        TargetFramework = .NETPortable,Version=v0.0,Profile=net45+sl50+netcore45;
+        TargetPath = "lib/portable-net45+sl50+netcore45/FSharp.Data.DesignTime.dll";};
+     ...]
+#+END_SRC
+
+*Extract References*: 
+
+#+BEGIN_SRC fsharp
+for r in IPack.references p do Console.WriteLine (r.Path);; 
+lib/net40/FSharp.Data.dll
+lib/net40/FSharp.Data.DesignTime.dll
+lib/portable-net45+sl50+netcore45/FSharp.Data.dll
+lib/portable-net45+sl50+netcore45/FSharp.Data.DesignTime.dll
+lib/portable-net45+netcore45/FSharp.Data.dll
+lib/portable-net45+netcore45/FSharp.Data.DesignTime.dll
+lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.dll
+lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.DesignTime.dll
+val it : unit = ()
+> 
+
+let r = Seq.item 0 (IPack.references p)   ;; 
+
+val r : IPackageAssemblyReference = lib/net40/FSharp.Data.dll
+
+
+r ;; 
+val it : IPackageAssemblyReference =
+  lib/net40/FSharp.Data.dll
+    {EffectivePath = "FSharp.Data.dll";
+     Name = "FSharp.Data.dll";
+     Path = "lib/net40/FSharp.Data.dll";
+     SourcePath = "/tmp/NuGetScratch/28ef2788-769b-4abc-818b-987b5dd6bd4a/8wxxmfag.pjt/lib/net40/FSharp.Data.dll";
+     SupportedFrameworks = seq [.NETFramework,Version=v4.0];
+     TargetFramework = .NETFramework,Version=v4.0;
+     TargetPath = "lib/net40/FSharp.Data.dll";}
+
+> r.SupportedFrameworks ;;
+val it : Collections.Generic.IEnumerable<Runtime.Versioning.FrameworkName> =
+  seq [.NETFramework,Version=v4.0 {FullName = ".NETFramework,Version=v4.0";
+                                   Identifier = ".NETFramework";
+                                   Profile = "";
+                                   Version = 4.0;}]
+
+> let f = Seq.item 0 r.SupportedFrameworks ;; 
+
+val f : Runtime.Versioning.FrameworkName = .NETFramework,Version=v4.0
+
+> f.Version ;;
+val it : Version = 4.0 {Build = -1;
+                        Major = 4;
+                        MajorRevision = -1s;
+                        Minor = 0;
+                        MinorRevision = -1s;
+                        Revision = -1;}
+> f.Identifier ;; 
+val it : string = ".NETFramework"
+> 
+
+r.Path ;;
+val it : string = "lib/net40/FSharp.Data.dll"
+> 
+#+END_SRC
+
+** Get Framework Path 
+
+#+BEGIN_SRC fsharp
+> System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory() ;; 
+val it : string = "/usr/lib/mono/4.5"
+> 
+#+END_SRC
+** Create a new Framework name
+
+#+BEGIN_SRC fsharp 
+> let fmname =  new System.Runtime.Versioning.FrameworkName(".NETFramework, Version=4.0") ;; 
+
+val fmname : Runtime.Versioning.FrameworkName = .NETFramework,Version=v4.0
+
+> 
+#+END_SRC
+
+** Local Repository 
+
+#+BEGIN_SRC fsharp 
+  open NuGet
+
+  >
+
+
+
+  > let repo =  PackageRepositoryFactory.Default.CreateRepository("/home/arch/Documents/projects/pget.fsharp/packages") ;; 
+
+  val repo : IPackageRepository
+
+  > repo ;;
+  val it : IPackageRepository =
+    NuGet.LazyLocalPackageRepository
+      {Logger = NuGet.NullLogger;
+       PackageSaveMode = Nupkg;
+       Source = "/home/arch/Documents/projects/pget.fsharp/packages";
+       SupportsPrereleasePackages = true;}
+  >
+
+
+  let repo =  PackageRepositoryFactory.Default.CreateRepository(System.IO.Path.GetFullPath("package")) ;; 
+
+  val repo : IPackageRepository
+
+#+END_SRC
+
+Show Repository Packages:
+
+#+BEGIN_SRC fsharp 
+  > let repo =  PackageRepositoryFactory.Default.CreateRepository(System.IO.Path.GetFullPath("packages")) ;; 
+
+  val repo : IPackageRepository
+
+  > 
+  for p in repo.GetPackages() do 
+    Console.WriteLine(p.Title) 
+  ;;
+  F# Data
+
+  Microsoft Xml Document Transformation
+
+  Zlib.Portable
+  val it : unit = ()
+  > 
+#+END_SRC
+
+** Filter packages compatible with Framework Version 
+
+#+BEGIN_SRC fsharp 
+
+  VersionUtility.TryGetCompatibleItems ;; 
+  val it :
+    arg00:Runtime.Versioning.FrameworkName *
+    arg01:Collections.Generic.IEnumerable<'a> ->
+      bool * Collections.Generic.IEnumerable<'a> when 'a :> IFrameworkTargetable
+  = <fun:clo@359-5>
+  > 
+
+
+  VersionUtility.IsCompatible ;;
+  val it :
+    arg00:Runtime.Versioning.FrameworkName *
+    arg01:Collections.Generic.IEnumerable<Runtime.Versioning.FrameworkName> ->
+      bool = <fun:clo@363-6>
+  > 
+
+  repo.GetPackages () 
+  |> Seq.filter (fun p -> VersionUtility.IsCompatible(fmname, p.GetSupportedFrameworks()))
+  ;;
+
+
+
+  rs |> Seq.filter ( fun r -> VersionUtility.IsCompatible(fmname, r.SupportedFrameworks)) ;;
+  val it : seq<IPackageAssemblyReference> =
+    seq
+      [lib/net40/FSharp.Data.dll
+         {EffectivePath = "FSharp.Data.dll";
+          Name = "FSharp.Data.dll";
+          Path = "lib/net40/FSharp.Data.dll";
+          SourcePath = "/tmp/NuGetScratch/28ef2788-769b-4abc-818b-987b5dd6bd4a/8wxxmfag.pjt/lib/net40/FSharp.Data.dll";
+          SupportedFrameworks = seq [.NETFramework,Version=v4.0];
+          TargetFramework = .NETFramework,Version=v4.0;
+          TargetPath = "lib/net40/FSharp.Data.dll";};
+       lib/net40/FSharp.Data.DesignTime.dll
+         {EffectivePath = "FSharp.Data.DesignTime.dll";
+          Name = "FSharp.Data.DesignTime.dll";
+          Path = "lib/net40/FSharp.Data.DesignTime.dll";
+          SourcePath = "/tmp/NuGetScratch/28ef2788-769b-4abc-818b-987b5dd6bd4a/8wxxmfag.pjt/lib/net40/FSharp.Data.DesignTime.dll";
+          SupportedFrameworks = seq [.NETFramework,Version=v4.0];
+          TargetFramework = .NETFramework,Version=v4.0;
+          TargetPath = "lib/net40/FSharp.Data.DesignTime.dll";}]
+  >
+
+
+
+#+END_SRC
+
+** Sources
+
+*References*
+
+ - [[http://stackoverflow.com/questions/6653715/view-nuget-package-dependency-hierarchy/6653771][View nuget package dependency hierarchy - Stack Overflow]]
+
+ - [[https://github.com/NuGet/NuGet.Client/blob/dev/src/NuGet.Core/NuGet.Frameworks/FrameworkConstants.cs][NuGet.Client/FrameworkConstants.cs at dev · NuGet/NuGet.Client]]
+
+ - [[https://the.randomengineer.com/2016/07/08/using-nuget-core-to-get-the-latest-version-of-a-package/][Using NuGet.Core to Get the Latest Version of a Package | The Random Engineer]]
+
+ - [[https://blog.codeinside.eu/2015/06/03/create-and-read-nuget-package-via-code/][Code Inside Blog | Create and read NuGet Packages via Code]]
+
+ - [[https://social.msdn.microsoft.com/Forums/vstudio/en-US/f10a9c7e-4ad9-4fc5-be94-adfc2eb42a1a/install-a-nuget-package-programmatically?forum=vsx][Install a Nuget package programmatically]]
+
+ - [[http://mikehadlow.blogspot.com.br/2013/06/nuget-install-is-broken-with-f.html][Code rant: NuGet Install Is Broken With F#]]
+
+ - [[http://qiita.com/higty/items/894c1a165c67f0fd2927][Nugetへのパッケージの更新を簡単に。Nugetパッケージを自動アップロードするスクリプトを.csprojとAssemblyInfo.csから自動生成する方法 - Qiita]]
+
+ - 
+
+ - 
+
+ - 
+
+ - 
+
+ - 
+
+*Gists*
+
+ - [[https://gist.github.com/takemyoxygen/322cc7db9e017510a906][nuget-script.fsx]]
+
+ - [[https://gist.github.com/michael-newton-15below/4118468][Nuget.Core example]]
+
+ - [[https://gist.github.com/scovetta/b0f75b783077815df10498ca28ee25c1][NuGet.Core Parsing Bug]]
+
+ - [[https://gist.github.com/emgarten/9681ea4edb90982e7db2][NuGet.Core example of reading nuget.config restore settings]]
+
+ - [[https://gist.github.com/filipw/5087814][Get relevant assemblies with Nuget.Core]]
+
+ - [[https://gist.github.com/BryanWilhite/1baba5e63d57c608da83][ShouldGetNuGetPackageFile() uses DefaultPackagePathResolver from NuGet.Core]]
+
+ - [[https://gist.github.com/mavnn/6684569][C# and F# comparisons of NuGet ProjectSystem implementations. F# code is from https://github.com/mavnn/NuGetPlus/blob/master/NuGetPlus.Core/ProjectSystem.fs C# code is from http://nuget.codeplex.com/SourceControl/latest#src/CommandLine/Common/MSBuildProjectSystem.cs They aren't identical in functionality, but they're pretty similar and implement the same interfaces.]]
+
+ - 
+
+ - 
+
+ - 
+
+ - 
+
+ - 
+
+ - 
+
+ - 
