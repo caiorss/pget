@@ -1,0 +1,5 @@
+*.exe
+packages/
+*.dll
+bin/
+*.mdb
