@@ -9,9 +9,8 @@ open System
 module IPFile =
 
     type T = NuGet.IPackageFile
-
    
-    let private removeSuffix (suffix: string) (s: string) =
+    let removeSuffix (suffix: string) (s: string) =
         if s.EndsWith(suffix)
         then s.Substring(0, s.Length - suffix.Length)
         else s        
@@ -19,7 +18,7 @@ module IPFile =
     let name (p: T) =
         removeSuffix ".dll" p.EffectivePath
     
-    let effectivePath (p: T) =
+    let effectivePath (p: T): string  =
         p.EffectivePath       
 
     let path (p: T) =
@@ -59,9 +58,9 @@ module IPack =
 
     let authors (pack: T) = pack.Authors
 
-    let getLibFiles (pack: T) = pack.GetLibFiles()
+    let getLibFiles (pack: T): seq<NuGet.IPackageFile> = pack.GetLibFiles()
 
-    let getLibDllFiles (pack: T)  =
+    let getLibDllFiles (pack: T): seq<NuGet.IPackageFile>  =
         pack.GetLibFiles() |> Seq.filter (fun p -> p.Path.EndsWith(".dll"))
 
     let getLibDllFilesCompatible (pack: T) framework =
@@ -84,12 +83,12 @@ module IPack =
         let fname = fullName pack        
         Seq.map  (fun ip -> System.IO.Path.Combine(repoPath, fname, IPFile.path ip))
                  ipackDllFiles        
-        
+
+                
 
 module Repo =
     
     type R = NuGet.IPackageRepository
-
 
     let parseVersion (version: string) =
         try
@@ -148,11 +147,13 @@ module Nuget =
 
     let findPackageById = Repo.findPackageById nugetV2
 
+    let findPackagesById = Repo.findPackagesById nugetV2
+
     let installPackage path (package, version) =
         let pm = Repo.PM.makePackageManager nugetV2 path
         Repo.PM.installPackage pm (package, version)
 
-    let findLatestPackageById = Repo.findLatestPackageById nugetV2
+    let findLatestPackageById = Repo.findLatestPackageById nugetV2    
 
     let installPackageLatest path package =
         let pm = Repo.PM.makePackageManager nugetV2 path
@@ -194,17 +195,30 @@ module Cmd =
          | None       ->  printfn "Error: package not found."
          | Some pack' ->  IPack.getDllFilesRefsCompatible repoPath framework pack'
                           |> Seq.iter (fun p -> Console.WriteLine p)
-         
 
+    let searchPackageByName packageId =
+        packageId
+        |> Nuget.findPackagesById
+        |> Seq.groupBy (fun p -> p.Title)
+        |> Seq.iter ( fun (_, v) -> showPackage <| Seq.last v;
+                                    printfn "Versions: "
+                                    Seq.iter (fun (p: NuGet.IPackage) ->
+                                              Console.WriteLine(p.Version.ToString())) v
+                    )
+        
+    
     let parseCommands args =
         match args with
         | [||]                           -> printfn "Error: empty args"
         | [| "--list-packages" |]        -> showRepository "packages"
-        | [| "--list-packages" ; repo |] -> showRepository repo
-        | [| "--packages" ; repo |]      -> showPackageList repo
-        | [| "--packages" |]                               -> showPackageList "packages"
+        | [| "--list-packages" ; repo |] -> showRepository repo      
         | [| "--package-ref" ; repo ; framework ; pack|]   -> showPackageRefs repo framework pack
-        | _                              -> printfn "Error: Invalid commands"
+        | [| "--package-ref-net40" ; repo ;  pack|]   -> showPackageRefs repo ".NETFramework,Version=v4.0" pack
+        | [| "--package-ref-net45" ; repo ; pack|]   -> showPackageRefs repo ".NETFramework,Version=v4.5" pack
+        | [| "--packages" ; repo |]      -> showPackageList repo        
+        | [| "--packages" |]                               -> showPackageList "packages"
+        | [| "--search"; packageId |]                      -> searchPackageByName packageId
+        | _                              -> printfn "Error: Invalid commands"              
 
 
 let main() =    
