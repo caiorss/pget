@@ -83,17 +83,17 @@ module IPack =
         let fname = fullName pack        
         Seq.map  (fun ip -> System.IO.Path.Combine(repoPath, fname, IPFile.path ip))
                  ipackDllFiles
-
+                 
     let getDllFilesRefsCompatibleUnique repoPath framework (pack: T)   =
         let ipackDllFiles = getLibDllFilesCompatibleByName pack framework
-        let fname = fullName pack
-
+        let fname = fullName pack        
+        
         ipackDllFiles
         |> Seq.groupBy (fun (p: NuGet.IPackageFile) -> p.EffectivePath)
         |> Seq.map (fun (k, v) -> System.IO.Path.Combine(repoPath, fname, IPFile.path <| Seq.last v))
-
-
-
+        
+        
+                
                 
 
 module Repo =
@@ -147,7 +147,6 @@ module Repo =
         let installPackageLatest (pm: T) package repo =
             let ver = findLatestPackageById repo package
             installPackage pm (package, ver.Version.ToString())
-
 
 module Nuget =
 
@@ -203,7 +202,7 @@ module Cmd =
          let pack =  Repo.findPackageById repo packageId
          match pack with
          | None       ->  printfn "Error: package not found."
-         | Some pack' ->  IPack.getDllFilesRefsCompatible repoPath framework pack'
+         | Some pack' ->  IPack.getDllFilesRefsCompatibleUnique repoPath framework pack'
                           |> Seq.iter (fun p -> Console.WriteLine p)
 
     let searchPackageByName packageId =
@@ -223,7 +222,7 @@ module Cmd =
         | [| "--list-packages" |]        -> showRepository "packages"
         | [| "--list-packages" ; repo |] -> showRepository repo      
         | [| "--package-ref" ; repo ; framework ; pack|]   -> showPackageRefs repo framework pack
-        | [| "--package-ref-net40" ; repo ;  pack|]   -> showPackageRefs repo ".NETFramework,Version=v4.0" pack
+        | [| "--package-ref-net40" ; repo ; pack|]   -> showPackageRefs repo ".NETFramework,Version=v4.0" pack
         | [| "--package-ref-net45" ; repo ; pack|]   -> showPackageRefs repo ".NETFramework,Version=v4.5" pack
         | [| "--packages" ; repo |]      -> showPackageList repo        
         | [| "--packages" |]                               -> showPackageList "packages"
