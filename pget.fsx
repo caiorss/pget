@@ -52,7 +52,7 @@ module IPack =
 
     let projectUrl (pack: T) = pack.ProjectUrl.ToString()
 
-    let isReleaseVersion (pack: T) = pack.IsReleaseVersion()
+    let isReleaseVersion (pack: T): bool = pack.IsReleaseVersion()
    
     let isLastestVersion (pack: T) = pack.IsLatestVersion
 
