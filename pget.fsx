@@ -225,6 +225,14 @@ module Cmd =
         |> Seq.collect (IPack.getDllFilesRefsCompatibleUnique repoPath frameWork)
         |> Seq.iter (printfn "%s")
 
+    let generateLocalRefDirective repoPath frameWork packageId =
+         let repo =  Repo.localRepository repoPath
+         let pack =  Repo.findPackageById repo packageId
+         match pack with
+         | None       ->  printfn "Error: package not found."
+         | Some pack' ->  IPack.getDllFilesRefsCompatibleUnique repoPath frameWork pack'
+                          |> Seq.iter (printfn "#r \"%s\"")      
+               
 
     let searchPackageByName packageId =               
         Nuget.nugetV2
@@ -240,9 +248,10 @@ module Cmd =
         | [||]                                               -> printfn "Error: empty args"
         | [| "--list-packages" |]                            -> showRepository "packages"
         | [| "--list-packages" ; repo |]                     -> showRepository repo      
-        | [| "--package-ref" ; repo ; framework ; pack|]     -> showPackageRefs repo framework pack
-        | [| "--package-ref-net40" ; repo ; pack|]           -> showPackageRefs repo ".NETFramework,Version=v4.0" pack
-        | [| "--package-ref-net45" ; repo ; pack|]           -> showPackageRefs repo ".NETFramework,Version=v4.5" pack
+        | [| "--package-ref" ; repo ; "net40";  pack|]       -> showPackageRefs repo ".NETFramework,Version=v4.0" pack
+        | [| "--package-ref" ; repo ; "net45" ; pack|]       -> showPackageRefs repo ".NETFramework,Version=v4.5" pack
+        | [| "--package-ref" ; repo ; framework ; pack |]    -> showPackageRefs repo framework pack
+        | [| "--package-fsx" ; repo ; "net45" ; pack |]      -> generateLocalRefDirective repo ".NETFramework,Version=v4.5" pack
         | [| "--packages" ; repo |]                          -> showPackageList repo        
         | [| "--packages" |]                                 -> showPackageList "packages"
         | [| "--packages-refs"; "net40" ; repo |]            -> showLocalRepoRefs repo ".NETFramework,Version=v4.0"   
