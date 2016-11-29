@@ -167,15 +167,16 @@ module Nuget =
 
     let findPackagesById = Repo.findPackagesById nugetV2
 
-    let installPackage path (package, version) =
-        let pm = Repo.PM.makePackageManager nugetV2 path
+    let installPackage repoPath (package, version) =
+        let pm = Repo.PM.makePackageManager nugetV2 repoPath
         Repo.PM.installPackage pm (package, version)
 
-    let findLatestPackageById = Repo.findLatestPackageById nugetV2    
+    // let findLatestPackageById = Repo.findLatestStableVersion nugetV2
 
-    let installPackageLatest path package =
-        let pm = Repo.PM.makePackageManager nugetV2 path
-        Repo.PM.installPackageLatest pm package
+    let installPackageLatest repoPath package =
+        let version = Repo.findLatestStableVersion nugetV2 package
+        printfn "Installing: %s %s" package version
+        installPackage repoPath (package, version)
 
 
 module Cmd =
