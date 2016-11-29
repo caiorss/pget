@@ -1,10 +1,12 @@
 #if INTERACTIVE
 #r "packages/NuGet.Core/lib/net40-Client/NuGet.Core.dll"
 #r "packages/Microsoft.Web.Xdt/lib/net40/Microsoft.Web.XmlTransform.dll"
+#r "System.Linq"
 #endif
 
 open NuGet
 open System
+open System.Linq
 
 module IPFile =
 
@@ -50,7 +52,7 @@ module IPack =
 
     let projectUrl (pack: T) = pack.ProjectUrl
 
-    // let isReleaseVersion (pack: T) = pack.IsReleaseVersion()
+    let isReleaseVersion (pack: T) = pack.IsReleaseVersion()
    
     let isLastestVersion (pack: T) = pack.IsLatestVersion
 
@@ -91,11 +93,8 @@ module IPack =
         ipackDllFiles
         |> Seq.groupBy (fun (p: NuGet.IPackageFile) -> p.EffectivePath)
         |> Seq.map (fun (k, v) -> System.IO.Path.Combine(repoPath, fname, IPFile.path <| Seq.last v))
-        
-        
-                
-                
 
+                                           
 module Repo =
     
     type R = NuGet.IPackageRepository
@@ -115,7 +114,13 @@ module Repo =
 
         try Some (Seq.item 0 packs)
         with
-            :? System.ArgumentException -> None          
+            :? System.ArgumentException -> None
+
+    let searchPackagesById packageId  (repo: R) =
+        repo.GetPackages().Where(fun (p: IPackage) -> p.Title.Contains(packageId))
+        |> Seq.groupBy(fun p -> p.Id)             
+        |> Seq.map (fun (k, v) -> Seq.last v)     
+       
 
     let findLatestPackageById (repo: R) (packageId: string) =
         packageId
@@ -147,6 +152,7 @@ module Repo =
         let installPackageLatest (pm: T) package repo =
             let ver = findLatestPackageById repo package
             installPackage pm (package, ver.Version.ToString())
+
 
 module Nuget =
 
@@ -205,15 +211,10 @@ module Cmd =
          | Some pack' ->  IPack.getDllFilesRefsCompatibleUnique repoPath framework pack'
                           |> Seq.iter (fun p -> Console.WriteLine p)
 
-    let searchPackageByName packageId =
-        packageId
-        |> Nuget.findPackagesById
-        |> Seq.groupBy (fun p -> p.Title)
-        |> Seq.iter ( fun (_, v) -> showPackage <| Seq.last v;
-                                    printfn "Versions: "
-                                    Seq.iter (fun (p: NuGet.IPackage) ->
-                                              Console.WriteLine(p.Version.ToString())) v
-                    )
+    let searchPackageByName packageId =               
+        Nuget.nugetV2
+        |> Repo.searchPackagesById packageId
+        |> Seq.iter showPackage //(fun p -> printfn "%A" p)
         
     
     let parseCommands args =
@@ -239,4 +240,4 @@ main()
 
 // NuGet.SemanticVersion.Parse("a5.0.0")    
 
-// NuGet.PackageManager.Install                                     
+// NuGet.PackageManager.Install
