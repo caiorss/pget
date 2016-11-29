@@ -1,4 +1,34 @@
+#+TITLE: Notes 
+
+
 * Notes 
+** Objective 
+
+Build a command line tool and library to install, search, update Nuget
+packages.
+
+Wishlist's:
+
+ - Install packages
+
+ - Search packages in NuGet repository 
+
+ - Show packages and details about local repository 
+
+ - Install packages in a cache 
+
+ - Emacs interface with _s-expression_ output.
+
+ - Turn this project into a NuGet package.
+
+ - Create documentation. 
+
+ - Publish this package 
+
+ - 
+
+ - 
+
 ** References 
 
 #+BEGIN_SRC fsharp 
