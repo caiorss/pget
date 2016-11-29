@@ -50,7 +50,7 @@ module IPack =
 
     let dependencies (pack: T) = pack.DependencySets
 
-    let projectUrl (pack: T) = pack.ProjectUrl
+    let projectUrl (pack: T) = pack.ProjectUrl.ToString()
 
     let isReleaseVersion (pack: T) = pack.IsReleaseVersion()
    
