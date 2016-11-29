@@ -221,20 +221,28 @@ module Cmd =
         Nuget.nugetV2
         |> Repo.searchPackagesById packageId
         |> Seq.iter showPackage //(fun p -> printfn "%A" p)
+
+    let installPackage repoPath packageId version =
+        Nuget.installPackage repoPath (packageId, version)
+       
         
-    
     let parseCommands args =
         match args with
-        | [||]                           -> printfn "Error: empty args"
-        | [| "--list-packages" |]        -> showRepository "packages"
-        | [| "--list-packages" ; repo |] -> showRepository repo      
-        | [| "--package-ref" ; repo ; framework ; pack|]   -> showPackageRefs repo framework pack
-        | [| "--package-ref-net40" ; repo ; pack|]   -> showPackageRefs repo ".NETFramework,Version=v4.0" pack
-        | [| "--package-ref-net45" ; repo ; pack|]   -> showPackageRefs repo ".NETFramework,Version=v4.5" pack
-        | [| "--packages" ; repo |]      -> showPackageList repo        
-        | [| "--packages" |]                               -> showPackageList "packages"
-        | [| "--search"; packageId |]                      -> searchPackageByName packageId
-        | _                              -> printfn "Error: Invalid commands"              
+        | [||]                                               -> printfn "Error: empty args"
+        | [| "--list-packages" |]                            -> showRepository "packages"
+        | [| "--list-packages" ; repo |]                     -> showRepository repo      
+        | [| "--package-ref" ; repo ; framework ; pack|]     -> showPackageRefs repo framework pack
+        | [| "--package-ref-net40" ; repo ; pack|]           -> showPackageRefs repo ".NETFramework,Version=v4.0" pack
+        | [| "--package-ref-net45" ; repo ; pack|]           -> showPackageRefs repo ".NETFramework,Version=v4.5" pack
+        | [| "--packages" ; repo |]                          -> showPackageList repo        
+        | [| "--packages" |]                                 -> showPackageList "packages"
+        | [| "--search"; packageId |]                        -> searchPackageByName packageId
+        | [| "--local" ; "--install" ; packageId; version |] -> installPackage "packages" packageId version
+        | [| "--install"; repo; packageId ; version |]       -> installPackage repo packageId version
+        | [| "--install"; repo ; packageId  |]               -> Nuget.installPackageLatest repo packageId
+        | [| "--show"; packageId |]                          -> Option.iter showPackage (Nuget.findPackageById packageId)
+        | _                                                  -> printfn "Error: Invalid commands"
+        
 
 
 let main() =    
