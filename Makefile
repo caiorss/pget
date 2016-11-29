@@ -21,5 +21,12 @@ $(build): pget.fsx $(NuGet.Core) $(Microsoft.Web.Xdt)
 	cp -v $(NuGet.Core) bin/
 	cp -v $(Microsoft.Web.Xdt) bin/
 
+
+release: $(build)
+	rm -rf pget.zip
+	cp  -r bin  pget
+	zip -r pget.zip pget
+	rm  -rf pget
+
 clean:
 	rm -rf bin/*
