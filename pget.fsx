@@ -117,7 +117,7 @@ module Repo =
             :? System.ArgumentException -> None
 
     let searchPackagesById packageId  (repo: R) =
-        repo.GetPackages().Where(fun (p: IPackage) -> p.Title.Contains(packageId))
+        repo.GetPackages().Where(fun (p: IPackage) -> p.Id.Contains(packageId))
         |> Seq.groupBy(fun p -> p.Id)             
         |> Seq.map (fun (k, v) -> Seq.last v)     
        
