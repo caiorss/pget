@@ -1,5 +1,247 @@
-#+TITLE: Notes 
+#+TITLE: Pget.exe
+#+AUTHOR: Caio Rodrigues
 
+* Pget.exe 
+** Overview 
+
+Pget.exe is high level wrapper to NuGet.core package which provides
+command line tools to manage dependencies in F# projects. Features: 
+
+ - Search  packages in Nuget repository
+ - Install NuGet packages
+ - Display all assembly references in a repository
+ - Show details about packages like description, summary, web site and
+   so on.
+ - Show package details.
+** Build Instructions 
+
+Run =$ make= to build pget.exe, the output file and dlls will be in
+~/bin directory.
+
+#+BEGIN_SRC txt 
+$ make
+
+nuget.exe install NuGet.Core -OutputDirectory packages -Version 2.12.0
+Feeds used:
+  /home/arch/.local/share/NuGet/Cache
+  /home/arch/.nuget/packages/
+  https://api.nuget.org/v3/index.json
+
+Attempting to gather dependency information for package 'NuGet.Core.2.12.0' with respect to project 'packages', targeting 'Any,Version=v0.0'
+Attempting to resolve dependencies for package 'NuGet.Core.2.12.0' with DependencyBehavior 'Lowest'
+Resolving actions to install package 'NuGet.Core.2.12.0'
+Resolved actions to install package 'NuGet.Core.2.12.0'
+Adding package 'Microsoft.Web.Xdt.2.1.1' to folder '/run/media/arch/transfer/projects/pget.fsharp/packages'
+Added package 'Microsoft.Web.Xdt.2.1.1' to folder '/run/media/arch/transfer/projects/pget.fsharp/packages'
+Successfully installed 'Microsoft.Web.Xdt 2.1.1' to packages
+Adding package 'NuGet.Core.2.12.0' to folder '/run/media/arch/transfer/projects/pget.fsharp/packages'
+Added package 'NuGet.Core.2.12.0' to folder '/run/media/arch/transfer/projects/pget.fsharp/packages'
+Successfully installed 'NuGet.Core 2.12.0' to packages
+fsc pget.fsx --out:bin/pget.exe \
+	--target:exe \
+	--platform:anycpu \
+	-r:packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll                   \
+	-r:packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll
+F# Compiler for F# 4.1
+Freely distributed under the Apache 2.0 Open Source License
+mkdir -p bin
+cp -v packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll                   bin/
+'packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll' -> 'bin/NuGet.Core.dll'
+cp -v packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll bin/
+'packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll' -> 'bin/Microsoft.Web.XmlTransform.dll'
+
+#+END_SRC
+
+** Examples 
+*** Search a package from nugetV2 API
+
+#+BEGIN_SRC txt
+  $ bin/pget.exe -- --search terminal
+  Id:     DevLib.TerminalServices
+  Version:    2.9.0.37966
+  Title:      
+  Summary:        https://devlib.codeplex.com/
+
+  DevLib is a highly reusable collection of components and core functionalities addressing common crosscutting concerns. It provides a comprehensive set of features that save development time, minimize costs, reduce the use of precious test resources, and decrease the overall maintenance effort.
+
+  It is time to boost your productivity.
+  Authors:    Yu Guan
+  Url:        https://devlib.codeplex.com/
+  Description:    https://devlib.codeplex.com/
+
+  terminal session related
+
+  DevLib is a highly reusable collection of components and core functionalities addressing common crosscutting concerns. It provides a comprehensive set of features that save development time, minimize costs, reduce the use of precious test resources, and decrease the overall maintenance effort.
+
+  It is time to boost your productivity.
+
+  ...
+
+  Id:     Zongsoft.Terminals.Plugins
+  Version:    4.1.1602.0
+  Title:      Zongsoft.Terminals.Plugins
+  Summary:        关于终端程序插件环境的类库。
+  Authors:    Zongsoft Corporation
+  Url:        https://github.com/Zongsoft/Zongsoft.Terminals.Plugins
+  Description:    This is a library about plugin terminal(command line) program development.
+
+#+END_SRC
+
+*** Show package information 
+
+#+BEGIN_SRC sh txt
+  $ bin/pget.exe -- --show OxyPlot.WindowsForms
+  Id:     OxyPlot.WindowsForms
+  Version:    2011.10.1
+  Title:      OxyPlot.WindowsForms
+  Summary:        
+  Authors:    objo
+  Url:        http://oxyplot.codeplex.com/
+  Description:    OxyPlot is a .NET plotting library with focus on simplicity and performance. The library contains custom controls for WPF, Silverlight and Windows Forms and includes exporters for SVG, PDF, XPS and PNG.
+#+END_SRC
+*** Print all assembly references compatible with Framework .NET 4.5
+
+#+BEGIN_SRC txt
+  $ bin/pget.exe -- --packages-refs net45
+
+  packages/FSharp.Charting.Gtk.0.89/lib/net40/OxyPlot.dll
+  packages/FSharp.Charting.Gtk.0.89/lib/net40/OxyPlot.GtkSharp.dll
+  packages/FSharp.Charting.Gtk.0.89/lib/net40/FSharp.Charting.Gtk.dll
+  packages/FSharp.Charting.Gtk.0.90.14/lib/net40/FSharp.Charting.Gtk.dll
+  packages/FSharp.Charting.Gtk.0.90.14/lib/net40/OxyPlot.dll
+  packages/FSharp.Charting.Gtk.0.90.14/lib/net40/OxyPlot.GtkSharp.dll
+  ...
+  packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll
+  packages/OxyPlot.WindowsForms.1.0.0/lib/net40/OxyPlot.WindowsForms.dll
+  packages/Zlib.Portable.1.11.0/lib/portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid/Zlib.Portable.dll
+  packages/zlib.net.1.0.3.0/lib/zlib.net.dll
+
+#+END_SRC
+
+*** List all packages at ./packages repository
+
+#+BEGIN_SRC txt
+$ bin/pget.exe -- --packages
+FSharp.Charting.Gtk 0.89
+FSharp.Charting.Gtk 0.90.14
+FSharp.Data 2.3.1-beta2
+FSharp.Data 2.3.2
+FunScript 1.1.94
+MathNet.Numerics 2.1.0.19
+Microsoft.Web.Xdt 2.1.1
+Microsoft.Web.Xdt 2.1.1
+NuGet.Core 2.12.0
+NuGet.Core 2.12.0
+OxyPlot.Core 1.0.0
+OxyPlot.WindowsForms 1.0.0
+Zlib.Portable 1.11.0
+zlib.net 1.0.3.0
+#+END_SRC
+
+*** List all packages from a local repository
+
+#+BEGIN_SRC txt
+$ bin/pget.exe -- --packages ~/nuget
+
+Mono.Ssdp 1.0.3.0
+Mono.Upnp 1.0.3.0
+Newtonsoft.Json 9.0.1
+NuGet.CommandLine 2.5.0
+NuGet.Core 2.12.0
+NuGet.Core 2.13.0-rc1-final
+NuGet.Frameworks 3.4.3
+NuGet.Versioning 3.4.3
+OxyPlot.Core 2014.1.546
+OxyPlot.GtkSharp 2014.1.546
+OxyPlot.WindowsForms 2014.1.546
+R.NET.Community 1.6.5
+R.NET.Community.FSharp 1.6.5
+...
+System.Data.SQLite 1.0.102.0
+System.Data.SQLite.Core 1.0.102.0
+System.Data.SQLite.EF6 1.0.102.0
+System.Data.SQLite.Linq 1.0.102.0
+XPlot.GoogleCharts 1.3.1
+XPlot.GoogleCharts 1.4.2
+XPlot.GoogleCharts.Deedle 1.3.1
+XPlot.Plotly 1.3.1
+XPlot.Plotly 1.4.2
+scriptcs 0.10.0
+
+#+END_SRC
+
+*** Show all package at current ./packages repository
+
+#+BEGIN_SRC txt
+$ bin/pget.exe -- --list-packages 
+
+Id:		FSharp.Charting.Gtk
+Version:	0.89
+Title:		
+Summary:		A Charting Library for F# (Gtk, cross-platform)
+Authors:	Carl Nolan,  Don Syme,  Tomas Petricek
+Url:		http://fsharp.github.com/FSharp.Charting
+Description:	The F# Charting library (FSharp.Charting.AspNet.dll) is an ASP.NET Web Forms build of FSharp.Charting. It is experimental..
+
+
+Id:		FSharp.Charting.Gtk
+Version:	0.90.14
+Title:		
+Summary:		A Charting Library for F# (Gtk, cross-platform)
+Authors:	Carl Nolan,  Tomas Petricek
+Url:		http://fslab.org/FSharp.Charting
+Description:	The F# Charting library (FSharp.Charting.Gtk.dll) is a cross-platform variation of of FSharp.Charting. It can be used on Windows, OSX and other platforms supporting Gtk.
+
+
+Id:		FSharp.Data
+Version:	2.3.1-beta2
+Title:		F# Data
+Summary:		Library of F# type providers and data access tools
+Authors:	Tomas Petricek,  Gustavo Guerra,  Colin Bull
+Url:		http://fsharp.github.io/FSharp.Data
+Description:	The F# Data library (FSharp.Data.dll) implements everything you need to access data in your F# applications and scripts. It implements F# type providers for working with structured file formats (CSV, HTML, JSON and XML) and for accessing the WorldBank data. It also includes helpers for parsing CSV, HTML and JSON files and for sending HTTP requests.
+
+#+END_SRC
+
+*** Show all packages from a local repository
+
+#+BEGIN_SRC txt
+$ bin/pget.exe -- --list-packages ~/nuget
+
+Id:		Eto.Platform.Gtk3
+Version:	2.2.0
+Title:		Eto.Forms - GTK3 Platform
+Summary:		GTK3 Platform for the Eto.Forms UI Framework
+Authors:	Picoe Software Solutions Inc.
+Url:		https://github.com/picoe/Eto
+Description:	This is the GTK3 platform for Eto.Forms UI Framework.
+    	
+Include this along with your Eto.Forms application to provide a GTK3 interface, typically for Linux users.
+    	
+You do not need to use any of the classes of this assembly (unless customizing the GTK functionality of the platform), and should just use the UI controls from the Eto assembly.
+    	
+On Linux, mono framework 2.10 or higher and gtk-sharp2 are required.
+
+
+Id:		FAKE
+Version:	4.39.0
+Title:		
+Summary:		FAKE - F# Make - Get rid of the noise in your build scripts.
+Authors:	Steffen Forkmann,  Mauricio Scheffer,  Colin Bull
+Url:		http://www.github.com/fsharp/Fake
+Description:	FAKE - F# Make - is a build automation tool for .NET. Tasks and dependencies are specified in a DSL which is integrated in F#. This package bundles all extensions.
+
+
+Id:		FSPowerPack.Community
+Version:	3.0.0.0
+Title:		
+Summary:		The additional libraries in the F# PowerPack are functionality which is not part of the core F# release, but enables some development scenarios with F#. The PowerPack include features such as a basic Matrix library and supporting math types, FsLex and FsYacc tools for lexing and parsing, support for using F# with LINQ-based libraries, and a tool for generating HTML documentation from F# libraries. This functionality, which has previously been available in the F# CTP releases, is now available on CodePlex. The F# PowerPack will continue to evolve seperately from the main F# releases, and the features will continue to be improved and iterated upon.
+Authors:	Daniel Mohl (author of this NuGet package) refer to http://fsharppowerpack.codeplex.com/ for the library authors
+Url:		http://fsharppowerpack.codeplex.com/
+Description:	The F# PowerPack is a collection of libraries and tools for use with the F# programming languages provided by the F# team at Microsoft.
+
+
+#+END_SRC
 
 * Notes 
 ** Objective 
