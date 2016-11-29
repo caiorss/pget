@@ -6,7 +6,9 @@
 ** Overview 
 
 Pget.exe is high level wrapper to NuGet.core package which provides
-command line tools to manage dependencies in F# projects. Features: 
+command line tools to manage dependencies in F# projects. 
+
+Features: 
 
  - Search  packages in Nuget repository
  - Install NuGet packages
@@ -14,6 +16,10 @@ command line tools to manage dependencies in F# projects. Features:
  - Show details about packages like description, summary, web site and
    so on.
  - Show package details.
+
+Objective: Provide NuGet.Core integration with external tools, text editors
+like Emacs and also command line integration with NuGet API.
+
 ** Build Instructions 
 
 Run =$ make= to build pget.exe, the output file and dlls will be in
@@ -243,6 +249,25 @@ Description:	The F# PowerPack is a collection of libraries and tools for use wit
 
 
 #+END_SRC
+
+*** Generate Fsharp Repl directives to load package in the repl.
+
+#+BEGIN_SRC sh
+  $ ls packages
+   Baseclass.Contrib.Nuget.Output.2.1.0/  NuGet.Core.2.12.0/  SFML.Net.2.2/
+   Microsoft.Web.Xdt.2.1.1/               OpenGL.Net.0.3.2/
+
+  $ bin/pget.exe -- --package-fsx packages net45 SFML.Net
+  #r "packages/SFML.Net.2.2/lib/sfmlnet-audio-2.dll"
+  #r "packages/SFML.Net.2.2/lib/sfmlnet-graphics-2.dll"
+  #r "packages/SFML.Net.2.2/lib/sfmlnet-window-2.dll"
+  #r "packages/SFML.Net.2.2/lib/sfmlnet-system-2.dll"
+#+END_SRC
+
+** TODO Tasklist 
+
+ - [] Implement better command line parsing
+ - [] 
 
 * Notes 
 ** Objective 
