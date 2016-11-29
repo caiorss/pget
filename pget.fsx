@@ -217,6 +217,15 @@ module Cmd =
          | Some pack' ->  IPack.getDllFilesRefsCompatibleUnique repoPath framework pack'
                           |> Seq.iter (fun p -> Console.WriteLine p)
 
+
+    let showLocalRepoRefs repoPath frameWork =
+        repoPath
+        |> Repo.localRepository
+        |> Repo.getPackages
+        |> Seq.collect (IPack.getDllFilesRefsCompatibleUnique repoPath frameWork)
+        |> Seq.iter (printfn "%s")
+
+
     let searchPackageByName packageId =               
         Nuget.nugetV2
         |> Repo.searchPackagesById packageId
