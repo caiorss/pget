@@ -153,8 +153,8 @@ module Repo =
             | None   ->  failwith "Error: Wrong version name"
 
         let installPackageLatest (pm: T) package repo =
-            let ver = findLatestPackageById repo package
-            installPackage pm (package, ver.Version.ToString())
+            let ver = findLatestStableVersion repo package
+            installPackage pm (package, ver)
 
 
 module Nuget =
