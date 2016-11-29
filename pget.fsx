@@ -122,10 +122,13 @@ module Repo =
         |> Seq.map (fun (k, v) -> Seq.last v)     
        
 
-    let findLatestPackageById (repo: R) (packageId: string) =
-        packageId
-        |> findPackagesById repo
-        |> Seq.find IPack.isLastestVersion 
+    let findLatestStableVersion (repo: R) (packageId: string) =
+        let package = packageId
+                      |> findPackagesById repo
+                      |> Seq.filter IPack.isReleaseVersion
+                      |> Seq.last
+        package.Version.ToString()
+        // |> Seq.tryFind IPack.isLastestVersion
        
     let createRepository (uri: string): R =
         NuGet.PackageRepositoryFactory.Default.CreateRepository(uri)
