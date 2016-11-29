@@ -245,6 +245,10 @@ module Cmd =
         | [| "--package-ref-net45" ; repo ; pack|]           -> showPackageRefs repo ".NETFramework,Version=v4.5" pack
         | [| "--packages" ; repo |]                          -> showPackageList repo        
         | [| "--packages" |]                                 -> showPackageList "packages"
+        | [| "--packages-refs"; "net40" ; repo |]            -> showLocalRepoRefs repo ".NETFramework,Version=v4.0"   
+        | [| "--packages-refs"; "net45" ; repo |]            -> showLocalRepoRefs repo ".NETFramework,Version=v4.5"   
+        | [| "--packages-refs"; "net40" |]                   -> showLocalRepoRefs "packages" ".NETFramework,Version=v4.0"
+        | [| "--packages-refs"; "net45" |]                   -> showLocalRepoRefs "packages" ".NETFramework,Version=v4.5"   
         | [| "--search"; packageId |]                        -> searchPackageByName packageId
         | [| "--local" ; "--install" ; packageId; version |] -> installPackage "packages" packageId version
         | [| "--install"; repo; packageId ; version |]       -> installPackage repo packageId version
@@ -255,12 +259,9 @@ module Cmd =
 
 
 let main() =    
-    // printfn "env.cmdline: %A" <| commandLineArgsInteractive ()
+
     Cmd.parseCommands <| Cmd.commandLineArgsInteractive ()
     0
 
 main() 
 
-// NuGet.SemanticVersion.Parse("a5.0.0")    
-
-// NuGet.PackageManager.Install
