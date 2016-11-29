@@ -185,11 +185,13 @@ module Cmd =
         | Some i -> args.[(i+1)..]
 
     let showPackage (p: NuGet.IPackage) =
-        Console.WriteLine("Id:\t\t{0}\nVersion:\t{1}\nTitle:\t\t{2}\nAuthors:\t{3}\nDescription:\t{4}\n\n",
+        Console.WriteLine("Id:\t\t{0}\nVersion:\t{1}\nTitle:\t\t{2}\nSummary:\t\t{3}\nAuthors:\t{4}\nUrl:\t\t{5}\nDescription:\t{6}\n\n",
                           p.Id,
                           p.Version,
-                          p.Title,                          
+                          p.Title,
+                          p.Summary,
                           String.concat ", " (Array.ofSeq p.Authors),
+                          p.ProjectUrl,
                           p.Description
                           )
 
