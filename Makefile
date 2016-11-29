@@ -1,7 +1,5 @@
 build := bin/pget.exe
 
-# refs := packages/NuGet.Core/lib/net40-Client/NuGet.Core.dll -r:packages/Microsoft.Web.Xdt/lib/net40/Microsoft.Web.XmlTransform.dll
-
 all: $(build)
 
 NuGet.Core        := packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll                  
@@ -13,6 +11,7 @@ $(NuGet.Core):
 $(build): pget.fsx $(NuGet.Core) $(Microsoft.Web.Xdt)
 	fsc pget.fsx --out:$(build) \
 		--target:exe \
+		--standalone \
 		--platform:anycpu \
 		-r:$(NuGet.Core) \
 		-r:$(Microsoft.Web.Xdt)
@@ -26,7 +25,8 @@ release: $(build)
 	rm -rf pget.zip
 	cp  -r bin  pget
 	zip -r pget.zip pget
-	rm  -rf pget
+	rm  -rf pgetF
+	echo "Build release pget.zip Ok."
 
 clean:
 	rm -rf bin/*
