@@ -1,7 +1,7 @@
 #if INTERACTIVE
 #r "packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll"
 #r "packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll"
-#r "System.Linq"
+#r "System.Linq.dll"
 #endif
 
 open NuGet
@@ -30,7 +30,8 @@ module IPFile =
         p.SupportedFrameworks
         
 
-/// Package object Assessors 
+/// Package object Assessors
+///        
 module IPack =
     type T = NuGet.IPackage
 
@@ -39,37 +40,50 @@ module IPack =
 
     /// Get package title 
     let title  (pack: T) =   pack.Title
-    
+
+    /// Get package version 
     let version (pack: T) = pack.Version
 
+    /// Get package Version as string 
     let versionString (pack: T) = pack.Version.ToString()
 
+    /// Get package Description as String 
     let description (pack: T) = pack.Description
 
+    /// Get package References 
     let references (pack: T) = pack.AssemblyReferences
 
+    /// Get package Dependencies 
     let dependencies (pack: T) = pack.DependencySets
 
+    /// Get project URL 
     let projectUrl (pack: T) = pack.ProjectUrl.ToString()
 
+    /// Returns true if it as release version 
     let isReleaseVersion (pack: T): bool = pack.IsReleaseVersion()
    
     let isLastestVersion (pack: T) = pack.IsLatestVersion
 
+    /// Package full name  <Package ID>.<Version>
     let fullName (pack: T) = pack.Id + "." + pack.Version.ToString()
 
+    /// Get package authors 
     let authors (pack: T) = pack.Authors
 
+    /// Get library files 
     let getLibFiles (pack: T): seq<NuGet.IPackageFile> = pack.GetLibFiles()
 
+    /// Get all *.dll references in the package 
     let getLibDllFiles (pack: T): seq<NuGet.IPackageFile>  =
         pack.GetLibFiles() |> Seq.filter (fun p -> p.Path.EndsWith(".dll"))
 
+    /// Get Dll file compatible with framework     
     let getLibDllFilesCompatible (pack: T) framework =
         pack
         |> getLibDllFiles
         |> Seq.filter (fun p -> NuGet.VersionUtility.IsCompatible(framework, p.SupportedFrameworks))
-        
+
+
     let getLibDllFilesCompatibleByName (pack: T) framework =
         let fmr = new System.Runtime.Versioning.FrameworkName(framework) 
         pack
@@ -94,7 +108,9 @@ module IPack =
         |> Seq.groupBy (fun (p: NuGet.IPackageFile) -> p.EffectivePath)
         |> Seq.map (fun (k, v) -> System.IO.Path.Combine(repoPath, fname, IPFile.path <| Seq.last v))
 
-                                           
+
+/// This module provides NuGet Repository object assessors
+///        
 module Repo =
     
     type R = NuGet.IPackageRepository
