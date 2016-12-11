@@ -1,12 +1,15 @@
-#if INTERACTIVE
-#r "packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll"
-#r "packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll"
-#r "System.Linq.dll"
-#endif
+namespace Pget 
+
+// #if INTERACTIVE
+// #r "packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll"
+// #r "packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll"
+// #r "System.Linq.dll"
+// #endif
 
 open NuGet
 open System
 open System.Linq
+
 
 module IPFile =
 
@@ -108,6 +111,18 @@ module IPack =
         |> Seq.groupBy (fun (p: NuGet.IPackageFile) -> p.EffectivePath)
         |> Seq.map (fun (k, v) -> System.IO.Path.Combine(repoPath, fname, IPFile.path <| Seq.last v))
 
+    /// Print package data in Command line     
+    let showPackage (p: T) = 
+        Console.WriteLine("Id:\t\t{0}\nVersion:\t{1}\nTitle:\t\t{2}\nSummary:\t\t{3}\nAuthors:\t{4}\nUrl:\t\t{5}\nDescription:\t{6}\n\n",
+                          p.Id,
+                          p.Version,
+                          p.Title,
+                          p.Summary,
+                          String.concat ", " (Array.ofSeq p.Authors),
+                          p.ProjectUrl,
+                          p.Description
+                          )
+
 
 /// This module provides NuGet Repository object assessors
 ///        
@@ -204,21 +219,11 @@ module Cmd =
         | None -> [||]
         | Some i -> args.[(i+1)..]
 
-    let showPackage (p: NuGet.IPackage) =
-        Console.WriteLine("Id:\t\t{0}\nVersion:\t{1}\nTitle:\t\t{2}\nSummary:\t\t{3}\nAuthors:\t{4}\nUrl:\t\t{5}\nDescription:\t{6}\n\n",
-                          p.Id,
-                          p.Version,
-                          p.Title,
-                          p.Summary,
-                          String.concat ", " (Array.ofSeq p.Authors),
-                          p.ProjectUrl,
-                          p.Description
-                          )
 
     let showRepository repoPath =
         Repo.localRepository repoPath
         |> Repo.getPackages
-        |> Seq.iter showPackage
+        |> Seq.iter IPack.showPackage
 
     let showPackageList repoPath =
         Repo.localRepository repoPath
@@ -253,7 +258,7 @@ module Cmd =
     let searchPackageByName packageId =               
         Nuget.nugetV2
         |> Repo.searchPackagesById packageId
-        |> Seq.iter showPackage //(fun p -> printfn "%A" p)
+        |> Seq.iter IPack.showPackage //(fun p -> printfn "%A" p)
 
     let installPackage repoPath packageId version =
         Nuget.installPackage repoPath (packageId, version)
@@ -278,15 +283,15 @@ module Cmd =
         | [| "--local" ; "--install" ; packageId; version |] -> installPackage "packages" packageId version
         | [| "--install"; repo; packageId ; version |]       -> installPackage repo packageId version
         | [| "--install"; repo ; packageId  |]               -> Nuget.installPackageLatest repo packageId
-        | [| "--show"; packageId |]                          -> Option.iter showPackage (Nuget.findPackageById packageId)
+        | [| "--show"; packageId |]                          -> Option.iter IPack.showPackage (Nuget.findPackageById packageId)
         | _                                                  -> printfn "Error: Invalid commands"
         
 
 
-let main() =    
+// let main() =    
 
-    Cmd.parseCommands <| Cmd.commandLineArgsInteractive ()
-    0
+//     Cmd.parseCommands <| Cmd.commandLineArgsInteractive ()
+//     0
 
-main() 
+// main() 
 
