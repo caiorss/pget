@@ -173,13 +173,13 @@ module Repo =
         with
             :? System.ArgumentException -> None
 
-    let searchPackagesById packageId  (repo: R) =
-        repo.GetPackages().Where(fun (p: IPackage) -> p.Id.Contains(packageId))
-        |> Seq.groupBy(fun p -> p.Id)             
-        |> Seq.map (fun (k, v) -> Seq.last v)     
+    let searchPackageById (repo: R) (packageId: string) =
+        repo.GetPackages().Where(fun (p: IPackage) -> p.Id.ToLower().Contains(packageId.ToLower()))
+        // |> Seq.groupBy(fun p -> p.Id)
+        // |> Seq.map (fun (k, v) -> Seq.last v)
 
 
-    let searchPackages input (repo: R)  =
+    let searchPackages (repo: R) (input: string)  =
         repo.GetPackages().Where(fun (p: IPackage) -> p.Id.Contains(input)
                                                       || p.Title.Contains(input)
                                                       || p.Description.Contains(input)
