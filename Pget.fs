@@ -299,20 +299,34 @@ module RepoLocal =
         |> Repo.getPackages
         |> Seq.iter (fun p -> printfn "%A" p)
 
-    let getPackageRefs repoPath framework packageId =
+
+    /// Get relative path to assemblies from a package without
+    /// version in the path. It is assumed that only one version
+    /// is installed in the local repository.
+    ///
+    let getPackageRefsNoVersion repoPath framework packageId =
          packageId
          |> findPackageById (localRepository repoPath)
-         |> Option.map (IPack.getDllFilesRefsCompatibleUnique repoPath framework)
-    // Search packages which Id has word.
-    //
+         |> Option.map (IPack.getRefsUniqueNoVersion repoPath framework)
+
     let searchPackageById repoPath query  =
         Repo.searchPackageById (localRepository repoPath) query
 
+    /// Get references fo all local packages *.dll compatible with given framework.
+    ///
+    let getRefsNoVersion repoPath frameWork =
+        repoPath
+        |> getPackages
+        |> Seq.collect (IPack.getRefsUniqueNoVersion repoPath frameWork)
+
+
 module Nuget =
     
-    let private nugetV2Repo = "https://packages.nuget.org/api/v2"
+    let  nugetV2url = "https://packages.nuget.org/api/v2"
+    let  nugetV3url = "https://packages.nuget.org/api/v3"
 
-    let nugetV2 = Repo.createRepository nugetV2Repo
+
+    let nugetV2 = Repo.createRepository nugetV2url
 
     let findPackageById = Repo.findPackageById nugetV2
 
