@@ -48,6 +48,8 @@ module IPack =
     
     type T = NuGet.IPackage
 
+    let packageId (pack: T) = pack.Id
+
     /// Get summary 
     let summary (pack: T) = pack.Summary
 
