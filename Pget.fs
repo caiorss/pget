@@ -124,6 +124,23 @@ module IPack =
 
     let zipPackage (nupkgFile: string) =  NuGet.ZipPackage nupkgFile
 
+
+    let getDependencies (pack: T) =
+        pack.DependencySets
+        |> Seq.map (fun dep -> dep.Dependencies)
+        |> Seq.collect (Seq.map ( fun p -> (p.Id, match p.VersionSpec with
+                                                  | null -> None
+                                                  | v    -> Some v
+                                    )))
+
+    let getDependenciesAsString (pack: T) =
+        let deplist = getDependencies pack
+                      |> Seq.map (fun (name, ver) -> match ver with
+                                                     | None   ->  name
+                                                     | Some v ->  name + " " + v.ToString()
+                                  )
+        String.Join(", ", deplist)
+
     /// Print package data in Command line     
     let showPackage (p: T) = 
         Console.WriteLine("""
@@ -134,6 +151,7 @@ Version       {1}
 Summary       {3}  
 Authors       {4}
 Project URL   {5}
+Dependencies  {8}
 Description   {6}                         
                           """,
                           p.Id,
@@ -143,7 +161,8 @@ Description   {6}
                           String.concat ", " (Array.ofSeq p.Authors),
                           p.ProjectUrl,
                           p.Description,
-                          p.Tags
+                          p.Tags,
+                          getDependenciesAsString p
                           )
     /// Print the content of a NuGet package file (*.nupkg) file.
     let showZipPackage nupkg =  nupkg |> zipPackage |> showPackage    
