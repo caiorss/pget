@@ -10,6 +10,7 @@ open NuGet
 open System
 open System.Linq
 
+type EnumIPack =  System.Collections.Generic.IEnumerable<NuGet.IPackage> 
 
 module IPFile =
 
@@ -36,6 +37,7 @@ module IPFile =
 /// Package object Assessors
 ///        
 module IPack =
+    
     type T = NuGet.IPackage
 
     /// Get summary 
@@ -111,17 +113,32 @@ module IPack =
         |> Seq.groupBy (fun (p: NuGet.IPackageFile) -> p.EffectivePath)
         |> Seq.map (fun (k, v) -> System.IO.Path.Combine(repoPath, fname, IPFile.path <| Seq.last v))
 
+
+    let zipPackage (nupkgFile: string) =  NuGet.ZipPackage nupkgFile
+
     /// Print package data in Command line     
     let showPackage (p: T) = 
-        Console.WriteLine("Id:\t\t{0}\nVersion:\t{1}\nTitle:\t\t{2}\nSummary:\t\t{3}\nAuthors:\t{4}\nUrl:\t\t{5}\nDescription:\t{6}\n\n",
+        Console.WriteLine("""
+Id            {0}
+Title         {2}
+Tags          {7}
+Version       {1}
+Summary       {3}  
+Authors       {4}
+Project URL   {5}
+Description   {6}                         
+                          """,
                           p.Id,
                           p.Version,
                           p.Title,
                           p.Summary,
                           String.concat ", " (Array.ofSeq p.Authors),
                           p.ProjectUrl,
-                          p.Description
+                          p.Description,
+                          p.Tags
                           )
+    /// Print the content of a NuGet package file (*.nupkg) file.
+    let showZipPackage nupkg =  nupkg |> zipPackage |> showPackage    
 
 
 /// This module provides NuGet Repository object assessors
@@ -151,6 +168,26 @@ module Repo =
         repo.GetPackages().Where(fun (p: IPackage) -> p.Id.Contains(packageId))
         |> Seq.groupBy(fun p -> p.Id)             
         |> Seq.map (fun (k, v) -> Seq.last v)     
+
+
+    let searchPackages input (repo: R)  =
+        repo.GetPackages().Where(fun (p: IPackage) -> p.Id.Contains(input)
+                                                      || p.Title.Contains(input)
+                                                      || p.Description.Contains(input)
+                                 )
+        |> Seq.groupBy(fun p -> p.Id)               // Remove repeated packages 
+        |> Seq.map (fun (k, v) -> Seq.last v)     
+
+
+    // Doesn't work - Error:   FS0039: The field, constructor or member
+    // 'Contatins' is not defined
+    // -------------------------
+    let filterPackages predicate  (repo: R) =
+        // repo.GetPackages().Where(fun (p: IPackage) -> predicate p)
+        repo.GetPackages()
+        |> Seq.filter (fun (p: IPackage) -> predicate p)
+        |> Seq.groupBy(fun p -> p.Id)             
+        |> Seq.map (fun (k, v) -> Seq.last v)           
        
 
     let findLatestStableVersion (repo: R) (packageId: string) =
@@ -160,13 +197,12 @@ module Repo =
                       |> Seq.last
         package.Version.ToString()
         // |> Seq.tryFind IPack.isLastestVersion
-       
+
+    /// Creates a repository given its uri     
     let createRepository (uri: string): R =
         NuGet.PackageRepositoryFactory.Default.CreateRepository(uri)
 
-    let localRepository (relPath: string): R =
-        PackageRepositoryFactory.Default.CreateRepository(System.IO.Path.GetFullPath(relPath))
-
+    /// Get packages from a repository object     
     let getPackages (repo: R) =
         repo.GetPackages()
 
@@ -187,16 +223,43 @@ module Repo =
             let ver = findLatestStableVersion repo package
             installPackage pm (package, ver)
 
+   /// Provides functions to deal with local repository (directory with NuGet packages)
+   ///          
+   module Local =
+       
+        /// Creates a local repository     
+        let localRepository (relPath: string) =
+            PackageRepositoryFactory.Default.CreateRepository(System.IO.Path.GetFullPath(relPath))
+
+        //// Returns all packages from a local repository     
+        let getPackages (relPath: string) =
+            let repo = localRepository relPath
+            repo.GetPackages ()
+
+        /// Show all details packages from a local repository
+        ///    
+        let showPackages (relPath: string) =
+            relPath
+            |> getPackages
+            |> Seq.iter IPack.showPackage
+       
+        /// Show the IDs of all packages in local repository
+        /// 
+        let showPackageList repoPath =
+            localRepository repoPath
+            |> Repo.getPackages
+            |> Seq.iter (fun p -> printfn "%A" p)
+
 
 module Nuget =
-
-    let nugetV2Repo = "https://packages.nuget.org/api/v2"
+    
+    let private nugetV2Repo = "https://packages.nuget.org/api/v2"
 
     let nugetV2 = Repo.createRepository nugetV2Repo
 
     let findPackageById = Repo.findPackageById nugetV2
 
-    let findPackagesById = Repo.findPackagesById nugetV2
+    let findPackagesById: string -> EnumIPack = Repo.findPackagesById nugetV2
 
     let installPackage repoPath (package, version) =
         let pm = Repo.PM.makePackageManager nugetV2 repoPath
@@ -221,70 +284,70 @@ module Cmd =
 
 
     let showRepository repoPath =
-        Repo.localRepository repoPath
+        Repo.Local.localRepository repoPath
         |> Repo.getPackages
         |> Seq.iter IPack.showPackage
 
     let showPackageList repoPath =
-        Repo.localRepository repoPath
+        Repo.Local.localRepository repoPath
         |> Repo.getPackages
         |> Seq.iter (fun p -> printfn "%A" p)
 
-    let showPackageRefs repoPath framework packageId =
-         let repo =  Repo.localRepository repoPath
-         let pack =  Repo.findPackageById repo packageId
-         match pack with
-         | None       ->  printfn "Error: package not found."
-         | Some pack' ->  IPack.getDllFilesRefsCompatibleUnique repoPath framework pack'
-                          |> Seq.iter (fun p -> Console.WriteLine p)
+//     let showPackageRefs repoPath framework packageId =
+//          let repo =  Repo.Local.localRepository repoPath
+//          let pack =  Repo.findPackageById repo packageId
+//          match pack with
+//          | None       ->  printfn "Error: package not found."
+//          | Some pack' ->  IPack.getDllFilesRefsCompatibleUnique repoPath framework pack'
+//                           |> Seq.iter (fun p -> Console.WriteLine p)
 
 
-    let showLocalRepoRefs repoPath frameWork =
-        repoPath
-        |> Repo.localRepository
-        |> Repo.getPackages
-        |> Seq.collect (IPack.getDllFilesRefsCompatibleUnique repoPath frameWork)
-        |> Seq.iter (printfn "%s")
+//     let showLocalRepoRefs repoPath frameWork =
+//         repoPath
+//         |> Repo.localRepository
+//         |> Repo.getPackages
+//         |> Seq.collect (IPack.getDllFilesRefsCompatibleUnique repoPath frameWork)
+//         |> Seq.iter (printfn "%s")
 
-    let generateLocalRefDirective repoPath frameWork packageId =
-         let repo =  Repo.localRepository repoPath
-         let pack =  Repo.findPackageById repo packageId
-         match pack with
-         | None       ->  printfn "Error: package not found."
-         | Some pack' ->  IPack.getDllFilesRefsCompatibleUnique repoPath frameWork pack'
-                          |> Seq.iter (printfn "#r \"%s\"")      
+//     let generateLocalRefDirective repoPath frameWork packageId =
+//          let repo =  Repo.localRepository repoPath
+//          let pack =  Repo.findPackageById repo packageId
+//          match pack with
+//          | None       ->  printfn "Error: package not found."
+//          | Some pack' ->  IPack.getDllFilesRefsCompatibleUnique repoPath frameWork pack'
+//                           |> Seq.iter (printfn "#r \"%s\"")      
                
 
-    let searchPackageByName packageId =               
-        Nuget.nugetV2
-        |> Repo.searchPackagesById packageId
-        |> Seq.iter IPack.showPackage //(fun p -> printfn "%A" p)
+//     let searchPackageByName packageId =               
+//         Nuget.nugetV2
+//         |> Repo.searchPackagesById packageId
+//         |> Seq.iter IPack.showPackage //(fun p -> printfn "%A" p)
 
-    let installPackage repoPath packageId version =
-        Nuget.installPackage repoPath (packageId, version)
+//     let installPackage repoPath packageId version =
+//         Nuget.installPackage repoPath (packageId, version)
        
         
-    let parseCommands args =
-        match args with
-        | [||]                                               -> printfn "Error: empty args"
-        | [| "--list-packages" |]                            -> showRepository "packages"
-        | [| "--list-packages" ; repo |]                     -> showRepository repo      
-        | [| "--package-ref" ; repo ; "net40";  pack|]       -> showPackageRefs repo ".NETFramework,Version=v4.0" pack
-        | [| "--package-ref" ; repo ; "net45" ; pack|]       -> showPackageRefs repo ".NETFramework,Version=v4.5" pack
-        | [| "--package-ref" ; repo ; framework ; pack |]    -> showPackageRefs repo framework pack
-        | [| "--package-fsx" ; repo ; "net45" ; pack |]      -> generateLocalRefDirective repo ".NETFramework,Version=v4.5" pack
-        | [| "--packages" ; repo |]                          -> showPackageList repo        
-        | [| "--packages" |]                                 -> showPackageList "packages"
-        | [| "--packages-refs"; "net40" ; repo |]            -> showLocalRepoRefs repo ".NETFramework,Version=v4.0"   
-        | [| "--packages-refs"; "net45" ; repo |]            -> showLocalRepoRefs repo ".NETFramework,Version=v4.5"   
-        | [| "--packages-refs"; "net40" |]                   -> showLocalRepoRefs "packages" ".NETFramework,Version=v4.0"
-        | [| "--packages-refs"; "net45" |]                   -> showLocalRepoRefs "packages" ".NETFramework,Version=v4.5"   
-        | [| "--search"; packageId |]                        -> searchPackageByName packageId
-        | [| "--local" ; "--install" ; packageId; version |] -> installPackage "packages" packageId version
-        | [| "--install"; repo; packageId ; version |]       -> installPackage repo packageId version
-        | [| "--install"; repo ; packageId  |]               -> Nuget.installPackageLatest repo packageId
-        | [| "--show"; packageId |]                          -> Option.iter IPack.showPackage (Nuget.findPackageById packageId)
-        | _                                                  -> printfn "Error: Invalid commands"
+//     let parseCommands args =
+//         match args with
+//         | [||]                                               -> printfn "Error: empty args"
+//         | [| "--list-packages" |]                            -> showRepository "packages"
+//         | [| "--list-packages" ; repo |]                     -> showRepository repo      
+//         | [| "--package-ref" ; repo ; "net40";  pack|]       -> showPackageRefs repo ".NETFramework,Version=v4.0" pack
+//         | [| "--package-ref" ; repo ; "net45" ; pack|]       -> showPackageRefs repo ".NETFramework,Version=v4.5" pack
+//         | [| "--package-ref" ; repo ; framework ; pack |]    -> showPackageRefs repo framework pack
+//         | [| "--package-fsx" ; repo ; "net45" ; pack |]      -> generateLocalRefDirective repo ".NETFramework,Version=v4.5" pack
+//         | [| "--packages" ; repo |]                          -> showPackageList repo        
+//         | [| "--packages" |]                                 -> showPackageList "packages"
+//         | [| "--packages-refs"; "net40" ; repo |]            -> showLocalRepoRefs repo ".NETFramework,Version=v4.0"   
+//         | [| "--packages-refs"; "net45" ; repo |]            -> showLocalRepoRefs repo ".NETFramework,Version=v4.5"   
+//         | [| "--packages-refs"; "net40" |]                   -> showLocalRepoRefs "packages" ".NETFramework,Version=v4.0"
+//         | [| "--packages-refs"; "net45" |]                   -> showLocalRepoRefs "packages" ".NETFramework,Version=v4.5"   
+//         | [| "--search"; packageId |]                        -> searchPackageByName packageId
+//         | [| "--local" ; "--install" ; packageId; version |] -> installPackage "packages" packageId version
+//         | [| "--install"; repo; packageId ; version |]       -> installPackage repo packageId version
+//         | [| "--install"; repo ; packageId  |]               -> Nuget.installPackageLatest repo packageId
+//         | [| "--show"; packageId |]                          -> Option.iter IPack.showPackage (Nuget.findPackageById packageId)
+//         | _                                                  -> printfn "Error: Invalid commands"
         
 
 
