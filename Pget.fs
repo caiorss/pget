@@ -123,6 +123,17 @@ module IPack =
         |> Seq.groupBy (fun (p: NuGet.IPackageFile) -> p.EffectivePath)
         |> Seq.map (fun (k, v) -> System.IO.Path.Combine(repoPath, fname, IPFile.path <| Seq.last v))
 
+    // Returns all assemble references in a local repository given its path
+    // and framework version.
+    //
+    let getRefsUniqueNoVersion repoPath framework (pack: T)   =
+        let ipackDllFiles = getLibDllFilesCompatibleByName pack framework
+        let fname = packageId pack
+
+        ipackDllFiles
+        |> Seq.groupBy (fun (p: NuGet.IPackageFile) -> p.EffectivePath)
+        |> Seq.map (fun (k, v) -> System.IO.Path.Combine(repoPath, fname, IPFile.path <| Seq.last v))
+
 
     let zipPackage (nupkgFile: string) =  NuGet.ZipPackage nupkgFile
 
