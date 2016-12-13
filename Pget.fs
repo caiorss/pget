@@ -18,9 +18,8 @@ module Framework =
     let net40 =  ".NETFramework,Version=v4.0"
     let net45 =  ".NETFramework,Version=v4.5"
 
-//  Wrapper for Nuget.IPackageFile class
-//
-//
+///  Wrapper for Nuget.IPackageFile class
+///
 module IPFile =
 
     type T = NuGet.IPackageFile
