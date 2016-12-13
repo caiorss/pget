@@ -232,32 +232,46 @@ module Repo =
             let ver = findLatestStableVersion repo package
             installPackage pm (package, ver)
 
-   /// Provides functions to deal with local repository (directory with NuGet packages)
-   ///          
-   module Local =
-       
-        /// Creates a local repository     
-        let localRepository (relPath: string) =
-            PackageRepositoryFactory.Default.CreateRepository(System.IO.Path.GetFullPath(relPath))
+/// Provides functions to deal with local repository (directory with NuGet packages)
+///
+module RepoLocal =
 
-        //// Returns all packages from a local repository     
-        let getPackages (relPath: string) =
-            let repo = localRepository relPath
-            repo.GetPackages ()
+    type R = NuGet.IPackageRepository
 
-        /// Show all details packages from a local repository
-        ///    
-        let showPackages (relPath: string) =
-            relPath
-            |> getPackages
-            |> Seq.iter IPack.showPackage
-       
-        /// Show the IDs of all packages in local repository
-        /// 
-        let showPackageList repoPath =
-            localRepository repoPath
-            |> Repo.getPackages
-            |> Seq.iter (fun p -> printfn "%A" p)
+    let findPackageById (repo: R) (packageId: string): NuGet.IPackage option =
+        let packs = repo.FindPackagesById (packageId)
+
+        try Some (Seq.item 0 packs)
+        with
+            :? System.ArgumentException -> None
+
+    /// Creates a local repository
+    let localRepository (relPath: string) =
+        PackageRepositoryFactory.Default.CreateRepository(System.IO.Path.GetFullPath(relPath))
+
+    //// Returns all packages from a local repository
+    let getPackages (relPath: string) =
+        let repo = localRepository relPath
+        repo.GetPackages ()
+
+    /// Show all details packages from a local repository
+    ///
+    let showPackages (relPath: string) =
+        relPath
+        |> getPackages
+        |> Seq.iter IPack.showPackage
+
+    /// Show the IDs of all packages in local repository
+    ///
+    let showPackageList repoPath =
+        localRepository repoPath
+        |> Repo.getPackages
+        |> Seq.iter (fun p -> printfn "%A" p)
+
+    let getPackageRefs repoPath framework packageId =
+         packageId
+         |> findPackageById (localRepository repoPath)
+         |> Option.map (IPack.getDllFilesRefsCompatibleUnique repoPath framework)
 
 
 module Nuget =
