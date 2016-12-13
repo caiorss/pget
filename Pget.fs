@@ -290,7 +290,10 @@ module RepoLocal =
          packageId
          |> findPackageById (localRepository repoPath)
          |> Option.map (IPack.getDllFilesRefsCompatibleUnique repoPath framework)
-
+    // Search packages which Id has word.
+    //
+    let searchPackageById repoPath query  =
+        Repo.searchPackageById (localRepository repoPath) query
 
 module Nuget =
     
