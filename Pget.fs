@@ -91,6 +91,15 @@ module IPack =
     /// Get package authors 
     let authors (pack: T) = pack.Authors
 
+    /// Get a package's number of downloads in NuGet package index.
+    let downloadCount (pack: T) = pack.DownloadCount
+
+    /// Returns supported frameworks by a package.
+    let supportedFrameworks (pack: T) = pack.GetSupportedFrameworks()
+
+    /// Returns true if package is listed in NuGet package index.
+    let listed (pack: T) = pack.Listed
+
     /// Get library files 
     let getLibFiles (pack: T): seq<NuGet.IPackageFile> = pack.GetLibFiles()
 
