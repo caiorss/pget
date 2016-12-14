@@ -325,6 +325,7 @@ module RepoLocal =
 
     type R = NuGet.IPackageRepository
 
+    /// Find a package by Id in local repository
     let findPackageById (repo: R) (packageId: string): NuGet.IPackage option =
         let packs = repo.FindPackagesById (packageId)
 
@@ -375,13 +376,14 @@ module RepoLocal =
         |> getPackages
         |> Seq.collect (IPack.getRefsUniqueNoVersion repoPath frameWork)
 
-
+    /// Install a package to local repository
+    ///    
     let installPackage repoPath (package, version) =
         let pm = Repo.PM.makePackageManager Nuget.nugetV2 repoPath
         Repo.PM.installPackage pm (package, version)
 
-    // let findLatestPackageById = Repo.findLatestStableVersion nugetV2
-
+    /// Install the latest version of a package to local repository
+    ///     
     let installPackageLatest repoPath package =
         let version = Repo.findLatestStableVersion Nuget.nugetV2 package
         printfn "Installing: %s %s" package version
