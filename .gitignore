@@ -1,5 +1,11 @@
 *.exe
+*.bin
 packages/
-*.dll
 bin/
+*.dll
 *.mdb
+*.nupkg
+*.so
+*.zip
+*.tar.gz
+*.tgz
