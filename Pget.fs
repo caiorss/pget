@@ -197,9 +197,26 @@ Description    {6}
                           getDependenciesAsString p,
                           p.DownloadCount
                           )
-    /// Print the content of a NuGet package file (*.nupkg) file.
-    let showZipPackage nupkg =  nupkg |> zipPackage |> showPackage    
 
+/// Module to deal with NuGet package files -  *.nupkg files
+///    
+module Nupkg =
+    
+    /// Read a .nupkg file.
+    let read (nupkgFile: string) =  NuGet.ZipPackage nupkgFile
+
+    /// Print the content of a NuGet package file (*.nupkg) file.
+    let show (nupkgFile: string) =
+        nupkgFile
+        |> read
+        |> IPack.showPackage
+
+    /// Get files all files of NuGet package archive.
+    ///    
+    let getFiles (nupkgFile: string) =
+        let pack = read nupkgFile
+        pack.GetFiles()
+           
 
 /// This module provides NuGet Repository object assessors
 ///        
