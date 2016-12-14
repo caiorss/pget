@@ -14,7 +14,9 @@ $(build): pget.fsx $(NuGet.Core) $(Microsoft.Web.Xdt)
 		--standalone \
 		--platform:anycpu \
 		-r:$(NuGet.Core) \
-		-r:$(Microsoft.Web.Xdt)
+		-r:$(Microsoft.Web.Xdt) \
+		--staticlink:NuGet.Core \
+		--standalone
 
 	mkdir -p bin
 	cp -v $(NuGet.Core) bin/
@@ -25,7 +27,7 @@ release: $(build)
 	rm -rf pget.zip
 	cp  -r bin  pget
 	zip -r pget.zip pget
-	rm  -rf pgetF
+	rm  -rf pget
 	echo "Build release pget.zip Ok."
 
 clean:
