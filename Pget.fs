@@ -304,6 +304,19 @@ module Nuget =
 
     let findPackagesById: string -> EnumIPack = Repo.findPackagesById nugetV2
 
+    /// Returns a seq with all F# related packages
+    let findFsharpPackages () =
+        let repository = NuGet.PackageRepositoryFactory.Default.CreateRepository "https://nuget.org/api/v2"
+
+        query { for p in repository.GetPackages() do
+                where (
+                        p.Id.ToLower().Contains("fsharp")
+                        || p.Id.ToLower().Contains("f#")
+                        || p.Tags.ToLower().Contains("f#")
+                        || p.Tags.ToLower().Contains("fsharp")
+                )
+                select p
+               }
 
 
 /// Provides functions to deal with local repository (directory with NuGet packages)
