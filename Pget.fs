@@ -177,15 +177,17 @@ module IPack =
     /// Print package data in Command line     
     let showPackage (p: T) = 
         Console.WriteLine("""
-Id            {0}
-Title         {2}
-Tags          {7}
-Version       {1}
-Summary       {3}  
-Authors       {4}
-Project URL   {5}
-Dependencies  {8}
-Description   {6}                         
+Id             {0}
+Title          {2}
+Tags           {7}
+Version        {1}
+Summary        {3}
+Authors        {4}
+Project URL    {5}
+Dependencies   {8}
+Download Count {9}
+
+Description    {6}
                           """,
                           p.Id,
                           p.Version,
@@ -195,7 +197,8 @@ Description   {6}
                           p.ProjectUrl,
                           p.Description,
                           p.Tags,
-                          getDependenciesAsString p
+                          getDependenciesAsString p,
+                          p.DownloadCount
                           )
     /// Print the content of a NuGet package file (*.nupkg) file.
     let showZipPackage nupkg =  nupkg |> zipPackage |> showPackage    
