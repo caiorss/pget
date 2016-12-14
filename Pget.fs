@@ -137,7 +137,8 @@ module IPack =
 
     let zipPackage (nupkgFile: string) =  NuGet.ZipPackage nupkgFile
 
-
+    /// Get a package's dependencies and its versions
+    ///
     let getDependencies (pack: T) =
         pack.DependencySets
         |> Seq.map (fun dep -> dep.Dependencies)
@@ -187,6 +188,8 @@ module Repo =
     
     type R = NuGet.IPackageRepository
 
+    /// Try to parse a package version
+    ///
     let parseVersion (version: string) =
         try
             Some (NuGet.SemanticVersion.Parse(version))
@@ -263,6 +266,24 @@ module Repo =
             let ver = findLatestStableVersion repo package
             installPackage pm (package, ver)
 
+
+module Nuget = 
+
+    /// NuGet Version 2 API 
+    let  nugetV2url = "https://packages.nuget.org/api/v2"
+
+    /// NuGet version 3 API 
+    let  nugetV3url = "https://packages.nuget.org/api/v3"
+
+
+    let nugetV2 = Repo.createRepository nugetV2url
+
+    let findPackageById = Repo.findPackageById nugetV2
+
+    let findPackagesById: string -> EnumIPack = Repo.findPackagesById nugetV2
+
+
+
 /// Provides functions to deal with local repository (directory with NuGet packages)
 ///
 module RepoLocal =
@@ -320,26 +341,13 @@ module RepoLocal =
         |> Seq.collect (IPack.getRefsUniqueNoVersion repoPath frameWork)
 
 
-module Nuget =
-    
-    let  nugetV2url = "https://packages.nuget.org/api/v2"
-    let  nugetV3url = "https://packages.nuget.org/api/v3"
-
-
-    let nugetV2 = Repo.createRepository nugetV2url
-
-    let findPackageById = Repo.findPackageById nugetV2
-
-    let findPackagesById: string -> EnumIPack = Repo.findPackagesById nugetV2
-
     let installPackage repoPath (package, version) =
-        let pm = Repo.PM.makePackageManager nugetV2 repoPath
+        let pm = Repo.PM.makePackageManager Nuget.nugetV2 repoPath
         Repo.PM.installPackage pm (package, version)
 
     // let findLatestPackageById = Repo.findLatestStableVersion nugetV2
 
     let installPackageLatest repoPath package =
-        let version = Repo.findLatestStableVersion nugetV2 package
+        let version = Repo.findLatestStableVersion Nuget.nugetV2 package
         printfn "Installing: %s %s" package version
         installPackage repoPath (package, version)
-
