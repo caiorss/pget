@@ -12,11 +12,17 @@ open System.Linq
 
 type EnumIPack =  System.Collections.Generic.IEnumerable<NuGet.IPackage> 
 
-// Framework Version Constants
+// Framework Version related functions
 //
 module Framework =
+
+    /// Framework .NET 4.0
     let net40 =  ".NETFramework,Version=v4.0"
+
+    /// Framework .NET 4.5
     let net45 =  ".NETFramework,Version=v4.5"
+
+    let makeSemanticVersion (version: string) = new NuGet.SemanticVersion(version)
 
 ///  Wrapper for Nuget.IPackageFile class
 ///
