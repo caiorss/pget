@@ -162,6 +162,10 @@ module IPack =
                                                   | v    -> Some v
                                     )))
 
+
+     /// Get NuGet package dependencies as string
+     ///  - "dependency1.version1, dependency2.version2 ..."
+     ///
     let getDependenciesAsString (pack: T) =
         let deplist = getDependencies pack
                       |> Seq.map (fun (name, ver) -> match ver with
