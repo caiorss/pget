@@ -149,9 +149,6 @@ module IPack =
         |> Seq.groupBy (fun (p: NuGet.IPackageFile) -> p.EffectivePath)
         |> Seq.map (fun (k, v) -> System.IO.Path.Combine(repoPath, fname, IPFile.path <| Seq.last v))
 
-    /// Read a .nupkg file.
-    let zipPackage (nupkgFile: string) =  NuGet.ZipPackage nupkgFile
-
     /// Get a package's dependencies and its versions
     ///
     let getDependencies (pack: T) =
