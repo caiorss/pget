@@ -216,7 +216,12 @@ module Nupkg =
     let getFiles (nupkgFile: string) =
         let pack = read nupkgFile
         pack.GetFiles()
-           
+
+    /// Print all files of NuGet package archive.
+    let showFiles (nupkgFile: string) =
+        NuGet.ZipPackage(nupkgFile).GetFiles()
+        |> Seq.iter (fun p -> Console.WriteLine(p))
+
 
 /// This module provides NuGet Repository object assessors
 ///        
