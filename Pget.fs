@@ -386,6 +386,11 @@ module RepoLocal =
          |> findPackageById (localRepository repoPath)
          |> Option.map (IPack.getDllFilesRefsCompatibleUnique repoPath framework)
 
+    let showPackageRefsFsx repoPath framework packageId =
+         getPackageRefs repoPath framework packageId
+         |> Option.iter (Seq.iter (printfn "#r \"%s\""))
+
+
     let searchPackageById repoPath query  =
         Repo.searchPackageById (localRepository repoPath) query
 
