@@ -1,3 +1,10 @@
+/// Pget - F# Functional wrapper to NuGet.Core package.
+///
+/// <description>
+/// The Pget module that stands for Package-Get provides functions
+/// to read and manipulate NuGet packages and query NuGet repository.
+/// </description>
+///
 namespace Pget 
 
 open NuGet
