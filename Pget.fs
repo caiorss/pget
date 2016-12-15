@@ -412,6 +412,9 @@ module RepoLocal =
                       |> Seq.toArray
         String.Join("\n", reflist)
 
+    let showScript repoPath framework =
+        generateScript repoPath framework |> Console.WriteLine
+
     /// Install a package to local repository
     ///    
     let installPackage repoPath (package, version) =
