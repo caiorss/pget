@@ -408,7 +408,8 @@ module RepoLocal =
     ///
     let generateScript repoPath framework =
         let reflist = getRefs repoPath framework
-                      |> Seq.map(fun r -> sprintf "#r \"%s\"")
+                      |> Seq.map(fun r -> sprintf "#r \"%s\"" r)
+                      |> Seq.toArray
         String.Join("\n", reflist)
 
     /// Install a package to local repository
