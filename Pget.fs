@@ -397,6 +397,19 @@ module RepoLocal =
         |> getPackages
         |> Seq.collect (IPack.getRefsUniqueNoVersion repoPath frameWork)
 
+    /// Get all assembly references path (*.dll files)
+    let getRefs repoPath frameWork =
+        repoPath
+        |> getPackages
+        |> Seq.collect (IPack.getDllFilesRefsCompatibleUnique repoPath frameWork)
+
+    /// Generates an include script for all packages in the repository
+    ///
+    let generateScript repoPath framework =
+        let reflist = getRefs repoPath framework
+                      |> Seq.map(fun r -> sprintf "#r \"%s\"")
+        String.Join("\n", reflist)
+
     /// Install a package to local repository
     ///    
     let installPackage repoPath (package, version) =
