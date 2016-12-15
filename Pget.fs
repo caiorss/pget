@@ -291,6 +291,7 @@ module Repo =
     let getPackages (repo: R) =
         repo.GetPackages()
 
+    /// PackageManager class wrapper
     module PM =
 
         type T = NuGet.PackageManager
