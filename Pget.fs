@@ -351,9 +351,10 @@ module RepoLocal =
         PackageRepositoryFactory.Default.CreateRepository(System.IO.Path.GetFullPath(relPath))
 
     //// Returns all packages from a local repository
-    let getPackages (relPath: string) =
-        let repo = localRepository relPath
+    let getPackages (repoPath: string) =
+        let repo = localRepository repoPath
         repo.GetPackages ()
+
 
     /// Show all details packages from a local repository
     ///
