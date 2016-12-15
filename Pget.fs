@@ -379,14 +379,12 @@ module RepoLocal =
         |> Seq.iter (fun p -> printfn "%A" p)
 
 
-    /// Get relative path to assemblies from a package without
-    /// version in the path. It is assumed that only one version
-    /// is installed in the local repository.
+    /// Get relative path to assemblies from a package
     ///
-    let getPackageRefsNoVersion repoPath framework packageId =
+    let getPackageRefs repoPath framework packageId =
          packageId
          |> findPackageById (localRepository repoPath)
-         |> Option.map (IPack.getRefsUniqueNoVersion repoPath framework)
+         |> Option.map (IPack.getDllFilesRefsCompatibleUnique repoPath framework)
 
     let searchPackageById repoPath query  =
         Repo.searchPackageById (localRepository repoPath) query
