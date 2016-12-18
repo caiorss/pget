@@ -9,3 +9,5 @@ bin/
 *.zip
 *.tar.gz
 *.tgz
+obj/
+tmp/
