@@ -54,10 +54,10 @@
 
     <!-- FParsec - Parser combinators  -->
     <Reference Include="NuGet.Core" >
-      <HintPath>packages/NuGet.Core/lib/net40-Client/NuGet.Core.dll</HintPath>      
+      <HintPath>packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll</HintPath>      
     </Reference>
     <Reference Include="Microsoft.Web.XmlTransform" >
-      <HintPath>Microsoft.Web.Xdt/lib/net40/Microsoft.Web.XmlTransform.dll</HintPath>      
+      <HintPath>packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll</HintPath>      
     </Reference>
     
   </ItemGroup>
@@ -65,7 +65,7 @@
 <!-- Files to be Compiled  -->
   
   <ItemGroup>
-    <Compile Include="Pget.fs" />
+    <Compile Include="src/Pget.fs" />
     <None Include="Script.fsx" />
   </ItemGroup>
 
