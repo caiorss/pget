@@ -24,6 +24,13 @@ module Framework =
     let net45 =  ".NETFramework,Version=v4.5"
 
     let makeSemanticVersion (version: string) = new NuGet.SemanticVersion(version)
+    /// Parse .NET framewok from string
+    let parseFramework s =
+        match s with
+        | "net35" -> Some ".NETFramework,Version=v3.5"
+        | "net40" -> Some ".NETFramework,Version=v4.0"
+        | "net45" -> Some ".NETFramework,Version=v4.5"
+        |  _      -> None
 
 ///  Wrapper for Nuget.IPackageFile class
 ///
