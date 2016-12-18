@@ -267,10 +267,12 @@ module Repo =
         |> Seq.map (fun (k, v) -> Seq.last v)
 
 
-    let searchPackages (repo: R) (input: string)  =
-        repo.GetPackages().Where(fun (p: IPackage) -> p.Id.Contains(input)
-                                                      || p.Title.Contains(input)
-                                                      || p.Description.Contains(input)
+    let searchPackage (repo: R) (input: string)  =
+        repo.GetPackages().Where(fun (p: IPackage) -> let inp = input.ToLower() in
+                                                          p.Id.ToLower().Contains(inp)
+                                                      || p.Title.ToLower().Contains(inp)
+                                                      || p.Tags.ToLower().Contains(inp)
+                                                      || p.Description.ToLower().Contains(inp)
                                  )
         |> Seq.groupBy(fun p -> p.Id)               // Remove repeated packages 
         |> Seq.map (fun (k, v) -> Seq.last v)     
