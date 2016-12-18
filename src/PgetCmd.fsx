@@ -46,6 +46,12 @@ let showRepoPackageRef framework repo packageId =
     | None    -> Console.WriteLine("Error: Wrong framework parameter")
  
 
+let showVersion () =
+    Console.WriteLine """
+Pget - Package Get - Version 1.0
+Copyright (C) 2016 Caio Rodrigues
+    """
+
 let showHelp () =
     Console.WriteLine """
 --list                                   List all packages in current repository ./package
