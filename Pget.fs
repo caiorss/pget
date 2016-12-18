@@ -337,7 +337,9 @@ module Nuget =
 
     let findPackageById = Repo.findPackageById nugetV2
 
-    let findPackagesById: string -> EnumIPack = Repo.findPackagesById nugetV2
+    let searchPackagesById: string -> EnumIPack = Repo.searchPackageById nugetV2
+
+    // let findPackagesById: string -> EnumIPack = Repo.searchPackages nugetV2
 
     /// Returns a seq with all F# related packages
     let findFsharpPackages () =
