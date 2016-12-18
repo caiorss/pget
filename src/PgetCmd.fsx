@@ -48,16 +48,21 @@ let showRepoPackageRef framework repo packageId =
 
 let showHelp () =
     Console.WriteLine """
---list                     List all packages in current repository ./package
---list [repo]              List all package in [repo] repository.
+--list                                   List all packages in current repository ./package
+--list [repo]                            List all package in [repo] repository.
 
---show                     Show all packages in current ./packages repository
---show [repo]              Show all packages in [repo] repository.
+--show                                   Show all packages in current ./packages repository
+--show [repo]                            Show all packages in [repo] repository.
 
---search [package]         Search a package by name.
---search [package] [repo]  Search a pacakge by name in a local repository
---search-local [pacakge]   Search a package in ./packages
---nupkg show [file]        Show metadata of a *.nupkg file
+--search [package]                       Search a package by name.
+--search [package] --repo                Search a pacakge by name in a local repository
+--search [package] --repo [repo]         Search a package in ./packages
+--nupkg show [file]                      Show metadata of a *.nupkg file
+
+--ref [frm]                              Show all assembly references from current ./packages
+--ref [frm] --pack [pack]                Show all assembly references from a package [pack] at ./packages.              
+--ref [frm] --pack [pack] --repo [path]  Show all assembly references from a package at [repo] directory
+                                         frm:  .NET Framework  net40 | net45                        
     """
 
 
