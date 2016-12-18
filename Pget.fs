@@ -421,7 +421,7 @@ module RepoLocal =
         |> getPackages
         |> Seq.collect (IPack.getDllFilesRefsCompatibleUnique repoPath frameWork)
 
-    /// Generates an include script for all packages in the repository
+    /// Generate a script to load all packages from the repository into REPL.
     ///
     let generateScript repoPath framework =
         let reflist = getRefs repoPath framework
