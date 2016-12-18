@@ -429,7 +429,7 @@ module RepoLocal =
                       |> Seq.toArray
         String.Join("\n", reflist)
 
-    let showScript repoPath framework =
+    let showScript framework repoPath =
         generateScript repoPath framework |> Console.WriteLine
 
     /// Install a package to local repository
