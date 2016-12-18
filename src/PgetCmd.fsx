@@ -1,6 +1,6 @@
 #if INTERACTIVE
-#r "packages/NuGet.Core/lib/net40-Client/NuGet.Core.dll"
-#r "packages/Microsoft.Web.Xdt/lib/net40/Microsoft.Web.XmlTransform.dll"
+#r "../packages/NuGet.Core/lib/net40-Client/NuGet.Core.dll"
+#r "../packages/Microsoft.Web.Xdt/lib/net40/Microsoft.Web.XmlTransform.dll"
 #r "System.Linq.dll"
 #endif
 
