@@ -206,6 +206,11 @@ Description    {6}
                           p.DownloadCount
                           )
 
+
+    let showAllPackages packSeq = Seq.iter showPackage (packSeq: IQueryable<IPackage>)
+
+
+
 /// Module to deal with NuGet package files -  *.nupkg files
 ///    
 module Nupkg =
