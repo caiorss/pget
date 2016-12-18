@@ -48,32 +48,59 @@ let showRepoPackageRef framework repo packageId =
 
 let showVersion () =
     Console.WriteLine """
-Pget - Package Get - Version 1.0
+Pget - Package Get - Version 1.0 
 Copyright (C) 2016 Caio Rodrigues
     """
 
 let showHelp () =
     Console.WriteLine """
---list                                   List all packages in current repository ./package
---list [repo]                            List all package in [repo] repository.
+Pget - Package Get - Enhanced command line interface to NuGet.Core
 
---show                                   Show all packages in current ./packages repository
---show [repo]                            Show all packages in [repo] repository.
+Commands                                    Description
+------------------------------------------  -------------------------------------------------------------
 
---search [package]                       Search a package by name.
---search [package] --repo                Search a pacakge by name in a local repository
---search [package] --repo [repo]         Search a package in ./packages
---nupkg show [file]                      Show metadata of a *.nupkg file
+List Commands:
 
---ref [frm]                              Show all assembly references from current ./packages
---ref [frm] --pack [pack]                Show all assembly references from a package [pack] at ./packages.              
---ref [frm] --pack [pack] --repo [path]  Show all assembly references from a package at [repo] directory
-                                         frm:  .NET Framework  net40 | net45                        
+  --list                                      List all packages in current repository ./package
+  --list [repo]                               List all package in [repo] repository.
+
+  --show                                      Show all packages in current ./packages repository
+  --show [repo]                               Show all packages in [repo] repository.
+
+Search commands:
+
+  --search [package]                          Search a package by name.
+  --search [package] --repo                   Search a pacakge by name in a local repository
+  --search [package] --repo [repo]            Search a package in ./packages
+
+Show references for fsx scripts:
+
+  --ref [frm]                                 Show all assembly references from current ./packages
+  --ref [frm] --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
+  --ref [frm] --pack [pack] --repo [path]     Show all assembly references from a package at [repo] directory
+                                              frm:  .NET Framework  net40 | net45
+
+Install packages:
+
+  --install [pack]                            Install the latest version of package [pack] to ./packages
+  --install [pack] --repo [repo]              Install the latest version of package [pack] to a repository [repo] i.e: ~/nuget
+  --install [pack] --ver [ver]                Install the version [ver] of package [pack]
+  --install [pack] --ver [ver] --repo [repo]  Install the version [ver] of package [pack] to a repository [repo]
+
+Nupkg Files:
+
+  --nupkg show [file]                         Show metadata of a *.nupkg file
+
     """
+
+    showVersion()
+    
 
 
 let parseCommands cmdargs =
     match List.ofArray cmdargs with
+    | ["--version" ]                      ->  showVersion ()
+    | ["--help" ]                         ->  showHelp ()
     | ["--list"       ]                   ->  Pget.RepoLocal.showPackageList "packages"
     | ["--list"; repo ]                   ->  Pget.RepoLocal.showPackageList  repo
     | ["--show";      ]                   ->  Pget.RepoLocal.showPackages "packages"
@@ -83,9 +110,14 @@ let parseCommands cmdargs =
     | ["--search"; pack ; "--repo"]       ->  searchLocalPackage pack "pacakges"
     | ["--search"; pack ; "--repo"; path] ->  searchLocalPackage pack  path
     
-    | ["--ref"; frm   ]                                   ->  showScript frm "packages"
-    | ["--ref"; frm  ; "--pack";  pack]                   ->  showLocalPackageRef frm pack
-    | ["--ref"; frm  ; "--pack";  pack; "--repo"; path]   ->  showRepoPackageRef frm path pack
+    | ["--ref"; frm   ]                                      ->  showScript frm "packages"
+    | ["--ref"; frm  ; "--pack";  pack]                      ->  showLocalPackageRef frm pack
+    | ["--ref"; frm  ; "--pack";  pack; "--repo"; path]      ->  showRepoPackageRef frm path pack
+
+    | ["--install"; pack ]                                   ->  Pget.RepoLocal.installPackageLatest "packages" pack
+    | ["--install"; pack ; "--repo"; path ]                  ->  Pget.RepoLocal.installPackageLatest path pack
+    | ["--install"; pack ; "--ver" ; ver  ]                  ->  Pget.RepoLocal.installPackage "packages" (pack, ver)
+    | ["--install"; pack ; "--ver" ; ver ; "--repo"; path  ] ->  Pget.RepoLocal.installPackage path (pack, ver)
     
     | []                                  ->  showHelp ()
     | _                                   ->  Console.WriteLine "Error: Invalid option."
