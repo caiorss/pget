@@ -2,6 +2,7 @@
 #r "../packages/NuGet.Core/lib/net40-Client/NuGet.Core.dll"
 #r "../packages/Microsoft.Web.Xdt/lib/net40/Microsoft.Web.XmlTransform.dll"
 #r "System.Linq.dll"
+#r "System.Xml.Linq.dll"
 #endif
 
 open System 
@@ -91,6 +92,19 @@ Nupkg Files:
 
   --nupkg show [file]                         Show metadata of a *.nupkg file
 
+--------------------------------------------------------------------------------------------------------------------
+
+Command abbreviations:
+
+  --install   -i
+  --repo      -r
+  --help      -h
+  --version   -v
+  --ver       -v
+  --list      -l
+  --search    -s
+  --show      -sh
+
     """
 
     showVersion()
@@ -100,24 +114,51 @@ Nupkg Files:
 let parseCommands cmdargs =
     match List.ofArray cmdargs with
     | ["--version" ]                      ->  showVersion ()
-    | ["--help" ]                         ->  showHelp ()
+    | ["-v" ]                             ->  showVersion ()
+    
+    | ["--help" ]                         ->  showHelp ()    
+    | ["-h" ]                             ->  showHelp ()
+    
     | ["--list"       ]                   ->  Pget.RepoLocal.showPackageList "packages"
     | ["--list"; repo ]                   ->  Pget.RepoLocal.showPackageList  repo
+    | ["-l"       ]                       ->  Pget.RepoLocal.showPackageList "packages"
+    | ["-l"; repo ]                       ->  Pget.RepoLocal.showPackageList  repo
+
+
     | ["--show";      ]                   ->  Pget.RepoLocal.showPackages "packages"
     | ["--show"; repo ]                   ->  Pget.RepoLocal.showPackages repo
-    | ["--nupkg"; "show"; fname]          ->  Pget.Nupkg.read fname |> Pget.IPack.showPackage
+    | ["-sh";      ]                       ->  Pget.RepoLocal.showPackages "packages"
+    | ["-sh"; repo ]                       ->  Pget.RepoLocal.showPackages repo
+
+   
     | ["--search"; pack ]                 ->  searchPackageById pack
     | ["--search"; pack ; "--repo"]       ->  searchLocalPackage pack "pacakges"
     | ["--search"; pack ; "--repo"; path] ->  searchLocalPackage pack  path
-    
+    | ["-s"; pack ]                       ->  searchPackageById pack
+    | ["-s"; pack ; "-r"]                 ->  searchLocalPackage pack "pacakges"
+    | ["-s"; pack ; "-r"; path]           ->  searchLocalPackage pack  path
+   
     | ["--ref"; frm   ]                                      ->  showScript frm "packages"
     | ["--ref"; frm  ; "--pack";  pack]                      ->  showLocalPackageRef frm pack
     | ["--ref"; frm  ; "--pack";  pack; "--repo"; path]      ->  showRepoPackageRef frm path pack
+    | ["--ref"; frm  ; "-p";  pack]                          ->  showLocalPackageRef frm pack
+    | ["--ref"; frm  ; "-p";  pack; "-r"; path]              ->  showRepoPackageRef frm path pack
+
+
 
     | ["--install"; pack ]                                   ->  Pget.RepoLocal.installPackageLatest "packages" pack
     | ["--install"; pack ; "--repo"; path ]                  ->  Pget.RepoLocal.installPackageLatest path pack
     | ["--install"; pack ; "--ver" ; ver  ]                  ->  Pget.RepoLocal.installPackage "packages" (pack, ver)
     | ["--install"; pack ; "--ver" ; ver ; "--repo"; path  ] ->  Pget.RepoLocal.installPackage path (pack, ver)
+    | ["-i"; pack ]                                          ->  Pget.RepoLocal.installPackageLatest "packages" pack
+    | ["-i"; pack ; "-r"; path ]                             ->  Pget.RepoLocal.installPackageLatest path pack
+    | ["-i"; pack ; "-v" ; ver  ]                            ->  Pget.RepoLocal.installPackage "packages" (pack, ver)
+    | ["-i"; pack ; "-v" ; ver ; "-r"; path  ]               ->  Pget.RepoLocal.installPackage path (pack, ver)
+
+
+    // | ["--install-from-file" ; file ]
+
+    | ["--nupkg"; "show"; fname]          ->  Pget.Nupkg.read fname |> Pget.IPack.showPackage
     
     | []                                  ->  showHelp ()
     | _                                   ->  Console.WriteLine "Error: Invalid option."
