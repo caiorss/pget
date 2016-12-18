@@ -263,8 +263,8 @@ module Repo =
 
     let searchPackageById (repo: R) (packageId: string) =
         repo.GetPackages().Where(fun (p: IPackage) -> p.Id.ToLower().Contains(packageId.ToLower()))
-        // |> Seq.groupBy(fun p -> p.Id)
-        // |> Seq.map (fun (k, v) -> Seq.last v)
+        |> Seq.groupBy(fun p -> p.Id)
+        |> Seq.map (fun (k, v) -> Seq.last v)
 
 
     let searchPackages (repo: R) (input: string)  =
