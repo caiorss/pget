@@ -5,14 +5,19 @@ help:
 	@echo "Enter $ make app - to build command line application src/bin/pget.exe"
 
 
-library := src/bin/pget.dll
-lib: $(library)
+lib:= bin/pget.dll
+lib: $(lib)
 
 ## Standalone command line application
 ##
-exe := src/bin/pget.exe
-app: $(exe)
+exe := bin/pget.exe
+exe: $(exe)
 
+
+# Compile the library using xbuild .fsproj file.
+#
+xbuild:
+	xbuild 
 
 NuGet.Core        := packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll
 Microsoft.Web.Xdt := packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll
@@ -22,8 +27,8 @@ $(NuGet.Core):
 
 
 
-$(library): src/Pget.fs src/PgetCmd.fsx $(NuGet.Core) $(Microsoft.Web.Xdt)
-	fsc src/Pget.fs --out:$(library) \
+$(lib): src/Pget.fs src/PgetCmd.fsx $(NuGet.Core) $(Microsoft.Web.Xdt)
+	fsc src/Pget.fs --out:$(lib) \
 		--target:library \
 		--platform:anycpu \
 		-r:$(NuGet.Core) \
@@ -54,4 +59,7 @@ release: $(build)
 	echo "Build release pget.zip Ok."
 
 clean:
-	rm -rf src/bin/*
+	rm -rf bin/* obj/*
+
+clean-packages:
+	rm -rf packages/*
