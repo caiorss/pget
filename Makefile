@@ -1,4 +1,4 @@
-build := bin/pget.exe
+library := bin/pget.dll
 
 all: $(build)
 
@@ -8,8 +8,10 @@ Microsoft.Web.Xdt := packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.Xm
 $(NuGet.Core):	
 	nuget.exe install NuGet.Core -OutputDirectory packages -Version 2.12.0
 
-$(build): pget.fsx $(NuGet.Core) $(Microsoft.Web.Xdt)
-	fsc pget.fsx --out:$(build) \
+lib: $(library)
+
+$(library): src/Pget.fs $(NuGet.Core) $(Microsoft.Web.Xdt)
+	fsc src/Pget.fs --out:src/$(library) \
 		--target:exe \
 		--standalone \
 		--platform:anycpu \
@@ -18,9 +20,9 @@ $(build): pget.fsx $(NuGet.Core) $(Microsoft.Web.Xdt)
 		--staticlink:NuGet.Core \
 		--standalone
 
-	mkdir -p bin
-	cp -v $(NuGet.Core) bin/
-	cp -v $(Microsoft.Web.Xdt) bin/
+	# mkdir -p src/bin
+	cp -v $(NuGet.Core) src/bin/
+	cp -v $(Microsoft.Web.Xdt) src/bin/
 
 
 release: $(build)
