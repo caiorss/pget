@@ -407,8 +407,8 @@ module RepoLocal =
          |> Option.iter (Seq.iter (printfn "#r \"%s\""))
 
 
-    let searchPackageById repoPath query  =
-        Repo.searchPackageById (localRepository repoPath) query
+    let searchPackage repoPath query  =
+        Repo.findPackagesById (localRepository repoPath) query
 
     /// Get references fo all local packages *.dll compatible with given framework.
     ///
