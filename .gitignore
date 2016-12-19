@@ -12,3 +12,6 @@ bin/
 obj/
 tmp/
 scratch.fsx
+/dist/
+/release/
+/ideas.org
