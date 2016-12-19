@@ -3,28 +3,45 @@
 #+EMAIL:  caiorss [DOT] rodrigues [DOT] gmail [DOT] com 
 #+DESCRIPTION: F# Command line interface to NuGet API.
 #+STARTUP: content
-#+KEYWORDS: NuGet F# fsharp csharp .net dotnet tool cli command line
+#+KEYWORDS: NuGet F# fsharp csharp .net dotnet tool cli command line toolbox
 
-* Pget.exe 
+* Pget.exe - Package Get 
 ** Overview 
-
 
 Pget.exe is high level wrapper to NuGet.core package which provides
 command line tools to manage dependencies in F# projects or .NET projects. 
 
-Features: 
-
- - Search  packages in Nuget repository
- - Install NuGet packages
- - Display all assembly references in a repository
- - Show details about packages like description, summary, web site and
-   so on.
- - Show package details.
-
 Objective: Provide NuGet.Core integration with external tools, text editors
 like Emacs and also command line integration with NuGet API.
 
+
+Features: 
+
+ - Search  packages in Nuget repository
+
+
+ - Install NuGet packages
+
+
+ - Display all assembly references in a repository
+
+
+ - Show details about packages like description, summary, web site and so on.
+
+
+ - Inspect .NET assemblies.
+   - Show .NET assemblies metadata
+   - Show .NET referenced assemblies
+
+
+ - Show NuGet packages *.nupkg file metadata.
+
+
+ - Get packages' assembly references from local repository and project
+   repository (./packages) for F# scripts.
+
 ** Build instruction
+
 
 Run the command =$ make exe=. It assumes that fsc - the F# compiler
 and nuget.exe are in the $PATH variable. 
@@ -43,6 +60,7 @@ and nuget.exe are in the $PATH variable.
 
 #+END_SRC
 
+** Get binary release 
 ** Commands 
 *** Print help 
 
@@ -691,7 +709,6 @@ Show assemblies referenced by an assembly file
 
 Pget.dll is a F# library that provides a high level interface and
 functional wrappers to NuGet.Core API. 
-
 
 
 
