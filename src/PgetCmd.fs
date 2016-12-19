@@ -110,6 +110,11 @@ module AsmAttr =
                                   ; ("Version",     a.Version.ToString())
                                ]
                      )
+        
+    /// Display resources from an .NET assembly file 
+    let showResurces (asmFile: string) =
+        let asm = loadFrom asmFile
+        asm.GetManifestResourceNames() |> Seq.iter Console.WriteLine
 
     let showAsmReferences (asmFile: string) =
         let asm = loadFrom asmFile
@@ -231,8 +236,9 @@ module Main =
 
     Assembly files: *.exe or *.dll
 
-      asm show     [file]                         Show all assembly attributes from an assembly file.
-      asm show-ref [file]                         Show all assembly references from an assembly file.
+      asm show           [file]                   Show all assembly attributes from an assembly file.
+      asm show-ref       [file]                   Show all assembly references from an assembly file.
+      asm show-resources [file]                   Show resources from an assembly file.
       
     Generate Guid - Globally Unique Identifier 
 
@@ -314,12 +320,13 @@ module Main =
         | ["-if" ; file; "-r"; repo ]                            ->  Pget.RepoLocal.installPackagesFromFile repo file
 
 
-        | ["--nupkg"; "show"; fname]          ->  Pget.Nupkg.read fname |> Pget.IPack.showPackage
+        | ["--nupkg"; "show"; fname]                             ->  Pget.Nupkg.read fname |> Pget.IPack.showPackage
 
-        | ["asm" ; "--show" ; asmFile]        -> AsmAttr.showFile asmFile
-        | ["asm" ; "--show-ref" ; asmFile]    -> AsmAttr.showAsmReferences asmFile         
+        | ["asm" ; "--show" ; asmFile]                           -> AsmAttr.showFile asmFile
+        | ["asm" ; "--show-ref" ; asmFile]                       -> AsmAttr.showAsmReferences asmFile         
+        | ["asm" ; "--show-resources"; asmFile]                  -> AsmAttr.showResurces asmFile
 
-        | ["--guid" ]                         -> Console.WriteLine(Guid.NewGuid().ToString() : string)
+        | ["--guid" ]                                            -> Console.WriteLine(Guid.NewGuid().ToString() : string)
 
         | []                                  ->  showHelp ()
         | _                                   ->  Console.WriteLine "Error: Invalid option."
