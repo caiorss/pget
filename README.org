@@ -1,21 +1,21 @@
 #+TITLE: Pget - .NET Command Line toolbox and Interface for NuGet.Core and F#
 #+AUTHOR: Caio Rodrigues
-#+EMAIL:  caiorss [DOT] rodrigues [DOT] gmail [DOT] com 
+#+EMAIL:  caiorss [DOT] rodrigues [DOT] gmail [DOT] com
 #+DESCRIPTION: F# Command line interface to NuGet API.
 #+STARTUP: content
 #+KEYWORDS: NuGet F# fsharp csharp .net dotnet tool cli command line toolbox
 
-* Pget.exe - Package Get 
-** Overview 
+* Pget.exe - Package Get
+** Overview
 
 Pget.exe is high level wrapper to NuGet.core package which provides
-command line tools to manage dependencies in F# projects or .NET projects. 
+command line tools to manage dependencies in F# projects or .NET projects.
 
 Objective: Provide NuGet.Core integration with external tools, text editors
 like Emacs and also command line integration with NuGet API.
 
 
-Features: 
+Features:
 
  - Search  packages in Nuget repository
 
@@ -40,13 +40,15 @@ Features:
  - Get packages' assembly references from local repository and project
    repository (./packages) for F# scripts.
 
-** Build instruction
-
+** Build instructions
+*** Build with Makefile
 
 Run the command =$ make exe=. It assumes that fsc - the F# compiler
-and nuget.exe are in the $PATH variable. 
+and nuget.exe are in the $PATH variable. It builds the standlone app
+pget.exe with all dependencies static linked and also FSharp.Core (F#
+runtime) static linked.
 
-#+BEGIN_SRC sh 
+#+BEGIN_SRC sh
   $ make exe
   fsc src/Pget.fs src/PgetCmd.fsx --out:bin/pget.exe \
   --target:exe \
@@ -60,14 +62,53 @@ and nuget.exe are in the $PATH variable.
 
 #+END_SRC
 
-** Get binary release 
-** Commands 
-*** Print help 
+Testing:
 
- - =$ pget.exe= 
+#+BEGIN_SRC sh
+  $ file bin/pget.exe
+  bin/pget.exe: PE32 executable (console) Intel 80386 Mono/.Net assembly, for MS Windows
 
-#+BEGIN_SRC txt  
-  $ bin/pget.exe 
+  $ bin/pget.exe --version
+
+      Pget - Package Get - Version 1.0
+      Copyright (C) 2016 Caio Rodrigues
+#+END_SRC
+
+*** Build with Xbuild or Msbuild
+
+ - =$ xbuild pget-exe.fsproj=
+
+Unfortunally is not possible yet to build an standalone app with xbuild.
+
+#+BEGIN_SRC sh
+  $ tree bin/
+  bin/
+  └── Debug
+      ├── FSharp.Core.dll
+      ├── Microsoft.Web.XmlTransform.dll
+      ├── NuGet.Core.dll
+      ├── Pget.exe
+      └── Pget.exe.mdb
+
+  1 directory, 5 files
+
+
+  $ bin/Debug/Pget.exe --version
+
+      Pget - Package Get - Version 1.0
+      Copyright (C) 2016 Caio Rodrigues
+
+#+END_SRC
+
+** Get binary release
+** Install
+** Commands
+*** Print help
+
+ - =$ pget.exe=
+
+#+BEGIN_SRC txt
+  $ bin/pget.exe
 
       Pget - Package Get - Enhanced command line interface to NuGet.Core
 
@@ -94,7 +135,7 @@ and nuget.exe are in the $PATH variable.
 
         --ref [frm]                                 Show all assembly references from current ./packages.
         --ref [frm] --repo [repo]                   Show all assembly references from current [repo] directory.
-        --ref [frm] --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
+        --ref [frm] --pack [pack]                   Show all assembly references from a package [pack] at ./packages.
         --ref [frm] --pack [pack] --repo [path]     Show all assembly references from a package at [repo] directory
                                                     frm:  .NET Framework  net40 | net45
 
@@ -117,10 +158,10 @@ and nuget.exe are in the $PATH variable.
 
         asm show     [file]                         Show all assembly attributes from an assembly file.
         asm show-ref [file]                         Show all assembly references from an assembly file.
-        
-      Generate Guid - Globally Unique Identifier 
 
-        --guid 
+      Generate Guid - Globally Unique Identifier
+
+        --guid
 
       --------------------------------------------------------------------------------------------------------------------
 
@@ -135,31 +176,31 @@ and nuget.exe are in the $PATH variable.
         --search             -s
         --show               -sh
         --install-from-file  -if
-          
 
-      Pget - Package Get - Version 1.0 
+
+      Pget - Package Get - Version 1.0
       Copyright (C) 2016 Caio Rodrigues
 
 #+END_SRC
 
-*** Print Version 
- 
+*** Print Version
+
  - =$ pget.exe --version= or =$ pget.exe -v=
 
-#+BEGIN_SRC sh 
+#+BEGIN_SRC sh
   $ bin/pget.exe --version
 
-      Pget - Package Get - Version 1.0 
+      Pget - Package Get - Version 1.0
       Copyright (C) 2016 Caio Rodrigues
 #+END_SRC
 
-*** List packages 
+*** List packages
 
 List packages in current repository ./packages directory:
 
  - =$ pget.exe --list= or =$ pget.exe -l=
 
-#+BEGIN_SRC sh 
+#+BEGIN_SRC sh
   $ bin/pget.exe -l
   Microsoft.Web.Xdt 2.1.1
   NuGet.Core 2.12.0
@@ -181,9 +222,9 @@ List packages in current repository ./packages directory:
   6 directories, 4 files
 #+END_SRC
 
-List packages in a directory: 
+List packages in a directory:
 
- - =$ pget.exe --list [directory]= or =$ pget.exe --l [directory]= 
+ - =$ pget.exe --list [directory]= or =$ pget.exe --l [directory]=
 
 #+BEGIN_SRC sh
   $ bin/pget.exe -l /home/arch/nuget
@@ -196,10 +237,10 @@ List packages in a directory:
   Eto.Platform.Gtk 2.2.0
   Eto.Platform.Gtk3 2.2.0
   FAKE 4.39.0
-  ... 
+  ...
 #+END_SRC
 
-*** Show package metadata 
+*** Show package metadata
 
 Show all packages in ./packages directory
 
@@ -210,42 +251,42 @@ Show all packages in ./packages directory
 
   Id             Microsoft.Web.Xdt
   Title          Microsoft Xml Document Transformation
-  Tags           
+  Tags
   Version        2.1.1
   Summary        Microsoft Xml Document Transformation (XDT) enables transformig XML files. This is the same technology used to transform web.config files for Visual Studio web projects.
   Authors        Microsoft Corporation
-  Project URL    
-  Dependencies   
+  Project URL
+  Dependencies
   Download Count -1
 
   Description    Microsoft Xml Document Transformation (XDT) library. For more info on XDT please visit http://msdn.microsoft.com/en-us/library/dd465326.aspx.
-                            
+
 
   Id             NuGet.Core
-  Title          
-  Tags            nuget 
+  Title
+  Tags            nuget
   Version        2.12.0
-  Summary        
+  Summary
   Authors        Outercurve Foundation
   Project URL    https://github.com/NuGet/NuGet2
   Dependencies   Microsoft.Web.Xdt 2.1.0
   Download Count -1
 
   Description    NuGet.Core is the core framework assembly for NuGet that the rest of NuGet builds upon.
-       
+
 #+END_SRC
 
 Show all packages in a directory
 
 #+BEGIN_SRC txt
   Id             Common.Logging
-  Title          
-  Tags           
+  Title
+  Tags
   Version        2.1.2
-  Summary        
+  Summary
   Authors        Aleksandar Seovic,  Mark Pollack,  Erich Eichinger,  Stephen Bohlen
   Project URL    http://netcommon.sourceforge.net/
-  Dependencies   
+  Dependencies
   Download Count -1
 
   Description    Common.Logging library introduces a simple abstraction to allow you to select a specific logging implementation at runtime.
@@ -255,16 +296,16 @@ Show all packages in a directory
 
   Id             EntityFramework
   Title          EntityFramework
-  Tags            Microsoft EF Database Data O/RM ADO.NET 
+  Tags            Microsoft EF Database Data O/RM ADO.NET
   Version        6.0.0
   Summary        Entity Framework is Microsoft's recommended data access technology for new applications.
   Authors        Microsoft
   Project URL    http://go.microsoft.com/fwlink/?LinkID=320540
-  Dependencies   
+  Dependencies
   Download Count -1
 
   Description    Entity Framework is Microsoft's recommended data access technology for new applications.
-                            
+
 
 #+END_SRC
 
@@ -276,10 +317,10 @@ Show a single package in ./packages (Project repository)
   $ bin/pget.exe --show --pack NuGet.Core
 
   Id             NuGet.Core
-  Title          
-  Tags            nuget 
+  Title
+  Tags            nuget
   Version        2.12.0
-  Summary        
+  Summary
   Authors        Outercurve Foundation
   Project URL    https://github.com/NuGet/NuGet2
   Dependencies   Microsoft.Web.Xdt 2.1.0
@@ -293,7 +334,7 @@ Show a single package in a directory (Local Repository):
 
  - =$ pget.exe [repository] --show --pack [package-Id]=
 
-or 
+or
 
  - =$ pget.exe -sh [repository] -p [package-Id]=
 
@@ -302,7 +343,7 @@ or
 
   Id             NUnit.Console
   Title          NUnit Console Runner Version 3 Plus Extensions
-  Tags            nunit test testing tdd runner 
+  Tags            nunit test testing tdd runner
   Version        3.5.0
   Summary        Console runner for the NUnit 3 unit-testing framework with selected extensions.
   Authors        Charlie Poole
@@ -322,7 +363,7 @@ or
         Other extensions, if needed, must be installed separately
 #+END_SRC
 
-*** Search a package 
+*** Search a package
 
  - =$ pget.exe --search [keyword]= or - =$ pget.exe -s [keywork]=
 
@@ -330,39 +371,39 @@ or
   $ bin/pget.exe -s oxyplot
 
   Id             AnnotationGUIOxyplot
-  Title          
-  Tags           
+  Title
+  Tags
   Version        0.0.1
-  Summary        
+  Summary
   Authors        tschwarz
-  Project URL    
-  Dependencies   
+  Project URL
+  Dependencies
   Download Count 68
 
   Description    My package description.
-                            
+
 
   Id             Eto.OxyPlot
   Title          Eto.OxyPlot
-  Tags           
+  Tags
   Version        1.2.0-beta
-  Summary        
+  Summary
   Authors        Loren Van Spronsen
-  Project URL    
+  Project URL
   Dependencies   Eto.Forms 2.2.0, OxyPlot.Core 1.0.0-unstable2063
   Download Count 3382
 
   Description    OxyPlot bindings for the Eto UI framework
-                            
+
  ... ... ...
 #+END_SRC
-*** Install a package 
+*** Install a package
 
 Install the lastest version of a package to ./packages (Project repository)
 
  - =$ pget.exe --install [package-id]= or - =$ pget.exe -i [package-id]=
 
-#+BEGIN_SRC sh 
+#+BEGIN_SRC sh
   $ bin/pget.exe --install OxyPlot.Pdf
   Installing: OxyPlot.Pdf 1.0.0
 
@@ -378,27 +419,27 @@ Install the lastest version of a package to ./packages (Project repository)
 
   Id             OxyPlot.Core
   Title          OxyPlot core library (PCL)
-  Tags            plotting plot charting chart 
+  Tags            plotting plot charting chart
   Version        1.0.0
-  Summary        
+  Summary
   Authors        Oystein Bjorke
   Project URL    http://oxyplot.org/
-  Dependencies   
+  Dependencies
   Download Count -1
 
   Description    OxyPlot is a plotting library for .NET. This is the portable core library that is referenced by the platform-specific OxyPlot packages.
-      
+
 #+END_SRC
 
-Install a given version of package  to ./packages 
+Install a given version of package  to ./packages
 
  - =$ pget.exe --install [package-id] --version [version]=
 
-or 
+or
 
  - =$ pget.exe -i [package-id] --v [version]=
 
-#+BEGIN_SRC sh 
+#+BEGIN_SRC sh
   $ bin/pget.exe -i FParsec -v 1.0.2
 
   $ ls -l packages
@@ -411,11 +452,11 @@ or
   drwxrwxrwx 1 arch arch 296 dez 19 02:22 PDFsharp-MigraDoc-GDI.1.32.4334.0/
 #+END_SRC
 
-Install the lastest version of a package to a local repository 
+Install the lastest version of a package to a local repository
 
- - =$ pget.exe --install [package-id] --repo [repository]= 
+ - =$ pget.exe --install [package-id] --repo [repository]=
 
-or 
+or
 
  - =$ pget.exe -i [package-id] -r [repository]=
 
@@ -423,13 +464,13 @@ or
   $ bin/pget.exe -i  OxyPlot.Pdf -r /home/arch/nuget
   Installing: OxyPlot.Pdf 1.0.0
 
-  $ bin/pget.exe -sh /home/arch/nuget -p OxyPlot.Pdf 
+  $ bin/pget.exe -sh /home/arch/nuget -p OxyPlot.Pdf
 
   Id             OxyPlot.Pdf
   Title          OxyPlot PDF extensions (for Silverlight and NET4)
-  Tags            pdf plotting plot charting chart 
+  Tags            pdf plotting plot charting chart
   Version        1.0.0
-  Summary        
+  Summary
   Authors        Oystein Bjorke
   Project URL    http://oxyplot.org/
   Dependencies   OxyPlot.Core [1.0.0], PDFsharp-MigraDoc-GDI [1.32.4334], OxyPlot.Core [1.0.0], PDFsharp-MigraDoc-GDI [1.32.4334], OxyPlot.Core [1.0.0]
@@ -443,7 +484,7 @@ Install a given version of package to a local repository
 
  - =$ pget.exe --install [package-id] --version [package] --repo [repository]=
 
-or 
+or
 
  - =$ pget.exe -i [package-id] -v [package] --r [repository]=
 
@@ -451,13 +492,13 @@ or
   $ bin/pget.exe -i Microsoft.Web.Xdt -v 1.0.0 -r ~/nuget
 #+END_SRC
 
-Install all packages listed in the file ./packages.list to ./packages 
+Install all packages listed in the file ./packages.list to ./packages
 
- - =$ pget.exe --install-from-file= 
+ - =$ pget.exe --install-from-file=
 
-or 
+or
 
- - =$ pget.exe -if= 
+ - =$ pget.exe -if=
 
 Example of the file packages.list. If the version is not listed, it
 installs the latest version of the packages to ./packages.
@@ -467,30 +508,30 @@ File: packages.list
 #+BEGIN_SRC sh
   FSharp.Data              1.0.0
   Deedle                   1.0.0
-  OxyPlot.Pdf               
-  OxyPlot.WindowsForms      
+  OxyPlot.Pdf
+  OxyPlot.WindowsForms
 #+END_SRC
 
-Install all packages listed in the file ./packages.list to ./packages 
+Install all packages listed in the file ./packages.list to ./packages
 
- - =$ pget.exe --install-from-file [packages-list-file]= 
+ - =$ pget.exe --install-from-file [packages-list-file]=
 
-or 
+or
 
- - =$ pget.exe -if [package-list-file]= 
+ - =$ pget.exe -if [package-list-file]=
 
-*** Get assembly references for F# scripts 
+*** Get assembly references for F# scripts
 
 Get all assembly references from current ./packages repository.
 
  - =$ pget.exe --ref [framework]=
 
-The framework is the .NET framework version. It can be: 
+The framework is the .NET framework version. It can be:
 
  - net40 for .NET 4.0
- - net45 for .NET 4.5 
+ - net45 for .NET 4.5
 
-#+BEGIN_SRC sh 
+#+BEGIN_SRC sh
   $ bin/pget.exe --ref net40
   #r "packages/FParsec.1.0.2/lib/net40-client/FParsec.dll"
   #r "packages/FParsec.1.0.2/lib/net40-client/FParsecCS.dll"
@@ -533,15 +574,15 @@ The framework is the .NET framework version. It can be:
 #+END_SRC
 
 
-Get all assembly references from a package in ./packages: 
+Get all assembly references from a package in ./packages:
 
  - =$ pget.exe --ref [framework] --pack [package-id]=
 
-or 
+or
 
  - =$ pget.exe --ref [framework] --p [package-id]=
 
-#+BEGIN_SRC sh 
+#+BEGIN_SRC sh
   $ bin/pget.exe --ref net45 --pack FParsec
   #r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"
   #r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"
@@ -552,7 +593,7 @@ Get all assembly references from a repository.
 
  - =$ pget.exe --ref [framework] --repo [repository]=
 
-or 
+or
 
  - =$ pget.exe --ref [framework] -r [repository]=
 
@@ -586,7 +627,7 @@ Get all assembly references from a package in a repository
 
  - =$ pget.exe --ref [framework] --pack [package-id] --repo [repository]=
 
-or 
+or
 
  - =$ pget.exe --ref [framework] --p [package-id] --repo [repository]=
 
@@ -601,9 +642,9 @@ or
   #r "/home/arch/nuget/FSharp.Data.2.3.1/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.DesignTime.dll"
 #+END_SRC
 
-*** NuGet package files nupkg files 
+*** NuGet package files nupkg files
 
-Show a NuGet package metadata 
+Show a NuGet package metadata
 
  - =$ pget.xe --nupkg show [nupkg-file]=
 
@@ -612,37 +653,37 @@ Show a NuGet package metadata
 
   Id             OxyPlot.Core
   Title          OxyPlot core library (PCL)
-  Tags            plotting plot charting chart 
+  Tags            plotting plot charting chart
   Version        1.0.0
-  Summary        
+  Summary
   Authors        Oystein Bjorke
   Project URL    http://oxyplot.org/
-  Dependencies   
+  Dependencies
   Download Count -1
 
   Description    OxyPlot is a plotting library for .NET. This is the portable core library that is referenced by the platform-specific OxyPlot packages.
 
 #+END_SRC
- 
+
 *** Show assembly metadata
 
- - =$ pget.exe asm --show [assembly-file]= 
+ - =$ pget.exe asm --show [assembly-file]=
 
 Example 1:
 
-#+BEGIN_SRC sh 
-  $ bin/pget.exe asm --show ~/bin/nuget.exe 
+#+BEGIN_SRC sh
+  $ bin/pget.exe asm --show ~/bin/nuget.exe
   Assembly Attributes
   -------------------------------------------
   Name         NuGet
   Version      3.4.4.1321
   CLR Version  v4.0.30319
   Product      NuGet
-  Culture      
+  Culture
   Company      Microsoft Corporation
   Description  NuGet Command Line
   Copyright    Microsoft Corporation. All rights reserved.
-  GUID         
+  GUID
   Com Visible  False
   Codebase     file:///home/arch/bin/nuget.exe
 #+END_SRC
@@ -650,66 +691,64 @@ Example 1:
 Example 2:
 
 #+BEGIN_SRC sh
-  $ bin/pget.exe asm --show ~/nuget/FSharp.Core.3.1.2.5/lib/net40/FSharp.Core.dll 
+  $ bin/pget.exe asm --show ~/nuget/FSharp.Core.3.1.2.5/lib/net40/FSharp.Core.dll
   Assembly Attributes
   -------------------------------------------
   Name         FSharp.Core
   Version      4.3.1.0
   CLR Version  v4.0.30319
   Product      Microsoft® Visual Studio® 2013
-  Culture      
+  Culture
   Company      Microsoft Corporation
   Description  FSharp.Core.dll
   Copyright    © Microsoft Corporation. All rights reserved.
-  GUID         
+  GUID
   Com Visible  False
   Codebase     file:///home/arch/nuget/FSharp.Core.3.1.2.5/lib/net40/FSharp.Core.dll
 #+END_SRC
 
-Show assemblies referenced by an assembly file 
+Show assemblies referenced by an assembly file
 
- - =$ pget.exe asm --show-ref [assembly-file]= 
+ - =$ pget.exe asm --show-ref [assembly-file]=
 
-#+BEGIN_SRC sh 
-  $ bin/pget.exe asm --show-ref ~/bin/nuget.exe 
-  Name = mscorlib     Version = 4.0.0.0       Culture = 
-  Name = Microsoft.CSharp     Version = 4.0.0.0       Culture = 
-  Name = System.Core      Version = 4.0.0.0       Culture = 
-  Name = System       Version = 4.0.0.0       Culture = 
-  Name = System.Xml.Linq      Version = 4.0.0.0       Culture = 
-  Name = System.Xml       Version = 4.0.0.0       Culture = 
-  Name = Microsoft.Build      Version = 4.0.0.0       Culture = 
-  Name = Microsoft.Build.Framework        Version = 4.0.0.0       Culture = 
-  Name = System.ComponentModel.Composition        Version = 4.0.0.0       Culture = 
-  Name = Microsoft.Build.Utilities.v4.0       Version = 4.0.0.0       Culture = 
-  Name = System.Numerics      Version = 4.0.0.0       Culture = 
-  Name = System.Data      Version = 4.0.0.0       Culture = 
-  Name = System.Runtime.Serialization     Version = 4.0.0.0       Culture = 
-  Name = System.Security      Version = 4.0.0.0       Culture = 
-  Name = System.ComponentModel.DataAnnotations        Version = 4.0.0.0       Culture = 
-  Name = WindowsBase      Version = 4.0.0.0       Culture = 
-  Name = System.ServiceModel      Version = 4.0.0.0       Culture = 
-  Name = System.Data.Services.Client      Version = 4.0.0.0       Culture = 
-  Name = System.IO.Compression        Version = 4.0.0.0       Culture = 
-  Name = System.Net.Http      Version = 4.0.0.0       Culture = 
-  Name = System.IdentityModel     Version = 4.0.0.0       Culture = 
-  Name = System.Net.Http.WebRequest       Version = 4.0.0.0       Culture = 
+#+BEGIN_SRC sh
+  $ bin/pget.exe asm --show-ref ~/bin/nuget.exe
+  Name = mscorlib     Version = 4.0.0.0       Culture =
+  Name = Microsoft.CSharp     Version = 4.0.0.0       Culture =
+  Name = System.Core      Version = 4.0.0.0       Culture =
+  Name = System       Version = 4.0.0.0       Culture =
+  Name = System.Xml.Linq      Version = 4.0.0.0       Culture =
+  Name = System.Xml       Version = 4.0.0.0       Culture =
+  Name = Microsoft.Build      Version = 4.0.0.0       Culture =
+  Name = Microsoft.Build.Framework        Version = 4.0.0.0       Culture =
+  Name = System.ComponentModel.Composition        Version = 4.0.0.0       Culture =
+  Name = Microsoft.Build.Utilities.v4.0       Version = 4.0.0.0       Culture =
+  Name = System.Numerics      Version = 4.0.0.0       Culture =
+  Name = System.Data      Version = 4.0.0.0       Culture =
+  Name = System.Runtime.Serialization     Version = 4.0.0.0       Culture =
+  Name = System.Security      Version = 4.0.0.0       Culture =
+  Name = System.ComponentModel.DataAnnotations        Version = 4.0.0.0       Culture =
+  Name = WindowsBase      Version = 4.0.0.0       Culture =
+  Name = System.ServiceModel      Version = 4.0.0.0       Culture =
+  Name = System.Data.Services.Client      Version = 4.0.0.0       Culture =
+  Name = System.IO.Compression        Version = 4.0.0.0       Culture =
+  Name = System.Net.Http      Version = 4.0.0.0       Culture =
+  Name = System.IdentityModel     Version = 4.0.0.0       Culture =
+  Name = System.Net.Http.WebRequest       Version = 4.0.0.0       Culture =
 #+END_SRC
 
-*** Generate GUID 
+*** Generate GUID
 
  - =$ pget.exe --guid=
 
-#+BEGIN_SRC sh 
+#+BEGIN_SRC sh
   $ bin/pget.exe --guid
   c4969f50-7a17-4f8f-ac9d-d783a9a8f8d4
 #+END_SRC
 
-* Pget.dll 
+* Pget.dll
 
 Pget.dll is a F# library that provides a high level interface and
-functional wrappers to NuGet.Core API. 
+functional wrappers to NuGet.Core API.
 
-
-
-* Repository 
+* Repository
