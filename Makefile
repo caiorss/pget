@@ -13,6 +13,14 @@ lib: $(lib)
 exe := bin/pget.exe
 exe: $(exe)
 
+## Publish release to git orphan-branch build and upload to Github
+#
+exe-release: exe
+	mkdir -p ./release 
+	cp $(exe) ./release
+	cd ./release && git add pget.exe && git commit -m "New binary release" && git push
+
+
 
 # Compile the library using xbuild .fsproj file.
 #
