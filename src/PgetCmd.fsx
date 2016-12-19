@@ -76,9 +76,10 @@ Search commands:
   --search [package] --repo                   Search a pacakge by name in a local repository
   --search [package] --repo [repo]            Search a package in ./packages
 
-Show references for fsx scripts:
+Show references for F# *.fsx scripts:
 
-  --ref [frm]                                 Show all assembly references from current ./packages
+  --ref [frm]                                 Show all assembly references from current ./packages.
+  --ref [frm] --repo [repo]                   Show all assembly references from current [repo] directory.
   --ref [frm] --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
   --ref [frm] --pack [pack] --repo [path]     Show all assembly references from a package at [repo] directory
                                               frm:  .NET Framework  net40 | net45
@@ -148,9 +149,11 @@ let parseCommands cmdargs =
     | ["-s"; pack ; "-r"; path]           ->  searchLocalPackage pack  path
    
     | ["--ref"; frm   ]                                      ->  showScript frm "packages"
+    | ["--ref"; frm ; "--repo"; path ]                       ->  showScript frm  path
     | ["--ref"; frm  ; "--pack";  pack]                      ->  showLocalPackageRef frm pack
     | ["--ref"; frm  ; "--pack";  pack; "--repo"; path]      ->  showRepoPackageRef frm path pack
     | ["--ref"; frm  ; "-p";  pack]                          ->  showLocalPackageRef frm pack
+    | ["--ref"; frm ; "-r"; path ]                           ->  showScript frm  path
     | ["--ref"; frm  ; "-p";  pack; "-r"; path]              ->  showRepoPackageRef frm path pack
 
 
