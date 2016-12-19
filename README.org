@@ -1,4 +1,4 @@
-#+TITLE: Pget.exe
+#+TITLE: Pget - .NET Command Line toolbox and Interface for NuGet.Core and F#
 #+AUTHOR: Caio Rodrigues
 #+EMAIL:  caiorss [DOT] rodrigues [DOT] gmail [DOT] com 
 #+DESCRIPTION: F# Command line interface to NuGet API.
