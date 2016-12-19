@@ -48,70 +48,91 @@ and nuget.exe are in the $PATH variable.
 
  - =$ pget.exe= 
 
-#+BEGIN_SRC sh
+#+BEGIN_SRC txt  
   $ bin/pget.exe 
 
-  Pget - Package Get - Enhanced command line interface to NuGet.Core
+      Pget - Package Get - Enhanced command line interface to NuGet.Core
 
-  Commands                                    Description
-  ------------------------------------------  -------------------------------------------------------------
+      Commands                                    Description
+      ------------------------------------------  -------------------------------------------------------------
 
-  List Commands:
+      List Commands:
 
-    --list                                      List all packages in current repository ./package
-    --list [repo]                               List all package in [repo] repository.
+        --list                                      List all packages in current repository ./package
+        --list [repo]                               List all package in [repo] repository.
 
-    --show                                      Show all packages in current ./packages repository
-    --show [repo]                               Show all packages in [repo] repository.
-    --show --pack [pack]                        Show the package [pack] in ./packages directory
-    --show [repo] --pack [pack]                 Show the package [pack] in [repo] directory.
+        --show                                      Show all packages in current ./packages repository
+        --show [repo]                               Show all packages in [repo] repository.
+        --show --pack [pack]                        Show the package [pack] in ./packages directory
+        --show [repo] --pack [pack]                 Show the package [pack] in [repo] directory.
 
-  Search commands:
+      Search commands:
 
-    --search [package]                          Search a package by name.
-    --search [package] --repo                   Search a pacakge by name in a local repository
-    --search [package] --repo [repo]            Search a package in ./packages
+        --search [package]                          Search a package by name.
+        --search [package] --repo                   Search a pacakge by name in a local repository
+        --search [package] --repo [repo]            Search a package in ./packages
 
-  Show references for fsx scripts:
+      Show references for F# *.fsx scripts:
 
-    --ref [frm]                                 Show all assembly references from current ./packages
-    --ref [frm] --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
-    --ref [frm] --pack [pack] --repo [path]     Show all assembly references from a package at [repo] directory
-                                                frm:  .NET Framework  net40 | net45
+        --ref [frm]                                 Show all assembly references from current ./packages.
+        --ref [frm] --repo [repo]                   Show all assembly references from current [repo] directory.
+        --ref [frm] --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
+        --ref [frm] --pack [pack] --repo [path]     Show all assembly references from a package at [repo] directory
+                                                    frm:  .NET Framework  net40 | net45
 
-  Install packages:
+      Install packages:
 
-    --install [pack]                            Install the latest version of package [pack] to ./packages
-    --install [pack] --repo [repo]              Install the latest version of package [pack] to a repository [repo] i.e: ~/nuget
-    --install [pack] --ver [ver]                Install the version [ver] of package [pack]
-    --install [pack] --ver [ver] --repo [repo]  Install the version [ver] of package [pack] to a repository [repo]
+        --install [pack]                            Install the latest version of package [pack] to ./packages
+        --install [pack] --repo [repo]              Install the latest version of package [pack] to a repository [repo] i.e: ~/nuget
+        --install [pack] --ver [ver]                Install the version [ver] of package [pack]
+        --install [pack] --ver [ver] --repo [repo]  Install the version [ver] of package [pack] to a repository [repo]
 
-    --install-from-file                         Install all packages listed in the file ./packages.lst to ./packages directory.
-    --install-from-file [file]                  Install all packages listed in the file [file] to ./packages
-    --install-from-file [file] --repo [repo]    Install all packages listed in the file [file] to [repo] directory.
+        --install-from-file                         Install all packages listed in the file ./packages.lst to ./packages directory.
+        --install-from-file [file]                  Install all packages listed in the file [file] to ./packages
+        --install-from-file [file] --repo [repo]    Install all packages listed in the file [file] to [repo] directory.
 
-  Nupkg Files:
+      Nupkg Files:
 
-    --nupkg show [file]                         Show metadata of a *.nupkg file
+        --nupkg show [file]                         Show metadata of a *.nupkg file
 
-  --------------------------------------------------------------------------------------------------------------------
+      Assembly files: *.exe or *.dll
 
-  Command abbreviations:
+        asm show     [file]                         Show all assembly attributes from an assembly file.
+        asm show-ref [file]                         Show all assembly references from an assembly file.
+        
+      Generate Guid - Globally Unique Identifier 
 
-    --install            -i
-    --repo               -r
-    --help               -h
-    --version            -v
-    --ver                -v
-    --list               -l
-    --search             -s
-    --show               -sh
-    --install-from-file  -if
-      
+        --guid 
 
-  Pget - Package Get - Version 1.0 
-  Copyright (C) 2016 Caio Rodrigues
+      --------------------------------------------------------------------------------------------------------------------
 
+      Command abbreviations:
+
+        --install            -i
+        --repo               -r
+        --help               -h
+        --version            -v
+        --ver                -v
+        --list               -l
+        --search             -s
+        --show               -sh
+        --install-from-file  -if
+          
+
+      Pget - Package Get - Version 1.0 
+      Copyright (C) 2016 Caio Rodrigues
+
+#+END_SRC
+
+*** Print Version 
+ 
+ - =$ pget.exe --version= or =$ pget.exe -v=
+
+#+BEGIN_SRC sh 
+  $ bin/pget.exe --version
+
+      Pget - Package Get - Version 1.0 
+      Copyright (C) 2016 Caio Rodrigues
 #+END_SRC
 
 *** List packages 
@@ -440,7 +461,6 @@ or
 
  - =$ pget.exe -if [package-list-file]= 
 
-
 *** Get assembly references for F# scripts 
 
 Get all assembly references from current ./packages repository.
@@ -586,6 +606,87 @@ Show a NuGet package metadata
 
 #+END_SRC
  
+*** Show assembly metadata
+
+ - =$ pget.exe asm --show [assembly-file]= 
+
+Example 1:
+
+#+BEGIN_SRC sh 
+  $ bin/pget.exe asm --show ~/bin/nuget.exe 
+  Assembly Attributes
+  -------------------------------------------
+  Name         NuGet
+  Version      3.4.4.1321
+  CLR Version  v4.0.30319
+  Product      NuGet
+  Culture      
+  Company      Microsoft Corporation
+  Description  NuGet Command Line
+  Copyright    Microsoft Corporation. All rights reserved.
+  GUID         
+  Com Visible  False
+  Codebase     file:///home/arch/bin/nuget.exe
+#+END_SRC
+
+Example 2:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe asm --show ~/nuget/FSharp.Core.3.1.2.5/lib/net40/FSharp.Core.dll 
+  Assembly Attributes
+  -------------------------------------------
+  Name         FSharp.Core
+  Version      4.3.1.0
+  CLR Version  v4.0.30319
+  Product      Microsoft® Visual Studio® 2013
+  Culture      
+  Company      Microsoft Corporation
+  Description  FSharp.Core.dll
+  Copyright    © Microsoft Corporation. All rights reserved.
+  GUID         
+  Com Visible  False
+  Codebase     file:///home/arch/nuget/FSharp.Core.3.1.2.5/lib/net40/FSharp.Core.dll
+#+END_SRC
+
+Show assemblies referenced by an assembly file 
+
+ - =$ pget.exe asm --show-ref [assembly-file]= 
+
+#+BEGIN_SRC sh 
+  $ bin/pget.exe asm --show-ref ~/bin/nuget.exe 
+  Name = mscorlib     Version = 4.0.0.0       Culture = 
+  Name = Microsoft.CSharp     Version = 4.0.0.0       Culture = 
+  Name = System.Core      Version = 4.0.0.0       Culture = 
+  Name = System       Version = 4.0.0.0       Culture = 
+  Name = System.Xml.Linq      Version = 4.0.0.0       Culture = 
+  Name = System.Xml       Version = 4.0.0.0       Culture = 
+  Name = Microsoft.Build      Version = 4.0.0.0       Culture = 
+  Name = Microsoft.Build.Framework        Version = 4.0.0.0       Culture = 
+  Name = System.ComponentModel.Composition        Version = 4.0.0.0       Culture = 
+  Name = Microsoft.Build.Utilities.v4.0       Version = 4.0.0.0       Culture = 
+  Name = System.Numerics      Version = 4.0.0.0       Culture = 
+  Name = System.Data      Version = 4.0.0.0       Culture = 
+  Name = System.Runtime.Serialization     Version = 4.0.0.0       Culture = 
+  Name = System.Security      Version = 4.0.0.0       Culture = 
+  Name = System.ComponentModel.DataAnnotations        Version = 4.0.0.0       Culture = 
+  Name = WindowsBase      Version = 4.0.0.0       Culture = 
+  Name = System.ServiceModel      Version = 4.0.0.0       Culture = 
+  Name = System.Data.Services.Client      Version = 4.0.0.0       Culture = 
+  Name = System.IO.Compression        Version = 4.0.0.0       Culture = 
+  Name = System.Net.Http      Version = 4.0.0.0       Culture = 
+  Name = System.IdentityModel     Version = 4.0.0.0       Culture = 
+  Name = System.Net.Http.WebRequest       Version = 4.0.0.0       Culture = 
+#+END_SRC
+
+*** Generate GUID 
+
+ - =$ pget.exe --guid=
+
+#+BEGIN_SRC sh 
+  $ bin/pget.exe --guid
+  c4969f50-7a17-4f8f-ac9d-d783a9a8f8d4
+#+END_SRC
+
 * Pget.dll 
 
 Pget.dll is a F# library that provides a high level interface and
