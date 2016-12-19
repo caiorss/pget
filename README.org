@@ -1,12 +1,16 @@
 #+TITLE: Pget.exe
 #+AUTHOR: Caio Rodrigues
-#+STARTUP: overview
+#+EMAIL:  caiorss [DOT] rodrigues [DOT] gmail [DOT] com 
+#+DESCRIPTION: F# Command line interface to NuGet API.
+#+STARTUP: content
+#+KEYWORDS: NuGet F# fsharp csharp .net dotnet tool cli command line
 
 * Pget.exe 
 ** Overview 
 
+
 Pget.exe is high level wrapper to NuGet.core package which provides
-command line tools to manage dependencies in F# projects. 
+command line tools to manage dependencies in F# projects or .NET projects. 
 
 Features: 
 
@@ -20,555 +24,574 @@ Features:
 Objective: Provide NuGet.Core integration with external tools, text editors
 like Emacs and also command line integration with NuGet API.
 
-** Build Instructions 
+** Build instruction
 
-Run =$ make= to build pget.exe, the output file and dlls will be in
-~/bin directory.
+Run the command =$ make exe=. It assumes that fsc - the F# compiler
+and nuget.exe are in the $PATH variable. 
 
-#+BEGIN_SRC txt 
-$ make
-
-nuget.exe install NuGet.Core -OutputDirectory packages -Version 2.12.0
-Feeds used:
-  /home/arch/.local/share/NuGet/Cache
-  /home/arch/.nuget/packages/
-  https://api.nuget.org/v3/index.json
-
-Attempting to gather dependency information for package 'NuGet.Core.2.12.0' with respect to project 'packages', targeting 'Any,Version=v0.0'
-Attempting to resolve dependencies for package 'NuGet.Core.2.12.0' with DependencyBehavior 'Lowest'
-Resolving actions to install package 'NuGet.Core.2.12.0'
-Resolved actions to install package 'NuGet.Core.2.12.0'
-Adding package 'Microsoft.Web.Xdt.2.1.1' to folder '/run/media/arch/transfer/projects/pget.fsharp/packages'
-Added package 'Microsoft.Web.Xdt.2.1.1' to folder '/run/media/arch/transfer/projects/pget.fsharp/packages'
-Successfully installed 'Microsoft.Web.Xdt 2.1.1' to packages
-Adding package 'NuGet.Core.2.12.0' to folder '/run/media/arch/transfer/projects/pget.fsharp/packages'
-Added package 'NuGet.Core.2.12.0' to folder '/run/media/arch/transfer/projects/pget.fsharp/packages'
-Successfully installed 'NuGet.Core 2.12.0' to packages
-fsc pget.fsx --out:bin/pget.exe \
-	--target:exe \
-	--platform:anycpu \
-	-r:packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll                   \
-	-r:packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll
-F# Compiler for F# 4.1
-Freely distributed under the Apache 2.0 Open Source License
-mkdir -p bin
-cp -v packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll                   bin/
-'packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll' -> 'bin/NuGet.Core.dll'
-cp -v packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll bin/
-'packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll' -> 'bin/Microsoft.Web.XmlTransform.dll'
+#+BEGIN_SRC sh 
+  $ make exe
+  fsc src/Pget.fs src/PgetCmd.fsx --out:bin/pget.exe \
+  --target:exe \
+      --platform:anycpu \
+      -r:packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll \
+  -r:packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll \
+  --staticlink:NuGet.Core \
+  --standalone
+  F# Compiler for F# 4.1
+  Freely distributed under the Apache 2.0 Open Source License
 
 #+END_SRC
 
-** Examples 
-*** Search a package from nugetV2 API
+** Commands 
+*** Print help 
 
-#+BEGIN_SRC txt
-  $ bin/pget.exe -- --search terminal
-  Id:     DevLib.TerminalServices
-  Version:    2.9.0.37966
-  Title:      
-  Summary:        https://devlib.codeplex.com/
-
-  DevLib is a highly reusable collection of components and core functionalities addressing common crosscutting concerns. It provides a comprehensive set of features that save development time, minimize costs, reduce the use of precious test resources, and decrease the overall maintenance effort.
-
-  It is time to boost your productivity.
-  Authors:    Yu Guan
-  Url:        https://devlib.codeplex.com/
-  Description:    https://devlib.codeplex.com/
-
-  terminal session related
-
-  DevLib is a highly reusable collection of components and core functionalities addressing common crosscutting concerns. It provides a comprehensive set of features that save development time, minimize costs, reduce the use of precious test resources, and decrease the overall maintenance effort.
-
-  It is time to boost your productivity.
-
-  ...
-
-  Id:     Zongsoft.Terminals.Plugins
-  Version:    4.1.1602.0
-  Title:      Zongsoft.Terminals.Plugins
-  Summary:        关于终端程序插件环境的类库。
-  Authors:    Zongsoft Corporation
-  Url:        https://github.com/Zongsoft/Zongsoft.Terminals.Plugins
-  Description:    This is a library about plugin terminal(command line) program development.
-
-#+END_SRC
-
-*** Show package information 
-
-#+BEGIN_SRC sh txt
-  $ bin/pget.exe -- --show OxyPlot.WindowsForms
-  Id:     OxyPlot.WindowsForms
-  Version:    2011.10.1
-  Title:      OxyPlot.WindowsForms
-  Summary:        
-  Authors:    objo
-  Url:        http://oxyplot.codeplex.com/
-  Description:    OxyPlot is a .NET plotting library with focus on simplicity and performance. The library contains custom controls for WPF, Silverlight and Windows Forms and includes exporters for SVG, PDF, XPS and PNG.
-#+END_SRC
-*** Print all assembly references compatible with Framework .NET 4.5
-
-#+BEGIN_SRC txt
-  $ bin/pget.exe -- --packages-refs net45
-
-  packages/FSharp.Charting.Gtk.0.89/lib/net40/OxyPlot.dll
-  packages/FSharp.Charting.Gtk.0.89/lib/net40/OxyPlot.GtkSharp.dll
-  packages/FSharp.Charting.Gtk.0.89/lib/net40/FSharp.Charting.Gtk.dll
-  packages/FSharp.Charting.Gtk.0.90.14/lib/net40/FSharp.Charting.Gtk.dll
-  packages/FSharp.Charting.Gtk.0.90.14/lib/net40/OxyPlot.dll
-  packages/FSharp.Charting.Gtk.0.90.14/lib/net40/OxyPlot.GtkSharp.dll
-  ...
-  packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll
-  packages/OxyPlot.WindowsForms.1.0.0/lib/net40/OxyPlot.WindowsForms.dll
-  packages/Zlib.Portable.1.11.0/lib/portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid/Zlib.Portable.dll
-  packages/zlib.net.1.0.3.0/lib/zlib.net.dll
-
-#+END_SRC
-
-*** List all packages at ./packages repository
-
-#+BEGIN_SRC txt
-$ bin/pget.exe -- --packages
-FSharp.Charting.Gtk 0.89
-FSharp.Charting.Gtk 0.90.14
-FSharp.Data 2.3.1-beta2
-FSharp.Data 2.3.2
-FunScript 1.1.94
-MathNet.Numerics 2.1.0.19
-Microsoft.Web.Xdt 2.1.1
-Microsoft.Web.Xdt 2.1.1
-NuGet.Core 2.12.0
-NuGet.Core 2.12.0
-OxyPlot.Core 1.0.0
-OxyPlot.WindowsForms 1.0.0
-Zlib.Portable 1.11.0
-zlib.net 1.0.3.0
-#+END_SRC
-
-*** List all packages from a local repository
-
-#+BEGIN_SRC txt
-$ bin/pget.exe -- --packages ~/nuget
-
-Mono.Ssdp 1.0.3.0
-Mono.Upnp 1.0.3.0
-Newtonsoft.Json 9.0.1
-NuGet.CommandLine 2.5.0
-NuGet.Core 2.12.0
-NuGet.Core 2.13.0-rc1-final
-NuGet.Frameworks 3.4.3
-NuGet.Versioning 3.4.3
-OxyPlot.Core 2014.1.546
-OxyPlot.GtkSharp 2014.1.546
-OxyPlot.WindowsForms 2014.1.546
-R.NET.Community 1.6.5
-R.NET.Community.FSharp 1.6.5
-...
-System.Data.SQLite 1.0.102.0
-System.Data.SQLite.Core 1.0.102.0
-System.Data.SQLite.EF6 1.0.102.0
-System.Data.SQLite.Linq 1.0.102.0
-XPlot.GoogleCharts 1.3.1
-XPlot.GoogleCharts 1.4.2
-XPlot.GoogleCharts.Deedle 1.3.1
-XPlot.Plotly 1.3.1
-XPlot.Plotly 1.4.2
-scriptcs 0.10.0
-
-#+END_SRC
-
-*** Show all package at current ./packages repository
-
-#+BEGIN_SRC txt
-$ bin/pget.exe -- --list-packages 
-
-Id:		FSharp.Charting.Gtk
-Version:	0.89
-Title:		
-Summary:		A Charting Library for F# (Gtk, cross-platform)
-Authors:	Carl Nolan,  Don Syme,  Tomas Petricek
-Url:		http://fsharp.github.com/FSharp.Charting
-Description:	The F# Charting library (FSharp.Charting.AspNet.dll) is an ASP.NET Web Forms build of FSharp.Charting. It is experimental..
-
-
-Id:		FSharp.Charting.Gtk
-Version:	0.90.14
-Title:		
-Summary:		A Charting Library for F# (Gtk, cross-platform)
-Authors:	Carl Nolan,  Tomas Petricek
-Url:		http://fslab.org/FSharp.Charting
-Description:	The F# Charting library (FSharp.Charting.Gtk.dll) is a cross-platform variation of of FSharp.Charting. It can be used on Windows, OSX and other platforms supporting Gtk.
-
-
-Id:		FSharp.Data
-Version:	2.3.1-beta2
-Title:		F# Data
-Summary:		Library of F# type providers and data access tools
-Authors:	Tomas Petricek,  Gustavo Guerra,  Colin Bull
-Url:		http://fsharp.github.io/FSharp.Data
-Description:	The F# Data library (FSharp.Data.dll) implements everything you need to access data in your F# applications and scripts. It implements F# type providers for working with structured file formats (CSV, HTML, JSON and XML) and for accessing the WorldBank data. It also includes helpers for parsing CSV, HTML and JSON files and for sending HTTP requests.
-
-#+END_SRC
-
-*** Show all packages from a local repository
-
-#+BEGIN_SRC txt
-$ bin/pget.exe -- --list-packages ~/nuget
-
-Id:		Eto.Platform.Gtk3
-Version:	2.2.0
-Title:		Eto.Forms - GTK3 Platform
-Summary:		GTK3 Platform for the Eto.Forms UI Framework
-Authors:	Picoe Software Solutions Inc.
-Url:		https://github.com/picoe/Eto
-Description:	This is the GTK3 platform for Eto.Forms UI Framework.
-    	
-Include this along with your Eto.Forms application to provide a GTK3 interface, typically for Linux users.
-    	
-You do not need to use any of the classes of this assembly (unless customizing the GTK functionality of the platform), and should just use the UI controls from the Eto assembly.
-    	
-On Linux, mono framework 2.10 or higher and gtk-sharp2 are required.
-
-
-Id:		FAKE
-Version:	4.39.0
-Title:		
-Summary:		FAKE - F# Make - Get rid of the noise in your build scripts.
-Authors:	Steffen Forkmann,  Mauricio Scheffer,  Colin Bull
-Url:		http://www.github.com/fsharp/Fake
-Description:	FAKE - F# Make - is a build automation tool for .NET. Tasks and dependencies are specified in a DSL which is integrated in F#. This package bundles all extensions.
-
-
-Id:		FSPowerPack.Community
-Version:	3.0.0.0
-Title:		
-Summary:		The additional libraries in the F# PowerPack are functionality which is not part of the core F# release, but enables some development scenarios with F#. The PowerPack include features such as a basic Matrix library and supporting math types, FsLex and FsYacc tools for lexing and parsing, support for using F# with LINQ-based libraries, and a tool for generating HTML documentation from F# libraries. This functionality, which has previously been available in the F# CTP releases, is now available on CodePlex. The F# PowerPack will continue to evolve seperately from the main F# releases, and the features will continue to be improved and iterated upon.
-Authors:	Daniel Mohl (author of this NuGet package) refer to http://fsharppowerpack.codeplex.com/ for the library authors
-Url:		http://fsharppowerpack.codeplex.com/
-Description:	The F# PowerPack is a collection of libraries and tools for use with the F# programming languages provided by the F# team at Microsoft.
-
-
-#+END_SRC
-
-*** Generate Fsharp Repl directives to load package in the repl.
+ - =$ pget.exe= 
 
 #+BEGIN_SRC sh
-  $ ls packages
-   Baseclass.Contrib.Nuget.Output.2.1.0/  NuGet.Core.2.12.0/  SFML.Net.2.2/
-   Microsoft.Web.Xdt.2.1.1/               OpenGL.Net.0.3.2/
+  $ bin/pget.exe 
 
-  $ bin/pget.exe -- --package-fsx packages net45 SFML.Net
-  #r "packages/SFML.Net.2.2/lib/sfmlnet-audio-2.dll"
-  #r "packages/SFML.Net.2.2/lib/sfmlnet-graphics-2.dll"
-  #r "packages/SFML.Net.2.2/lib/sfmlnet-window-2.dll"
-  #r "packages/SFML.Net.2.2/lib/sfmlnet-system-2.dll"
-#+END_SRC
+  Pget - Package Get - Enhanced command line interface to NuGet.Core
 
-** TODO Tasklist 
+  Commands                                    Description
+  ------------------------------------------  -------------------------------------------------------------
 
- - [] Implement better command line parsing
- - [] 
+  List Commands:
 
-* Notes 
-** Objective 
+    --list                                      List all packages in current repository ./package
+    --list [repo]                               List all package in [repo] repository.
 
-Build a command line tool and library to install, search, update Nuget
-packages.
+    --show                                      Show all packages in current ./packages repository
+    --show [repo]                               Show all packages in [repo] repository.
+    --show --pack [pack]                        Show the package [pack] in ./packages directory
+    --show [repo] --pack [pack]                 Show the package [pack] in [repo] directory.
 
-Wishlist's:
+  Search commands:
 
- - Install NuGet packages
+    --search [package]                          Search a package by name.
+    --search [package] --repo                   Search a pacakge by name in a local repository
+    --search [package] --repo [repo]            Search a package in ./packages
 
- - Search packages in NuGet repository 
+  Show references for fsx scripts:
 
- - Show packages and details about local repository 
+    --ref [frm]                                 Show all assembly references from current ./packages
+    --ref [frm] --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
+    --ref [frm] --pack [pack] --repo [path]     Show all assembly references from a package at [repo] directory
+                                                frm:  .NET Framework  net40 | net45
 
- - Install packages in a cache 
+  Install packages:
 
- - Emacs interface with _s-expression_ output.
+    --install [pack]                            Install the latest version of package [pack] to ./packages
+    --install [pack] --repo [repo]              Install the latest version of package [pack] to a repository [repo] i.e: ~/nuget
+    --install [pack] --ver [ver]                Install the version [ver] of package [pack]
+    --install [pack] --ver [ver] --repo [repo]  Install the version [ver] of package [pack] to a repository [repo]
 
- - Turn this project into a NuGet package.
+    --install-from-file                         Install all packages listed in the file ./packages.lst to ./packages directory.
+    --install-from-file [file]                  Install all packages listed in the file [file] to ./packages
+    --install-from-file [file] --repo [repo]    Install all packages listed in the file [file] to [repo] directory.
 
- - Create documentation. 
+  Nupkg Files:
 
- - Publish this package 
+    --nupkg show [file]                         Show metadata of a *.nupkg file
 
- - 
+  --------------------------------------------------------------------------------------------------------------------
 
- - 
+  Command abbreviations:
 
-** References 
+    --install            -i
+    --repo               -r
+    --help               -h
+    --version            -v
+    --ver                -v
+    --list               -l
+    --search             -s
+    --show               -sh
+    --install-from-file  -if
+      
 
-#+BEGIN_SRC fsharp 
-> IPack.references p ;; 
-val it : Collections.Generic.IEnumerable<IPackageAssemblyReference> =
-  seq
-    [lib/net40/FSharp.Data.dll
-       {EffectivePath = "FSharp.Data.dll";
-        Name = "FSharp.Data.dll";
-        Path = "lib/net40/FSharp.Data.dll";
-        SourcePath = "/tmp/NuGetScratch/28ef2788-769b-4abc-818b-987b5dd6bd4a/8wxxmfag.pjt/lib/net40/FSharp.Data.dll";
-        SupportedFrameworks = seq [.NETFramework,Version=v4.0];
-        TargetFramework = .NETFramework,Version=v4.0;
-        TargetPath = "lib/net40/FSharp.Data.dll";};
-     lib/net40/FSharp.Data.DesignTime.dll
-       {EffectivePath = "FSharp.Data.DesignTime.dll";
-        Name = "FSharp.Data.DesignTime.dll";
-        Path = "lib/net40/FSharp.Data.DesignTime.dll";
-        SourcePath = "/tmp/NuGetScratch/28ef2788-769b-4abc-818b-987b5dd6bd4a/8wxxmfag.pjt/lib/net40/FSharp.Data.DesignTime.dll";
-        SupportedFrameworks = seq [.NETFramework,Version=v4.0];
-        TargetFramework = .NETFramework,Version=v4.0;
-        TargetPath = "lib/net40/FSharp.Data.DesignTime.dll";};
-     lib/portable-net45+sl50+netcore45/FSharp.Data.dll
-       {EffectivePath = "FSharp.Data.dll";
-        Name = "FSharp.Data.dll";
-        Path = "lib/portable-net45+sl50+netcore45/FSharp.Data.dll";
-        SourcePath = "/tmp/NuGetScratch/28ef2788-769b-4abc-818b-987b5dd6bd4a/8wxxmfag.pjt/lib/portable-net45+sl50+netcore45/FSharp.Data.dll";
-        SupportedFrameworks = seq
-                                [.NETPortable,Version=v0.0,Profile=net45+sl50+netcore45];
-        TargetFramework = .NETPortable,Version=v0.0,Profile=net45+sl50+netcore45;
-        TargetPath = "lib/portable-net45+sl50+netcore45/FSharp.Data.dll";};
-     lib/portable-net45+sl50+netcore45/FSharp.Data.DesignTime.dll
-       {EffectivePath = "FSharp.Data.DesignTime.dll";
-        Name = "FSharp.Data.DesignTime.dll";
-        Path = "lib/portable-net45+sl50+netcore45/FSharp.Data.DesignTime.dll";
-        SourcePath = "/tmp/NuGetScratch/28ef2788-769b-4abc-818b-987b5dd6bd4a/8wxxmfag.pjt/lib/portable-net45+sl50+netcore45/FSharp.Data.DesignTime.dll";
-        SupportedFrameworks = seq
-                                [.NETPortable,Version=v0.0,Profile=net45+sl50+netcore45];
-        TargetFramework = .NETPortable,Version=v0.0,Profile=net45+sl50+netcore45;
-        TargetPath = "lib/portable-net45+sl50+netcore45/FSharp.Data.DesignTime.dll";};
-     ...]
-#+END_SRC
-
-*Extract References*: 
-
-#+BEGIN_SRC fsharp
-for r in IPack.references p do Console.WriteLine (r.Path);; 
-lib/net40/FSharp.Data.dll
-lib/net40/FSharp.Data.DesignTime.dll
-lib/portable-net45+sl50+netcore45/FSharp.Data.dll
-lib/portable-net45+sl50+netcore45/FSharp.Data.DesignTime.dll
-lib/portable-net45+netcore45/FSharp.Data.dll
-lib/portable-net45+netcore45/FSharp.Data.DesignTime.dll
-lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.dll
-lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.DesignTime.dll
-val it : unit = ()
-> 
-
-let r = Seq.item 0 (IPack.references p)   ;; 
-
-val r : IPackageAssemblyReference = lib/net40/FSharp.Data.dll
-
-
-r ;; 
-val it : IPackageAssemblyReference =
-  lib/net40/FSharp.Data.dll
-    {EffectivePath = "FSharp.Data.dll";
-     Name = "FSharp.Data.dll";
-     Path = "lib/net40/FSharp.Data.dll";
-     SourcePath = "/tmp/NuGetScratch/28ef2788-769b-4abc-818b-987b5dd6bd4a/8wxxmfag.pjt/lib/net40/FSharp.Data.dll";
-     SupportedFrameworks = seq [.NETFramework,Version=v4.0];
-     TargetFramework = .NETFramework,Version=v4.0;
-     TargetPath = "lib/net40/FSharp.Data.dll";}
-
-> r.SupportedFrameworks ;;
-val it : Collections.Generic.IEnumerable<Runtime.Versioning.FrameworkName> =
-  seq [.NETFramework,Version=v4.0 {FullName = ".NETFramework,Version=v4.0";
-                                   Identifier = ".NETFramework";
-                                   Profile = "";
-                                   Version = 4.0;}]
-
-> let f = Seq.item 0 r.SupportedFrameworks ;; 
-
-val f : Runtime.Versioning.FrameworkName = .NETFramework,Version=v4.0
-
-> f.Version ;;
-val it : Version = 4.0 {Build = -1;
-                        Major = 4;
-                        MajorRevision = -1s;
-                        Minor = 0;
-                        MinorRevision = -1s;
-                        Revision = -1;}
-> f.Identifier ;; 
-val it : string = ".NETFramework"
-> 
-
-r.Path ;;
-val it : string = "lib/net40/FSharp.Data.dll"
-> 
-#+END_SRC
-
-** Get Framework Path 
-
-#+BEGIN_SRC fsharp
-> System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory() ;; 
-val it : string = "/usr/lib/mono/4.5"
-> 
-#+END_SRC
-** Create a new Framework name
-
-#+BEGIN_SRC fsharp 
-> let fmname =  new System.Runtime.Versioning.FrameworkName(".NETFramework, Version=4.0") ;; 
-
-val fmname : Runtime.Versioning.FrameworkName = .NETFramework,Version=v4.0
-
-> 
-#+END_SRC
-
-** Local Repository 
-
-#+BEGIN_SRC fsharp 
-  open NuGet
-
-  >
-
-
-
-  > let repo =  PackageRepositoryFactory.Default.CreateRepository("/home/arch/Documents/projects/pget.fsharp/packages") ;; 
-
-  val repo : IPackageRepository
-
-  > repo ;;
-  val it : IPackageRepository =
-    NuGet.LazyLocalPackageRepository
-      {Logger = NuGet.NullLogger;
-       PackageSaveMode = Nupkg;
-       Source = "/home/arch/Documents/projects/pget.fsharp/packages";
-       SupportsPrereleasePackages = true;}
-  >
-
-
-  let repo =  PackageRepositoryFactory.Default.CreateRepository(System.IO.Path.GetFullPath("package")) ;; 
-
-  val repo : IPackageRepository
+  Pget - Package Get - Version 1.0 
+  Copyright (C) 2016 Caio Rodrigues
 
 #+END_SRC
 
-Show Repository Packages:
+*** List packages 
 
-#+BEGIN_SRC fsharp 
-  > let repo =  PackageRepositoryFactory.Default.CreateRepository(System.IO.Path.GetFullPath("packages")) ;; 
+List packages in current repository ./packages directory:
 
-  val repo : IPackageRepository
+ - =$ pget.exe --list= or =$ pget.exe -l=
 
-  > 
-  for p in repo.GetPackages() do 
-    Console.WriteLine(p.Title) 
-  ;;
-  F# Data
+#+BEGIN_SRC sh 
+  $ bin/pget.exe -l
+  Microsoft.Web.Xdt 2.1.1
+  NuGet.Core 2.12.0
 
-  Microsoft Xml Document Transformation
 
-  Zlib.Portable
-  val it : unit = ()
-  > 
+  $ tree packages
+  packages
+  ├── Microsoft.Web.Xdt.2.1.1
+  │   ├── lib
+  │   │   └── net40
+  │   │       └── Microsoft.Web.XmlTransform.dll
+  │   └── Microsoft.Web.Xdt.2.1.1.nupkg
+  └── NuGet.Core.2.12.0
+      ├── lib
+      │   └── net40-Client
+      │       └── NuGet.Core.dll
+      └── NuGet.Core.2.12.0.nupkg
+
+  6 directories, 4 files
 #+END_SRC
 
-** Filter packages compatible with Framework Version 
+List packages in a directory: 
 
-#+BEGIN_SRC fsharp 
+ - =$ pget.exe --list [directory]= or =$ pget.exe --l [directory]= 
 
-  VersionUtility.TryGetCompatibleItems ;; 
-  val it :
-    arg00:Runtime.Versioning.FrameworkName *
-    arg01:Collections.Generic.IEnumerable<'a> ->
-      bool * Collections.Generic.IEnumerable<'a> when 'a :> IFrameworkTargetable
-  = <fun:clo@359-5>
-  > 
+#+BEGIN_SRC sh
+  $ bin/pget.exe -l /home/arch/nuget
+  Common.Logging 2.1.2
+  Deedle 1.2.5
+  Deedle.RPlugin 1.2.5
+  DynamicInterop 0.7.4
+  EntityFramework 6.0.0
+  Eto.Forms 2.2.0
+  Eto.Platform.Gtk 2.2.0
+  Eto.Platform.Gtk3 2.2.0
+  FAKE 4.39.0
+  ... 
+#+END_SRC
+
+*** Show package metadata 
+
+Show all packages in ./packages directory
+
+ - =$ pget.exe --show= or =$ pget.exe -sh=
+
+#+BEGIN_SRC txt
+  $ bin/pget.exe --show
+
+  Id             Microsoft.Web.Xdt
+  Title          Microsoft Xml Document Transformation
+  Tags           
+  Version        2.1.1
+  Summary        Microsoft Xml Document Transformation (XDT) enables transformig XML files. This is the same technology used to transform web.config files for Visual Studio web projects.
+  Authors        Microsoft Corporation
+  Project URL    
+  Dependencies   
+  Download Count -1
+
+  Description    Microsoft Xml Document Transformation (XDT) library. For more info on XDT please visit http://msdn.microsoft.com/en-us/library/dd465326.aspx.
+                            
+
+  Id             NuGet.Core
+  Title          
+  Tags            nuget 
+  Version        2.12.0
+  Summary        
+  Authors        Outercurve Foundation
+  Project URL    https://github.com/NuGet/NuGet2
+  Dependencies   Microsoft.Web.Xdt 2.1.0
+  Download Count -1
+
+  Description    NuGet.Core is the core framework assembly for NuGet that the rest of NuGet builds upon.
+       
+#+END_SRC
+
+Show all packages in a directory
+
+#+BEGIN_SRC txt
+  Id             Common.Logging
+  Title          
+  Tags           
+  Version        2.1.2
+  Summary        
+  Authors        Aleksandar Seovic,  Mark Pollack,  Erich Eichinger,  Stephen Bohlen
+  Project URL    http://netcommon.sourceforge.net/
+  Dependencies   
+  Download Count -1
+
+  Description    Common.Logging library introduces a simple abstraction to allow you to select a specific logging implementation at runtime.
+
+  ...
+  ...
+
+  Id             EntityFramework
+  Title          EntityFramework
+  Tags            Microsoft EF Database Data O/RM ADO.NET 
+  Version        6.0.0
+  Summary        Entity Framework is Microsoft's recommended data access technology for new applications.
+  Authors        Microsoft
+  Project URL    http://go.microsoft.com/fwlink/?LinkID=320540
+  Dependencies   
+  Download Count -1
+
+  Description    Entity Framework is Microsoft's recommended data access technology for new applications.
+                            
+
+#+END_SRC
+
+Show a single package in ./packages (Project repository)
+
+ - =$ pget.exe --show --pack [package-Id]= or - =$ pget.exe -sh -p [package-Id]=
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe --show --pack NuGet.Core
+
+  Id             NuGet.Core
+  Title          
+  Tags            nuget 
+  Version        2.12.0
+  Summary        
+  Authors        Outercurve Foundation
+  Project URL    https://github.com/NuGet/NuGet2
+  Dependencies   Microsoft.Web.Xdt 2.1.0
+  Download Count -1
+
+  Description    NuGet.Core is the core framework assembly for NuGet that the rest of NuGet builds upon.
+#+END_SRC
 
 
-  VersionUtility.IsCompatible ;;
-  val it :
-    arg00:Runtime.Versioning.FrameworkName *
-    arg01:Collections.Generic.IEnumerable<Runtime.Versioning.FrameworkName> ->
-      bool = <fun:clo@363-6>
-  > 
+Show a single package in a directory (Local Repository):
 
-  repo.GetPackages () 
-  |> Seq.filter (fun p -> VersionUtility.IsCompatible(fmname, p.GetSupportedFrameworks()))
-  ;;
+ - =$ pget.exe [repository] --show --pack [package-Id]=
+
+or 
+
+ - =$ pget.exe -sh [repository] -p [package-Id]=
+
+#+BEGIN_SRC txt
+  $ bin/pget.exe --show ~/nuget --pack NUnit.Console
+
+  Id             NUnit.Console
+  Title          NUnit Console Runner Version 3 Plus Extensions
+  Tags            nunit test testing tdd runner 
+  Version        3.5.0
+  Summary        Console runner for the NUnit 3 unit-testing framework with selected extensions.
+  Authors        Charlie Poole
+  Project URL    http://nunit.org/
+  Dependencies   NUnit.ConsoleRunner 3.5.0, NUnit.Extension.NUnitProjectLoader 3.5.0, NUnit.Extension.VSProjectLoader 3.5.0, NUnit.Extension.NUnitV2ResultWriter 3.5.0, NUnit.Extension.NUnitV2Driver 3.5.0, NUnit.Extension.TeamCityEventListener 1.0.2
+  Download Count -1
+
+  Description    This package includes the nunit3-console runner and test engine for version 3.0 of the NUnit unit-testing framework.
+
+        The following extensions are included with this package:
+        ,* NUnitProjectLoader     - loads tests from NUnit projects
+        ,* VSProjectLoader        - loads tests from Visual Studio projects
+        ,* NUnitV2ResultWriter    - saves results in NUnit V2 format.
+        ,* NUnitV2FrameworkDriver - runs NUnit V2 tests.
+        ,* TeamCityEventListener - supports special progress messages used by teamcity.
+
+        Other extensions, if needed, must be installed separately
+#+END_SRC
+
+*** Search a package 
+
+ - =$ pget.exe --search [keyword]= or - =$ pget.exe -s [keywork]=
+
+#+BEGIN_SRC txt
+  $ bin/pget.exe -s oxyplot
+
+  Id             AnnotationGUIOxyplot
+  Title          
+  Tags           
+  Version        0.0.1
+  Summary        
+  Authors        tschwarz
+  Project URL    
+  Dependencies   
+  Download Count 68
+
+  Description    My package description.
+                            
+
+  Id             Eto.OxyPlot
+  Title          Eto.OxyPlot
+  Tags           
+  Version        1.2.0-beta
+  Summary        
+  Authors        Loren Van Spronsen
+  Project URL    
+  Dependencies   Eto.Forms 2.2.0, OxyPlot.Core 1.0.0-unstable2063
+  Download Count 3382
+
+  Description    OxyPlot bindings for the Eto UI framework
+                            
+ ... ... ...
+#+END_SRC
+*** Install a package 
+
+Install the lastest version of a package to ./packages (Project repository)
+
+ - =$ pget.exe --install [package-id]= or - =$ pget.exe -i [package-id]=
+
+#+BEGIN_SRC sh 
+  $ bin/pget.exe --install OxyPlot.Pdf
+  Installing: OxyPlot.Pdf 1.0.0
+
+  $ ls -l packages
+  total 0
+  drwxrwxrwx 1 arch arch 280 dez 19 00:52 Microsoft.Web.Xdt.2.1.1/
+  drwxrwxrwx 1 arch arch 264 dez 19 01:45 NuGet.Core.2.12.0/
+  drwxrwxrwx 1 arch arch 488 dez 19 02:22 OxyPlot.Core.1.0.0/
+  drwxrwxrwx 1 arch arch 480 dez 19 02:22 OxyPlot.Pdf.1.0.0/
+  drwxrwxrwx 1 arch arch 296 dez 19 02:22 PDFsharp-MigraDoc-GDI.1.32.4334.0/
+
+   bin/pget.exe -sh -p OxyPlot.Core
+
+  Id             OxyPlot.Core
+  Title          OxyPlot core library (PCL)
+  Tags            plotting plot charting chart 
+  Version        1.0.0
+  Summary        
+  Authors        Oystein Bjorke
+  Project URL    http://oxyplot.org/
+  Dependencies   
+  Download Count -1
+
+  Description    OxyPlot is a plotting library for .NET. This is the portable core library that is referenced by the platform-specific OxyPlot packages.
+      
+#+END_SRC
+
+Install a given version of package  to ./packages 
+
+ - =$ pget.exe --install [package-id] --version [version]=
+
+or 
+
+ - =$ pget.exe -i [package-id] --v [version]=
+
+#+BEGIN_SRC sh 
+  $ bin/pget.exe -i FParsec -v 1.0.2
+
+  $ ls -l packages
+  total 0
+  drwxrwxrwx 1 arch arch 256 dez 19 02:31 FParsec.1.0.2/
+  drwxrwxrwx 1 arch arch 280 dez 19 00:52 Microsoft.Web.Xdt.2.1.1/
+  drwxrwxrwx 1 arch arch 264 dez 19 01:45 NuGet.Core.2.12.0/
+  drwxrwxrwx 1 arch arch 488 dez 19 02:22 OxyPlot.Core.1.0.0/
+  drwxrwxrwx 1 arch arch 480 dez 19 02:22 OxyPlot.Pdf.1.0.0/
+  drwxrwxrwx 1 arch arch 296 dez 19 02:22 PDFsharp-MigraDoc-GDI.1.32.4334.0/
+#+END_SRC
+
+Install the lastest version of a package to a local repository 
+
+ - =$ pget.exe --install [package-id] --repo [repository]= 
+
+or 
+
+ - =$ pget.exe -i [package-id] -r [repository]=
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe -i  OxyPlot.Pdf -r /home/arch/nuget
+  Installing: OxyPlot.Pdf 1.0.0
+
+  $ bin/pget.exe -sh /home/arch/nuget -p OxyPlot.Pdf 
+
+  Id             OxyPlot.Pdf
+  Title          OxyPlot PDF extensions (for Silverlight and NET4)
+  Tags            pdf plotting plot charting chart 
+  Version        1.0.0
+  Summary        
+  Authors        Oystein Bjorke
+  Project URL    http://oxyplot.org/
+  Dependencies   OxyPlot.Core [1.0.0], PDFsharp-MigraDoc-GDI [1.32.4334], OxyPlot.Core [1.0.0], PDFsharp-MigraDoc-GDI [1.32.4334], OxyPlot.Core [1.0.0]
+  Download Count -1
+
+  Description    OxyPlot is a plotting library for .NET. This package contains .pdf export extensions for .NET 4 (based on PDFsharp) and Silverlight (based on SilverPDF).
+
+#+END_SRC
+
+Install a given version of package to a local repository
+
+ - =$ pget.exe --install [package-id] --version [package] --repo [repository]=
+
+or 
+
+ - =$ pget.exe -i [package-id] -v [package] --r [repository]=
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe -i Microsoft.Web.Xdt -v 1.0.0 -r ~/nuget
+#+END_SRC
+
+Install all packages listed in the file ./packages.list to ./packages 
+
+ - =$ pget.exe --install-from-file= 
+
+or 
+
+ - =$ pget.exe -if= 
+
+Example of the file packages.list. If the version is not listed, it
+installs the latest version of the packages to ./packages.
+
+File: packages.list
+
+#+BEGIN_SRC sh
+  FSharp.Data              1.0.0
+  Deedle                   1.0.0
+  OxyPlot.Pdf               
+  OxyPlot.WindowsForms      
+#+END_SRC
+
+Install all packages listed in the file ./packages.list to ./packages 
+
+ - =$ pget.exe --install-from-file [packages-list-file]= 
+
+or 
+
+ - =$ pget.exe -if [package-list-file]= 
 
 
+*** Get assembly references for F# scripts 
 
-  rs |> Seq.filter ( fun r -> VersionUtility.IsCompatible(fmname, r.SupportedFrameworks)) ;;
-  val it : seq<IPackageAssemblyReference> =
-    seq
-      [lib/net40/FSharp.Data.dll
-         {EffectivePath = "FSharp.Data.dll";
-          Name = "FSharp.Data.dll";
-          Path = "lib/net40/FSharp.Data.dll";
-          SourcePath = "/tmp/NuGetScratch/28ef2788-769b-4abc-818b-987b5dd6bd4a/8wxxmfag.pjt/lib/net40/FSharp.Data.dll";
-          SupportedFrameworks = seq [.NETFramework,Version=v4.0];
-          TargetFramework = .NETFramework,Version=v4.0;
-          TargetPath = "lib/net40/FSharp.Data.dll";};
-       lib/net40/FSharp.Data.DesignTime.dll
-         {EffectivePath = "FSharp.Data.DesignTime.dll";
-          Name = "FSharp.Data.DesignTime.dll";
-          Path = "lib/net40/FSharp.Data.DesignTime.dll";
-          SourcePath = "/tmp/NuGetScratch/28ef2788-769b-4abc-818b-987b5dd6bd4a/8wxxmfag.pjt/lib/net40/FSharp.Data.DesignTime.dll";
-          SupportedFrameworks = seq [.NETFramework,Version=v4.0];
-          TargetFramework = .NETFramework,Version=v4.0;
-          TargetPath = "lib/net40/FSharp.Data.DesignTime.dll";}]
-  >
+Get all assembly references from current ./packages repository.
+
+ - =$ pget.exe --ref [framework]=
+
+The framework is the .NET framework version. It can be: 
+
+ - net40 for .NET 4.0
+ - net45 for .NET 4.5 
+
+#+BEGIN_SRC sh 
+  $ bin/pget.exe --ref net40
+  #r "packages/FParsec.1.0.2/lib/net40-client/FParsec.dll"
+  #r "packages/FParsec.1.0.2/lib/net40-client/FParsecCS.dll"
+  #r "packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll"
+  #r "packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll"
+  #r "packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll"
+  #r "packages/OxyPlot.Pdf.1.0.0/lib/net40/OxyPlot.Pdf.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.DocumentObjectModel.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.Rendering.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.RtfRendering.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.Charting.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.DocumentObjectModel.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.Rendering.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.RtfRendering.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.Charting.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.resources.dll"
+
+
+  $ bin/pget.exe --ref net45
+  #r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"
+  #r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"
+  #r "packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll"
+  #r "packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll"
+  #r "packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll"
+  #r "packages/OxyPlot.Pdf.1.0.0/lib/net40/OxyPlot.Pdf.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.DocumentObjectModel.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.Rendering.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.RtfRendering.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.Charting.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.DocumentObjectModel.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.Rendering.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.RtfRendering.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.Charting.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.resources.dll"
 
 
 
 #+END_SRC
 
-** Sources
 
-*References*
+Get all assembly references from a package in ./packages: 
 
- - [[http://stackoverflow.com/questions/6653715/view-nuget-package-dependency-hierarchy/6653771][View nuget package dependency hierarchy - Stack Overflow]]
+ - =$ pget.exe --ref [framework] --pack [package-id]=
 
- - [[https://github.com/NuGet/NuGet.Client/blob/dev/src/NuGet.Core/NuGet.Frameworks/FrameworkConstants.cs][NuGet.Client/FrameworkConstants.cs at dev · NuGet/NuGet.Client]]
+or 
 
- - [[https://the.randomengineer.com/2016/07/08/using-nuget-core-to-get-the-latest-version-of-a-package/][Using NuGet.Core to Get the Latest Version of a Package | The Random Engineer]]
+ - =$ pget.exe --ref [framework] --p [package-id]=
 
- - [[https://blog.codeinside.eu/2015/06/03/create-and-read-nuget-package-via-code/][Code Inside Blog | Create and read NuGet Packages via Code]]
+#+BEGIN_SRC sh 
+  $ bin/pget.exe --ref net45 --pack FParsec
+  #r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"
+  #r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"
+#+END_SRC
 
- - [[https://social.msdn.microsoft.com/Forums/vstudio/en-US/f10a9c7e-4ad9-4fc5-be94-adfc2eb42a1a/install-a-nuget-package-programmatically?forum=vsx][Install a Nuget package programmatically]]
 
- - [[http://mikehadlow.blogspot.com.br/2013/06/nuget-install-is-broken-with-f.html][Code rant: NuGet Install Is Broken With F#]]
+Get all assembly references from a repository.
 
- - [[http://qiita.com/higty/items/894c1a165c67f0fd2927][Nugetへのパッケージの更新を簡単に。Nugetパッケージを自動アップロードするスクリプトを.csprojとAssemblyInfo.csから自動生成する方法 - Qiita]]
+ - =$ pget.exe --ref [framework] --repo [repository]=
 
- - 
+or 
 
- - 
+ - =$ pget.exe --ref [framework] -r [repository]=
 
- - 
+#+BEGIN_SRC sh
+  $ bin/pget.exe -i FSharp.Data -r /tmp/packages
+  Installing: FSharp.Data 2.3.2
 
- - 
+  $ bin/pget.exe -i FParsec -r /tmp/packages
+  Installing: FParsec 1.0.2
 
- - 
 
-*Gists*
+  $ ls /tmp/packages/
+  FParsec.1.0.2/  FSharp.Data.2.3.2/  Zlib.Portable.1.11.0/
 
- - [[https://gist.github.com/takemyoxygen/322cc7db9e017510a906][nuget-script.fsx]]
+  $ bin/pget.exe --ref net40 --repo /tmp/packages
+  #r "/tmp/packages/FParsec.1.0.2/lib/net40-client/FParsec.dll"
+  #r "/tmp/packages/FParsec.1.0.2/lib/net40-client/FParsecCS.dll"
+  #r "/tmp/packages/FSharp.Data.2.3.2/lib/net40/FSharp.Data.dll"
+  #r "/tmp/packages/FSharp.Data.2.3.2/lib/net40/FSharp.Data.DesignTime.dll"
+  #r "/tmp/packages/Zlib.Portable.1.11.0/lib/portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid/Zlib.Portable.dll"
 
- - [[https://gist.github.com/michael-newton-15below/4118468][Nuget.Core example]]
+  $ bin/pget.exe --ref net45 --repo /tmp/packages
+  #r "/tmp/packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"
+  #r "/tmp/packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"
+  #r "/tmp/packages/FSharp.Data.2.3.2/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.dll"
+  #r "/tmp/packages/FSharp.Data.2.3.2/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.DesignTime.dll"
+  #r "/tmp/packages/Zlib.Portable.1.11.0/lib/portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid/Zlib.Portable.dll"
+#+END_SRC
 
- - [[https://gist.github.com/scovetta/b0f75b783077815df10498ca28ee25c1][NuGet.Core Parsing Bug]]
+Get all assembly references from a package in a repository
 
- - [[https://gist.github.com/emgarten/9681ea4edb90982e7db2][NuGet.Core example of reading nuget.config restore settings]]
+ - =$ pget.exe --ref [framework] --pack [package-id] --repo [repository]=
 
- - [[https://gist.github.com/filipw/5087814][Get relevant assemblies with Nuget.Core]]
+or 
 
- - [[https://gist.github.com/BryanWilhite/1baba5e63d57c608da83][ShouldGetNuGetPackageFile() uses DefaultPackagePathResolver from NuGet.Core]]
+ - =$ pget.exe --ref [framework] --p [package-id] --repo [repository]=
 
- - [[https://gist.github.com/mavnn/6684569][C# and F# comparisons of NuGet ProjectSystem implementations. F# code is from https://github.com/mavnn/NuGetPlus/blob/master/NuGetPlus.Core/ProjectSystem.fs C# code is from http://nuget.codeplex.com/SourceControl/latest#src/CommandLine/Common/MSBuildProjectSystem.cs They aren't identical in functionality, but they're pretty similar and implement the same interfaces.]]
 
- - 
+#+BEGIN_SRC sh
+  $ bin/pget.exe --ref net45 --pack FParsec --repo ~/nuget
+  #r "/home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"
+  #r "/home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"
 
- - 
+  $ bin/pget.exe --ref net45 --pack FSharp.Data --repo ~/nuget
+  #r "/home/arch/nuget/FSharp.Data.2.3.1/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.dll"
+  #r "/home/arch/nuget/FSharp.Data.2.3.1/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.DesignTime.dll"
+#+END_SRC
 
- - 
+*** NuGet package files nupkg files 
 
- - 
+Show a NuGet package metadata 
 
- - 
+ - =$ pget.xe --nupkg show [nupkg-file]=
 
- - 
+#+BEGIN_SRC sh
+  $ pget.exe --nupkg show ./packages/OxyPlot.Core.1.0.0/OxyPlot.Core.1.0.0.nupkg
 
- - 
+  Id             OxyPlot.Core
+  Title          OxyPlot core library (PCL)
+  Tags            plotting plot charting chart 
+  Version        1.0.0
+  Summary        
+  Authors        Oystein Bjorke
+  Project URL    http://oxyplot.org/
+  Dependencies   
+  Download Count -1
+
+  Description    OxyPlot is a plotting library for .NET. This is the portable core library that is referenced by the platform-specific OxyPlot packages.
+
+#+END_SRC
+ 
+* Pget.dll 
+
+Pget.dll is a F# library that provides a high level interface and
+functional wrappers to NuGet.Core API. 
+
+
+
+
+* Repository 
