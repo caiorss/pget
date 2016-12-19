@@ -16,6 +16,132 @@ open System.Linq
 open NuGet
 
 
+/// Assembly attributes wrapper
+module AsmAttr =
+    open System.Reflection
+
+    let optDefault def opt =
+        match opt with
+        | None    -> def
+        | Some x  -> x
+
+    /// Load Assembly File
+    let loadFrom (assemblyFile: string) =
+        Assembly.LoadFrom assemblyFile
+
+    /// Return assembly name
+    let getName (asm: Assembly) =
+        asm.GetName().Name
+
+    /// Return assembly full name
+    let getFullName (asm: Assembly) =
+        asm.GetName().FullName
+
+    /// Return assembly version
+    let getVersion (asm: Assembly) =
+        asm.GetName().Version
+
+    /// Returns assembly title attribute
+    ///
+    let getTitle (asm: Assembly) =
+        asm.GetCustomAttributes<AssemblyTitleAttribute>()
+        |> Seq.tryItem 0
+        |> Option.map (fun p -> p.Title)
+
+    /// Return assembly description attribute
+    ///
+    let getDescription (asm: Assembly) =
+        asm.GetCustomAttributes<AssemblyDescriptionAttribute>()
+        |> Seq.tryItem 0
+        |> Option.map (fun p -> p.Description)
+
+    /// Returns assembly copyright attribute
+    ///
+    let getCopyright (asm: Assembly) =
+        asm.GetCustomAttributes<AssemblyCopyrightAttribute>()
+        |> Seq.tryItem 0
+        |> Option.map (fun p -> p.Copyright)
+
+    /// Returns assembly culture attribute
+    ///
+    let getCulture (asm: Assembly) =
+        asm.GetCustomAttributes<AssemblyCultureAttribute>()
+        |> Seq.tryItem 0
+        |> Option.map (fun p -> p.Culture)
+
+    /// Returns assembly product attribute
+    ///
+    let getProduct (asm: Assembly) =
+        asm.GetCustomAttributes<AssemblyProductAttribute>()
+        |> Seq.tryItem 0
+        |> Option.map (fun p -> p.Product)
+
+    /// Returns assembly company attribute
+    ///
+    let getCompany (asm: Assembly) =
+        asm.GetCustomAttributes<AssemblyCompanyAttribute>()
+        |> Seq.tryItem 0
+        |> Option.map (fun p -> p.Company)
+
+    /// Returns assembly  attribute
+    ///
+    let getComVisible (asm: Assembly) =
+        asm.GetCustomAttributes<System.Runtime.InteropServices.ComVisibleAttribute>()
+        |> Seq.tryItem 0
+        |> Option.map (fun p -> p.Value)
+
+    /// Returns assembly Guid  attribute
+    ///
+    let getGuid (asm: Assembly) =
+        asm.GetCustomAttributes<System.Runtime.InteropServices.GuidAttribute>()
+        |> Seq.tryItem 0
+        |> Option.map (fun p -> p.Value)
+
+    let getRuntimeVersion (asm: Assembly) =
+        asm.ImageRuntimeVersion
+
+    let getAsmReferences (asm: Assembly) =
+        asm.GetReferencedAssemblies()
+        |> Seq.map (fun a ->
+                     Map.ofSeq [
+                                    ("Name",        a.Name)
+                                  ; ("FullName",    a.FullName)
+                                  ; ("CultureInfo", a.CultureInfo.Name)
+                                  ; ("Version",     a.Version.ToString())
+                               ]
+                     )
+
+    let showAsmReferences (asmFile: string) =
+        let asm = loadFrom asmFile
+        asm.GetReferencedAssemblies ()
+        |> Seq.iter (fun an -> Console.WriteLine("Name = {0}\t\tVersion = {1}\t\tCulture = {2}",
+                                                 an.Name,
+                                                 an.Version,
+                                                 an.CultureInfo.Name
+                                                 ))
+
+
+    /// Print assembly file attributes
+    ///
+    let showFile (asmFile: string) =
+        let asm = loadFrom asmFile
+        printfn "Assembly Attributes"
+        printfn "-------------------------------------------"
+        printfn "Name         %s" (getName asm)
+        // printfn "Full Name    $s" (getFullName asm)
+        printfn "Version      %s" <| (getVersion asm).ToString()
+        printfn "CLR Version  %s" <| getRuntimeVersion asm
+        printfn "Product      %s" (optDefault ""  <| getProduct asm)
+        printfn "Culture      %s" (optDefault ""  <| getCulture asm)
+        printfn "Company      %s" (optDefault ""  <| getCompany asm)
+        printfn "Description  %s" (optDefault ""  <| getDescription asm)
+        printfn "Copyright    %s" (optDefault ""  <| getCopyright asm)
+        printfn "GUID         %s" (optDefault ""  <| getGuid asm)
+        printfn "Com Visible  %s" (optDefault ""  <| (getComVisible asm
+                                                      |> Option.map (fun e -> e.ToString())))
+        printfn "Codebase     %s" asm.CodeBase
+
+
 module Main =
 
     let commandLineArgsInteractive () =
