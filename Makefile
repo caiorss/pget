@@ -42,7 +42,7 @@ $(lib): src/Pget.fs src/PgetCmd.fsx $(NuGet.Core) $(Microsoft.Web.Xdt)
 
 
 $(exe): src/Pget.fs $(NuGet.Core) $(Microsoft.Web.Xdt)
-	fsc src/Pget.fs src/PgetCmd.fsx --out:$(exe) \
+	fsc src/AssemblyInfo.fs src/Pget.fs src/PgetCmd.fs  --out:$(exe) \
 	--target:exe \
     --platform:anycpu \
     -r:$(NuGet.Core) \
@@ -50,6 +50,9 @@ $(exe): src/Pget.fs $(NuGet.Core) $(Microsoft.Web.Xdt)
 	--staticlink:NuGet.Core \
 	--standalone
 
+# Install pget.exe to ~/bin 
+install: exe
+	cp $(exe) ~/bin
 
 release: $(build)
 	rm -rf pget.zip
