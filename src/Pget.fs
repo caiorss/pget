@@ -379,6 +379,15 @@ module RepoLocal =
         repo.GetPackages ()
 
 
+    /// Show a package given its repository path and ID
+    let showPackage  (repoPath: string) (packageId: string) =
+        let repo = localRepository repoPath
+        let pack = findPackageById repo packageId
+        match pack with
+        | Some p -> IPack.showPackage p
+        | None   -> printfn "Couldn't find the package %s" packageId
+
+
     /// Show all details packages from a local repository
     ///
     let showPackages (relPath: string) =
