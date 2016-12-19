@@ -454,3 +454,22 @@ module RepoLocal =
         let version = Repo.findLatestStableVersion Nuget.nugetV2 package
         printfn "Installing: %s %s" package version
         installPackage repoPath (package, version)
+
+    /// Install all packages listed in a file to a given repository
+    ///
+    /// - repoPath           - Directory the packages will be installed.
+    /// - packageListFile    - File containing the list of packages to be installed.
+    ///
+    let installPackagesFromFile repoPath packageFile =
+        packageFile
+        |> System.IO.File.ReadAllLines
+        |> Array.iter (fun (line: string) ->
+                       let row = line.Split([|' '|], System.StringSplitOptions.RemoveEmptyEntries)
+                       // printfn "package = %A" row
+                       match List.ofArray row with
+                       // | [ package ; "-"     ] -> installPackageLatest repoPath package
+                       | [ package ; version ] -> installPackage repoPath (package, version)
+                       | [ package           ] -> installPackageLatest repoPath package
+                       | []                    -> failwith "Error: No package listed"
+                       | _                     -> failwith "Error: Wrong package listing."
+                       )
