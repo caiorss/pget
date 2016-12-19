@@ -11,3 +11,4 @@ bin/
 *.tgz
 obj/
 tmp/
+scratch.fsx
