@@ -229,6 +229,15 @@ module Main =
 
       --nupkg show [file]                         Show metadata of a *.nupkg file
 
+    Assembly files: *.exe or *.dll
+
+      asm show     [file]                         Show all assembly attributes from an assembly file.
+      asm show-ref [file]                         Show all assembly references from an assembly file.
+      
+    Generate Guid - Globally Unique Identifier 
+
+      --guid 
+
     --------------------------------------------------------------------------------------------------------------------
 
     Command abbreviations:
@@ -306,6 +315,11 @@ module Main =
 
 
         | ["--nupkg"; "show"; fname]          ->  Pget.Nupkg.read fname |> Pget.IPack.showPackage
+
+        | ["asm" ; "--show" ; asmFile]        -> AsmAttr.showFile asmFile
+        | ["asm" ; "--show-ref" ; asmFile]    -> AsmAttr.showAsmReferences asmFile         
+
+        | ["--guid" ]                         -> Console.WriteLine(Guid.NewGuid().ToString() : string)
 
         | []                                  ->  showHelp ()
         | _                                   ->  Console.WriteLine "Error: Invalid option."
