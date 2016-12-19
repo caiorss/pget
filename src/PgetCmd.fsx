@@ -67,6 +67,8 @@ List Commands:
 
   --show                                      Show all packages in current ./packages repository
   --show [repo]                               Show all packages in [repo] repository.
+  --show --pack [pack]                        Show the package [pack] in ./packages directory
+  --show [repo] --pack [pack]                 Show the package [pack] in [repo] directory.
 
 Search commands:
 
@@ -88,6 +90,10 @@ Install packages:
   --install [pack] --ver [ver]                Install the version [ver] of package [pack]
   --install [pack] --ver [ver] --repo [repo]  Install the version [ver] of package [pack] to a repository [repo]
 
+  --install-from-file                         Install all packages listed in the file ./packages.lst to ./packages directory.
+  --install-from-file [file]                  Install all packages listed in the file [file] to ./packages
+  --install-from-file [file] --repo [repo]    Install all packages listed in the file [file] to [repo] directory.
+
 Nupkg Files:
 
   --nupkg show [file]                         Show metadata of a *.nupkg file
@@ -96,15 +102,15 @@ Nupkg Files:
 
 Command abbreviations:
 
-  --install   -i
-  --repo      -r
-  --help      -h
-  --version   -v
-  --ver       -v
-  --list      -l
-  --search    -s
-  --show      -sh
-
+  --install            -i
+  --repo               -r
+  --help               -h
+  --version            -v
+  --ver                -v
+  --list               -l
+  --search             -s
+  --show               -sh
+  --install-from-file  -if
     """
 
     showVersion()
@@ -127,9 +133,12 @@ let parseCommands cmdargs =
 
     | ["--show";      ]                   ->  Pget.RepoLocal.showPackages "packages"
     | ["--show"; repo ]                   ->  Pget.RepoLocal.showPackages repo
-    | ["-sh";      ]                       ->  Pget.RepoLocal.showPackages "packages"
-    | ["-sh"; repo ]                       ->  Pget.RepoLocal.showPackages repo
-
+    | ["--show"; "--pack"; pack]          ->  Pget.RepoLocal.showPackage "packages" pack
+    | ["--show"; repo ; "--pack"; pack]   ->  Pget.RepoLocal.showPackage repo pack       
+    | ["-sh";      ]                      ->  Pget.RepoLocal.showPackages "packages"
+    | ["-sh"; repo ]                      ->  Pget.RepoLocal.showPackages repo
+    | ["-sh"; "-p"; pack]                 ->  Pget.RepoLocal.showPackage "packages" pack
+    | ["-sh"; repo ; "-p"; pack]          ->  Pget.RepoLocal.showPackage repo pack       
    
     | ["--search"; pack ]                 ->  searchPackageById pack
     | ["--search"; pack ; "--repo"]       ->  searchLocalPackage pack "pacakges"
@@ -155,8 +164,13 @@ let parseCommands cmdargs =
     | ["-i"; pack ; "-v" ; ver  ]                            ->  Pget.RepoLocal.installPackage "packages" (pack, ver)
     | ["-i"; pack ; "-v" ; ver ; "-r"; path  ]               ->  Pget.RepoLocal.installPackage path (pack, ver)
 
+    | ["--install-from-file" ]                               ->  Pget.RepoLocal.installPackagesFromFile "packages" "packages.list" 
+    | ["--install-from-file" ; file ]                        ->  Pget.RepoLocal.installPackagesFromFile "packages" file
+    | ["--install-from-file" ; file; "--repo"; repo ]        ->  Pget.RepoLocal.installPackagesFromFile repo file
+    | ["-if" ]                                               ->  Pget.RepoLocal.installPackagesFromFile "packages" "packages.list" 
+    | ["-if" ; file ]                                        ->  Pget.RepoLocal.installPackagesFromFile "packages" file
+    | ["-if" ; file; "-r"; repo ]                            ->  Pget.RepoLocal.installPackagesFromFile repo file
 
-    // | ["--install-from-file" ; file ]
 
     | ["--nupkg"; "show"; fname]          ->  Pget.Nupkg.read fname |> Pget.IPack.showPackage
     
