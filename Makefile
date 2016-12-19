@@ -1,8 +1,18 @@
+
 all: help
 
 help:
 	@echo "Enter $ make lib - to build a library src/bin/pget.dll"
 	@echo "Enter $ make app - to build command line application src/bin/pget.exe"
+
+
+## F# Compiler Location - Change this for your platform 
+#
+CC := /usr/lib/mono/4.5/fsc.exe
+
+# Nuget client - Change this for your platform 
+#
+NUGET := ~/nuget.exe
 
 
 lib:= bin/pget.dll
@@ -31,12 +41,12 @@ NuGet.Core        := packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll
 Microsoft.Web.Xdt := packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll
 
 $(NuGet.Core):
-	nuget.exe install NuGet.Core -OutputDirectory packages -Version 2.12.0
+	$(NUGET) install NuGet.Core -OutputDirectory packages -Version 2.12.0
 
 
 
 $(lib): src/Pget.fs src/PgetCmd.fsx $(NuGet.Core) $(Microsoft.Web.Xdt)
-	fsc src/Pget.fs --out:$(lib) \
+	$(CC) src/Pget.fs --out:$(lib) \
 		--target:library \
 		--platform:anycpu \
 		-r:$(NuGet.Core) \
@@ -50,7 +60,7 @@ $(lib): src/Pget.fs src/PgetCmd.fsx $(NuGet.Core) $(Microsoft.Web.Xdt)
 
 
 $(exe): src/Pget.fs $(NuGet.Core) $(Microsoft.Web.Xdt)
-	fsc src/AssemblyInfo.fs src/Pget.fs src/PgetCmd.fs  --out:$(exe) \
+	$(CC) src/AssemblyInfo.fs src/Pget.fs src/PgetCmd.fs  --out:$(exe) \
 	--target:exe \
     --platform:anycpu \
     -r:$(NuGet.Core) \
