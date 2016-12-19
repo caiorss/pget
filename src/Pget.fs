@@ -365,10 +365,9 @@ module RepoLocal =
     /// Find a package by Id in local repository
     let findPackageById (repo: R) (packageId: string): NuGet.IPackage option =
         let packs = repo.FindPackagesById (packageId)
+        Seq.tryItem 0 packs
 
-        try Some (Seq.item 0 packs)
-        with
-            :? System.ArgumentException -> None
+
 
     /// Creates a local repository
     let localRepository (relPath: string) =
