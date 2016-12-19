@@ -59,7 +59,7 @@ $(lib): src/Pget.fs src/PgetCmd.fsx $(NuGet.Core) $(Microsoft.Web.Xdt)
 	cp -v $(Microsoft.Web.Xdt) src/bin/
 
 
-$(exe): src/Pget.fs $(NuGet.Core) $(Microsoft.Web.Xdt)
+$(exe): src/Pget.fs src/PgetCmd.fs src/AssemblyInfo.fs $(NuGet.Core) $(Microsoft.Web.Xdt)
 	$(CC) src/AssemblyInfo.fs src/Pget.fs src/PgetCmd.fs  --out:$(exe) \
 	--target:exe \
     --platform:anycpu \
