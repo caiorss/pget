@@ -752,3 +752,5 @@ Pget.dll is a F# library that provides a high level interface and
 functional wrappers to NuGet.Core API.
 
 * Repository
+
+ - https://www.github.com/caiorss/pget
