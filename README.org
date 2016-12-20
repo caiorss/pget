@@ -12,10 +12,19 @@ Pget.exe is high level wrapper to NuGet.core package which provides
 command line tools to manage dependencies in F# projects or .NET projects.
 
 Objective: Provide NuGet.Core integration with external tools, text editors
-like Emacs and also command line integration with NuGet API.
+like Emacs and VIM and also command line integration with NuGet API. 
 
 
-Features:
+*WHY pget ?* 
+
+I create pget because existing command line tools doesn't have all
+functionality provided by Visual Studio and Package Manager Console
+like display package metadata, search packages in NuGet repository,
+display packages' metadata from local repository or project repository
+./packages and show Nuget package file metadata and files.
+
+
+*Feature*
 
  - Search  packages in Nuget repository
 
@@ -26,13 +35,17 @@ Features:
  - Display all assembly references in a repository
 
 
- - Show details about packages like description, summary, web site and so on.
+ - Generate assembly references from all repository or single package
+   for F# scripts. 
+
+
+ - Show packages' metadata like description, summary, web site and so on.
 
 
  - Inspect .NET assemblies.
    - Show .NET assemblies metadata
    - Show .NET referenced assemblies
-
+   - Show assembly resources
 
  - Show NuGet packages *.nupkg file metadata.
 
