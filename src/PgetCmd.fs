@@ -190,74 +190,74 @@ module Main =
 
     let showHelp () =
         Console.WriteLine """
-    Pget - Package Get - Enhanced command line interface to NuGet.Core
+Pget - Package Get - Enhanced command line interface to NuGet.Core
 
-    Commands                                    Description
-    ------------------------------------------  -------------------------------------------------------------
+  Commands                                      Description
+  -----------------------------                -----------------------------------------------
 
-    List Commands:
+  List Commands:
 
-      --list                                      List all packages in current repository ./package
-      --list [repo]                               List all package in [repo] repository.
+    --list                                      List all packages in current repository ./package
+    --list [repo]                               List all package in [repo] repository.
 
-      --show                                      Show all packages in current ./packages repository
-      --show [repo]                               Show all packages in [repo] repository.
-      --show --pack [pack]                        Show the package [pack] in ./packages directory
-      --show [repo] --pack [pack]                 Show the package [pack] in [repo] directory.
+    --show                                      Show all packages in current ./packages repository
+    --show [repo]                               Show all packages in [repo] repository.
+    --show --pack [pack]                        Show the package [pack] in ./packages directory
+    --show [repo] --pack [pack]                 Show the package [pack] in [repo] directory.
 
-    Search commands:
+  Search commands:
 
-      --search [package]                          Search a package by name.
-      --search [package] --repo                   Search a pacakge by name in a local repository
-      --search [package] --repo [repo]            Search a package in ./packages
+    --search [package]                          Search a package by name.
+    --search [package] --repo                   Search a pacakge by name in a local repository
+    --search [package] --repo [repo]            Search a package in ./packages
 
-    Show references for F# *.fsx scripts:
+  Show references for F# *.fsx scripts:
 
-      --ref [frm]                                 Show all assembly references from current ./packages.
-      --ref [frm] --repo [repo]                   Show all assembly references from current [repo] directory.
-      --ref [frm] --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
-      --ref [frm] --pack [pack] --repo [path]     Show all assembly references from a package at [repo] directory
-                                                  frm:  .NET Framework  net40 | net45
+    --ref [frm]                                 Show all assembly references from current ./packages.
+    --ref [frm] --repo [repo]                   Show all assembly references from current [repo] directory.
+    --ref [frm] --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
+    --ref [frm] --pack [pack] --repo [path]     Show all assembly references from a package at [repo] directory
+                                                frm:  .NET Framework  net40 | net45
 
-    Install packages:
+  Install packages:
 
-      --install [pack]                            Install the latest version of package [pack] to ./packages
-      --install [pack] --repo [repo]              Install the latest version of package [pack] to a repository [repo] i.e: ~/nuget
-      --install [pack] --ver [ver]                Install the version [ver] of package [pack]
-      --install [pack] --ver [ver] --repo [repo]  Install the version [ver] of package [pack] to a repository [repo]
+    --install [pack]                            Install the latest version of package [pack] to ./packages
+    --install [pack] --repo [repo]              Install the latest version of package [pack] to a repository [repo] i.e: ~/nuget
+    --install [pack] --ver [ver]                Install the version [ver] of package [pack]
+    --install [pack] --ver [ver] --repo [repo]  Install the version [ver] of package [pack] to a repository [repo]
 
-      --install-from-file                         Install all packages listed in the file ./packages.lst to ./packages directory.
-      --install-from-file [file]                  Install all packages listed in the file [file] to ./packages
-      --install-from-file [file] --repo [repo]    Install all packages listed in the file [file] to [repo] directory.
+    --install-from-file                         Install all packages listed in the file ./packages.lst to ./packages directory.
+    --install-from-file [file]                  Install all packages listed in the file [file] to ./packages
+    --install-from-file [file] --repo [repo]    Install all packages listed in the file [file] to [repo] directory.
 
-    Nupkg Files:
+  Nupkg Files:
 
-      nupkg --show  [file]                         Show metadata of a *.nupkg file
-      nupkg --files [file]                         Show files in nupkg [file]
+    nupkg --show  [file]                         Show metadata of a *.nupkg file
+    nupkg --files [file]                         Show files in nupkg [file]
 
-    Assembly files: *.exe or *.dll
+  Assembly files: *.exe or *.dll
 
-      asm --show           [file]                   Show all assembly attributes from an assembly file.
-      asm --show-ref       [file]                   Show all assembly references from an assembly file.
-      asm --show-resources [file]                   Show resources from an assembly file.
-      
-    Generate Guid - Globally Unique Identifier 
+    asm --show           [file]                   Show all assembly attributes from an assembly file.
+    asm --show-ref       [file]                   Show all assembly references from an assembly file.
+    asm --show-resources [file]                   Show resources from an assembly file.
 
-      --guid 
+  Generate Guid - Globally Unique Identifier 
 
-    --------------------------------------------------------------------------------------------------------------------
+    --guid 
 
-    Command abbreviations:
+  --------------------------------------------
 
-      --install            -i
-      --repo               -r
-      --help               -h
-      --version            -v
-      --ver                -v
-      --list               -l
-      --search             -s
-      --show               -sh
-      --install-from-file  -if
+  Command abbreviations:
+
+    --install            -i
+    --repo               -r
+    --help               -h
+    --version            -v
+    --ver                -v
+    --list               -l
+    --search             -s
+    --show               -sh
+    --install-from-file  -if
         """
 
         showVersion()
@@ -272,58 +272,68 @@ module Main =
         | ["--help" ]                         ->  showHelp ()    
         | ["-h" ]                             ->  showHelp ()
 
-        | ["--list"       ]                   ->  Pget.RepoLocal.showPackageList "packages"
-        | ["--list"; repo ]                   ->  Pget.RepoLocal.showPackageList  repo
-        | ["-l"       ]                       ->  Pget.RepoLocal.showPackageList "packages"
-        | ["-l"; repo ]                       ->  Pget.RepoLocal.showPackageList  repo
+        // ================================= Repository related commands ==================
+        //
+        | ["repo"; path; "--list"]                      ->  Pget.RepoLocal.showPackageList path
+        | ["repo"; "--list"]                            ->  Pget.RepoLocal.showPackageList "packages"
+        | ["repo"; path; "-l"]                          ->  Pget.RepoLocal.showPackageList path
+        | ["repo"; "-l"]                                ->  Pget.RepoLocal.showPackageList "packages"
+
+        // Show all packages in repository 
+        | ["repo"; path; "--show" ]                     ->  Pget.RepoLocal.showPackages path        
+        | ["repo"; "--show" ]                           ->  Pget.RepoLocal.showPackages "packages"    
+
+        // Install package to repository 
+        | ["repo"; path; "--install"; pack ]              ->  Pget.RepoLocal.installPackageLatest path pack
+        | ["repo"; "--install"; pack ]                    ->  Pget.RepoLocal.installPackageLatest "packages" pack
+        | ["repo"; path ; "--install"; pack ; ver ]       ->  Pget.RepoLocal.installPackage path (pack, ver)        
+        | ["repo"; "--install"; pack ;  ver  ]            ->  Pget.RepoLocal.installPackage "packages" (pack, ver)
+        | ["repo"; path; "-i"; pack ]                     ->  Pget.RepoLocal.installPackageLatest path pack
+        | ["repo"; "-i"; pack ]                           ->  Pget.RepoLocal.installPackageLatest "packages" pack
+        | ["repo"; path ; "-i"; pack ; ver ]              ->  Pget.RepoLocal.installPackage path (pack, ver)    
+        | ["repo"; "-i"; pack ;  ver  ]                   ->  Pget.RepoLocal.installPackage "packages" (pack, ver)
+
+        // Install all packages from a list of package to repository
+        | ["repo"; "--install-from-file" ]                ->  Pget.RepoLocal.installPackagesFromFile "packages" "packages.list" 
+        | ["repo"; "--install-from-file" ; file ]         ->  Pget.RepoLocal.installPackagesFromFile "packages" file
+        | ["repo"; path; "--install-from-file" ; file ]   ->  Pget.RepoLocal.installPackagesFromFile  path file
+
+        | ["repo"; "-if" ]                                ->  Pget.RepoLocal.installPackagesFromFile "packages" "packages.list" 
+        | ["repo"; "-if" ; file ]                         ->  Pget.RepoLocal.installPackagesFromFile "packages" file
+        | ["repo"; path; "-if" ; file ]                   ->  Pget.RepoLocal.installPackagesFromFile  path file
 
 
-        | ["--show";      ]                   ->  Pget.RepoLocal.showPackages "packages"
-        | ["--show"; repo ]                   ->  Pget.RepoLocal.showPackages repo
-        | ["--show"; "--pack"; pack]          ->  Pget.RepoLocal.showPackage "packages" pack
-        | ["--show"; repo ; "--pack"; pack]   ->  Pget.RepoLocal.showPackage repo pack       
-        | ["-sh";      ]                      ->  Pget.RepoLocal.showPackages "packages"
-        | ["-sh"; repo ]                      ->  Pget.RepoLocal.showPackages repo
-        | ["-sh"; "-p"; pack]                 ->  Pget.RepoLocal.showPackage "packages" pack
-        | ["-sh"; repo ; "-p"; pack]          ->  Pget.RepoLocal.showPackage repo pack       
 
-        | ["--search"; pack ]                 ->  searchPackageById pack
-        | ["--search"; pack ; "--repo"]       ->  searchLocalPackage pack "pacakges"
-        | ["--search"; pack ; "--repo"; path] ->  searchLocalPackage pack  path
-        | ["-s"; pack ]                       ->  searchPackageById pack
-        | ["-s"; pack ; "-r"]                 ->  searchLocalPackage pack "pacakges"
-        | ["-s"; pack ; "-r"; path]           ->  searchLocalPackage pack  path
+        // Generate F# include directives (#r) for all packages in a repository 
+        | ["repo"; path ; "--ref"; framework  ]         ->  showScript framework  path
+        | ["repo"; "--ref"; framework  ]                ->  showScript framework "packages"
 
-        | ["--ref"; frm   ]                                      ->  showScript frm "packages"
-        | ["--ref"; frm ; "--repo"; path ]                       ->  showScript frm  path
-        | ["--ref"; frm  ; "--pack";  pack]                      ->  showLocalPackageRef frm pack
-        | ["--ref"; frm  ; "--pack";  pack; "--repo"; path]      ->  showRepoPackageRef frm path pack
-        | ["--ref"; frm  ; "-p";  pack]                          ->  showLocalPackageRef frm pack
-        | ["--ref"; frm ; "-r"; path ]                           ->  showScript frm  path
-        | ["--ref"; frm  ; "-p";  pack; "-r"; path]              ->  showRepoPackageRef frm path pack
+        // ==============================  Individual packages commands =====================
+        //
+        // show package metadata 
+        | ["pack"; pack ; "--show" ]           ->   Pget.RepoLocal.showPackage "packages" pack 
 
+        // show package files    
+        | ["pack"; pack ; "--show-files" ]     ->   Pget.RepoLocal.showPackageFiles "packages" pack
 
-
-        | ["--install"; pack ]                                   ->  Pget.RepoLocal.installPackageLatest "packages" pack
-        | ["--install"; pack ; "--repo"; path ]                  ->  Pget.RepoLocal.installPackageLatest path pack
-        | ["--install"; pack ; "--ver" ; ver  ]                  ->  Pget.RepoLocal.installPackage "packages" (pack, ver)
-        | ["--install"; pack ; "--ver" ; ver ; "--repo"; path  ] ->  Pget.RepoLocal.installPackage path (pack, ver)
-        | ["-i"; pack ]                                          ->  Pget.RepoLocal.installPackageLatest "packages" pack
-        | ["-i"; pack ; "-r"; path ]                             ->  Pget.RepoLocal.installPackageLatest path pack
-        | ["-i"; pack ; "-v" ; ver  ]                            ->  Pget.RepoLocal.installPackage "packages" (pack, ver)
-        | ["-i"; pack ; "-v" ; ver ; "-r"; path  ]               ->  Pget.RepoLocal.installPackage path (pack, ver)
-
-        | ["--install-from-file" ]                               ->  Pget.RepoLocal.installPackagesFromFile "packages" "packages.list" 
-        | ["--install-from-file" ; file ]                        ->  Pget.RepoLocal.installPackagesFromFile "packages" file
-        | ["--install-from-file" ; file; "--repo"; repo ]        ->  Pget.RepoLocal.installPackagesFromFile repo file
-        | ["-if" ]                                               ->  Pget.RepoLocal.installPackagesFromFile "packages" "packages.list" 
-        | ["-if" ; file ]                                        ->  Pget.RepoLocal.installPackagesFromFile "packages" file
-        | ["-if" ; file; "-r"; repo ]                            ->  Pget.RepoLocal.installPackagesFromFile repo file
+        // ============================ NuGet Repository (Remote) ========================== 
+        // search package 
+        | ["nuget"; pack; "--search" ]         ->  searchPackageById pack
+        | ["nuget"; pack; "-s" ]               ->  searchPackageById pack
+        
+        // | ["pack"; "--search"; pack ; "--repo"]                   ->  searchLocalPackage pack "pacakges"
+        // | ["pack"; "--search"; pack ; "--repo"; path]             ->  searchLocalPackage pack  path
+        
+        
+        // | ["pack"; pack; "--ref"; framework ;  "--repo"; path]    ->  showRepoPackageRef frm path pack
+        // | ["pack"; pack; "--ref"; fra  ; "-p";  pack]             ->  showLocalPackageRef frm pack
 
 
+        // ======  Commands to Handle NuGet package Archives ============== //
         | ["nupkg"; "--show"; fname]                             ->  Pget.Nupkg.show fname
         | ["nupkg"; "--files"; fname]                            ->  Pget.Nupkg.showFiles fname
 
+        // ==========  Commands to Handle .NET assembly ============== //
         | ["asm" ; "--show" ; asmFile]                           -> AsmAttr.showFile asmFile
         | ["asm" ; "--show-ref" ; asmFile]                       -> AsmAttr.showAsmReferences asmFile         
         | ["asm" ; "--show-resources"; asmFile]                  -> AsmAttr.showResurces asmFile
@@ -332,6 +342,7 @@ module Main =
 
         | []                                  ->  showHelp ()
         | _                                   ->  Console.WriteLine "Error: Invalid option."
+
 
     [<EntryPoint>]    
     let main (args) =    
