@@ -232,7 +232,8 @@ module Main =
 
     Nupkg Files:
 
-      --nupkg show [file]                         Show metadata of a *.nupkg file
+      nupkg --show  [file]                         Show metadata of a *.nupkg file
+      nupkg --files [file]                         Show files in nupkg [file]
 
     Assembly files: *.exe or *.dll
 
@@ -320,7 +321,8 @@ module Main =
         | ["-if" ; file; "-r"; repo ]                            ->  Pget.RepoLocal.installPackagesFromFile repo file
 
 
-        | ["--nupkg"; "show"; fname]                             ->  Pget.Nupkg.read fname |> Pget.IPack.showPackage
+        | ["nupkg"; "--show"; fname]                             ->  Pget.Nupkg.show fname
+        | ["nupkg"; "--files"; fname]                            ->  Pget.Nupkg.showFiles fname
 
         | ["asm" ; "--show" ; asmFile]                           -> AsmAttr.showFile asmFile
         | ["asm" ; "--show-ref" ; asmFile]                       -> AsmAttr.showAsmReferences asmFile         
