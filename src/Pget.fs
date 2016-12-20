@@ -407,6 +407,36 @@ module RepoLocal =
         |> Repo.getPackages
         |> Seq.iter (fun p -> printfn "%A" p)
 
+    //// Show all package files of a package in local repository 
+    let showPackageFilesRel repoPath packageId =
+        let repo = localRepository repoPath
+        
+        let libfilesOpt = findPackageById repo packageId
+                       |> Option.map IPack.getLibFilesPath
+                       
+        match libfilesOpt with
+        | Some libfiles    -> Seq.iter (fun (path: string) -> Console.WriteLine path) libfiles
+        | None             -> printfn "Error: Package not found in %s repository." repoPath               
+
+
+    //// Show all files' paths of a package in local repository.
+    ///    
+    let showPackageFiles repoPath packageId =
+        let repo = localRepository repoPath
+
+       
+        let libfilesOpt = findPackageById repo packageId
+                       |> Option.map (fun pack ->
+                                      let packPath = System.IO.Path.Combine(repoPath, IPack.fullName pack)
+
+                                      IPack.getLibFilesPath pack
+                                      |> Seq.map (fun filePath -> 
+                                                  System.IO.Path.Combine (packPath, filePath)))
+                       
+        match libfilesOpt with
+        | Some libfiles    -> Seq.iter (fun (path: string) -> Console.WriteLine path) libfiles
+        | None             -> printfn "Error: Package not found in %s repository." repoPath               
+
 
     /// Get relative path to assemblies from a package
     ///
