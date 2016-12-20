@@ -265,7 +265,7 @@ module Repo =
         with
             :? System.ArgumentException -> None
 
-    let searchPackageById (repo: R) (packageId: string) =
+    let searchPackageById (repo: R) (packageId: string) : EnumIPack =
         repo.GetPackages().Where(fun (p: IPackage) -> p.Id.ToLower().Contains(packageId.ToLower()))
         |> Seq.groupBy(fun p -> p.Id)
         |> Seq.map (fun (k, v) -> Seq.last v)
