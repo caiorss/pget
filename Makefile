@@ -69,7 +69,7 @@ $(exe): src/Pget.fs src/PgetCmd.fs src/AssemblyInfo.fs $(NuGet.Core) $(Microsoft
 	--standalone
 
 # Install pget.exe to ~/bin 
-install: exe
+exe-install: exe
 	cp $(exe) ~/bin
 
 release: $(build)
