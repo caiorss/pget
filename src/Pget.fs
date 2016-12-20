@@ -292,7 +292,8 @@ module Repo =
         |> Seq.groupBy(fun p -> p.Id)             
         |> Seq.map (fun (k, v) -> Seq.last v)           
        
-
+    /// Returns the latest stable version of a package in a given repository object
+    ///
     let findLatestStableVersion (repo: R) (packageId: string) =
         let package = packageId
                       |> findPackagesById repo
