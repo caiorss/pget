@@ -342,6 +342,14 @@ module Nuget =
 
     let findPackageById = Repo.findPackageById nugetV2
 
+    /// Try find a package in NuGet repository and print its data
+    ///
+    let showPackage packageId =
+        let pack = Repo.findPackageById nugetV2 packageId
+        match pack with
+        | Some pk -> IPack.showPackage pk
+        | None    -> printfn "Error: I can't find the package %s" packageId
+
     let searchPackagesById: string -> EnumIPack = Repo.searchPackageById nugetV2
 
     // let findPackagesById: string -> EnumIPack = Repo.searchPackages nugetV2
