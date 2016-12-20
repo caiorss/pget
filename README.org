@@ -155,80 +155,90 @@ or
 
  - =$ pget.exe=
 
-#+BEGIN_SRC txt
-  $ pget.exe 
+Example:
 
-      Pget - Package Get - Enhanced command line interface to NuGet.Core
+#+BEGIN_SRC
+  Pget - Package Get - Enhanced command line interface to NuGet.Core
 
-      Commands                                    Description
-      ------------------------------------------  -------------------------------------------------------------
+    Commands                                      Description
+    -----------------------------                -----------------------------------------------
 
-      List Commands:
+    List Repository
 
-        --list                                      List all packages in current repository ./package
-        --list [repo]                               List all package in [repo] repository.
+      repo --list                                 List all packages in current repository ./package
+      repo [path] --list                          List all package in [path] repository.
 
-        --show                                      Show all packages in current ./packages repository
-        --show [repo]                               Show all packages in [repo] repository.
-        --show --pack [pack]                        Show the package [pack] in ./packages directory
-        --show [repo] --pack [pack]                 Show the package [pack] in [repo] directory.
+    Show repository 
+   
+      repo --show                                 Show all packages in current ./packages repository
+      repo [path] --show                          Show all packages in [path] repository.
+    
+    Show package metadata
 
-      Search commands:
+      repo --show  [pack]                         Show the package [pack] in ./packages directory
+      repo [path] --show [pack]                   Show the package [pack] in [repo] directory.
 
-        --search [package]                          Search a package by name.
-        --search [package] --repo                   Search a pacakge by name in a local repository
-        --search [package] --repo [repo]            Search a package in ./packages
+    Show package files 
 
-      Show references for F# *.fsx scripts:
+      repo --show-files [pack]                    Show content files of package [pack] in ./packages
+      repo [path] --show-files [pack]             Show content files of package [pack] in [repo]
 
-        --ref [frm]                                 Show all assembly references from current ./packages.
-        --ref [frm] --repo [repo]                   Show all assembly references from current [repo] directory.
-        --ref [frm] --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
-        --ref [frm] --pack [pack] --repo [path]     Show all assembly references from a package at [repo] directory
-                                                    frm:  .NET Framework  net40 | net45
+    Install package to repository  
 
-      Install packages:
+      repo --install [pack]                       Install the latest version of package [pack] to ./packages
+      repo --install [pack] [ver]                 Install the version [ver] of package [pack]
+      repo [path] --install [pack]                Install the latest version of package [pack] to a repository [path] i.e: ~/nuget
+      repo [path] --install [pack] [ver]          Install the version [ver] of package [pack] to a repository [path]
 
-        --install [pack]                            Install the latest version of package [pack] to ./packages
-        --install [pack] --repo [repo]              Install the latest version of package [pack] to a repository [repo] i.e: ~/nuget
-        --install [pack] --ver [ver]                Install the version [ver] of package [pack]
-        --install [pack] --ver [ver] --repo [repo]  Install the version [ver] of package [pack] to a repository [repo]
+    Install a list of packages listed in a file
 
-        --install-from-file                         Install all packages listed in the file ./packages.lst to ./packages directory.
-        --install-from-file [file]                  Install all packages listed in the file [file] to ./packages
-        --install-from-file [file] --repo [repo]    Install all packages listed in the file [file] to [repo] directory.
+      repo --install-from-file                    Install all packages listed in the file ./packages.list to ./packages directory.
+      repo --install-from-file [file]             Install all packages listed in the file ./packages.list to ./packages directory.
+      repo [path] --install-from-file [file]      Install all packages listed in the file [file] to [path]
 
-      Nupkg Files:
 
-        nupkg --show  [file]                         Show metadata of a *.nupkg file
-        nupkg --files [file]                         Show files in nupkg [file]
+    Show references for F# *.fsx scripts:        [frm]:  .NET Framework  net40 | net45   
 
-      Assembly files: *.exe or *.dll
+      repo --ref [frm]                            Show all assembly references from current ./packages.
+      repo --ref  --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
+      repo [path] --ref [frm]                     Show all assembly references from current [repo] directory.
+      repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory
+                              
+    Nuget commands:
 
-        asm --show           [file]                   Show all assembly attributes from an assembly file.
-        asm --show-ref       [file]                   Show all assembly references from an assembly file.
-        asm --show-resources [file]                   Show resources from an assembly file.
-        
-      Generate Guid - Globally Unique Identifier 
+      nuget --search [package]                    Search a package by name.  
+      nuget --show   [package]                    Show package information (metadata).
 
-        --guid 
+    Nupkg Files:
 
-      --------------------------------------------------------------------------------------------------------------------
+      nupkg --show  [file]                        Show metadata of a *.nupkg file
+      nupkg --files [file]                        Show files in nupkg [file]
 
-      Command abbreviations:
+    Assembly files: *.exe or *.dll
 
-        --install            -i
-        --repo               -r
-        --help               -h
-        --version            -v
-        --ver                -v
-        --list               -l
-        --search             -s
-        --show               -sh
-        --install-from-file  -if
+      asm --info [file]                           Show all assembly attributes from an assembly file.
+      asm --refs [file]                           Show all assembly references from an assembly file.
+      asm --resources [file]                      Show resources from an assembly file.
+
+    Generate Guid - Globally Unique Identifier 
+
+      --guid 
+
+    --------------------------------------------
+
+    Command abbreviations:
+
+      --install            -i  
+      --help               -h
+      --version            -v
+      --ver                -v
+      --list               -l
+      --search             -s
+      --show               -sh
+      --install-from-file  -if
           
 
-      Pget - Package Get - Version 1.0 
+      Pget - Package Get - Version 1.2 
       Copyright (C) 2016 Caio Rodrigues
 
 #+END_SRC
@@ -237,21 +247,25 @@ or
 
  - =$ pget.exe --version= or =$ pget.exe -v=
 
+Example:
+
 #+BEGIN_SRC sh
   $ bin/pget.exe --version
 
-      Pget - Package Get - Version 1.0
+      Pget - Package Get - Version 1.2 
       Copyright (C) 2016 Caio Rodrigues
 #+END_SRC
 
-*** List packages
+*** Local Repository
+**** List packages
+***** List packages in project repository ./packages directory:
 
-List packages in current repository ./packages directory:
+ - =$ pget.exe repo --list= or =$ pget.exe -l=
 
- - =$ pget.exe --list= or =$ pget.exe -l=
+Example:
 
 #+BEGIN_SRC sh
-  $ bin/pget.exe -l
+  $ bin/pget.exe repo -l
   Microsoft.Web.Xdt 2.1.1
   NuGet.Core 2.12.0
 
@@ -272,12 +286,14 @@ List packages in current repository ./packages directory:
   6 directories, 4 files
 #+END_SRC
 
-List packages in a directory:
+***** List packages in a local repository
 
- - =$ pget.exe --list [directory]= or =$ pget.exe --l [directory]=
+ - =$ pget.exe repo --list [directory]= or =$ pget.exe --l [directory]=
+
+Example:
 
 #+BEGIN_SRC sh
-  $ bin/pget.exe -l /home/arch/nuget
+  $ bin/pget.exe repo -l /home/arch/nuget
   Common.Logging 2.1.2
   Deedle 1.2.5
   Deedle.RPlugin 1.2.5
@@ -289,15 +305,15 @@ List packages in a directory:
   FAKE 4.39.0
   ...
 #+END_SRC
+**** Show package information (metadata)
+***** Show all packages in project repository (./packages)
 
-*** Show package metadata
+ - =$ pget.exe pget repo --show= or =$ pget.exe repo -sh=
 
-Show all packages in ./packages directory
-
- - =$ pget.exe --show= or =$ pget.exe -sh=
+Example:
 
 #+BEGIN_SRC txt
-  $ bin/pget.exe --show
+  $ bin/pget.exe repo --show
 
   Id             Microsoft.Web.Xdt
   Title          Microsoft Xml Document Transformation
@@ -326,45 +342,55 @@ Show all packages in ./packages directory
 
 #+END_SRC
 
-Show all packages in a directory
+***** Show all packages in a local repository
+
+ - =$ pget.exe repo [path] --show= or =$ pget.exe repo [path] -sh=
+
+Example:
 
 #+BEGIN_SRC txt
-  Id             Common.Logging
-  Title
-  Tags
-  Version        2.1.2
-  Summary
-  Authors        Aleksandar Seovic,  Mark Pollack,  Erich Eichinger,  Stephen Bohlen
-  Project URL    http://netcommon.sourceforge.net/
-  Dependencies
+  $ bin/pget.exe repo /tmp/testrepo --show
+
+  Id             FParsec
+  Title          FParsec
+  Tags            parser combinator f# fsharp c# csharp parsec fparsec 
+  Version        1.0.2
+  Summary        
+  Authors        Stephan Tolksdorf
+  Project URL    http://www.quanttec.com/fparsec/
+  Dependencies   
   Download Count -1
 
-  Description    Common.Logging library introduces a simple abstraction to allow you to select a specific logging implementation at runtime.
+  Description    FParsec is a parser combinator library for F#.
 
-  ...
-  ...
+  You can find comprehensive documentation for FParsec at http://www.quanttec.com/fparsec. The documentation includes a feature list, a tutorial, a user’s guide and an API reference.
 
-  Id             EntityFramework
-  Title          EntityFramework
-  Tags            Microsoft EF Database Data O/RM ADO.NET
-  Version        6.0.0
-  Summary        Entity Framework is Microsoft's recommended data access technology for new applications.
-  Authors        Microsoft
-  Project URL    http://go.microsoft.com/fwlink/?LinkID=320540
-  Dependencies
+  This package uses the basic “low-trust” configuration of FParsec, which does not use any unverifiable code and is optimized for maximum portability. If you need to parse very large files or if you employ FParsec for performance-critical jobs, consider using the alternate “Big Data Edition” NuGet package (see nuget.org/packages/fparsec-big-data-edition).
+                            
+
+  Id             FSharp.Data
+  Title          F# Data
+  Tags            F# fsharp data typeprovider WorldBank CSV HTML CSS JSON XML HTTP linqpad-samples 
+  Version        2.3.2
+  Summary        Library of F# type providers and data access tools
+  Authors        Tomas Petricek,  Gustavo Guerra,  Colin Bull
+  Project URL    http://fsharp.github.io/FSharp.Data
+  Dependencies   Zlib.Portable 1.11.0, Zlib.Portable 1.11.0, Zlib.Portable 1.11.0
   Download Count -1
 
-  Description    Entity Framework is Microsoft's recommended data access technology for new applications.
-
-
+  Description    The F# Data library (FSharp.Data.dll) implements everything you need to access data in your F# applications and scripts. It implements F# type providers for working with structured file formats (CSV, HTML, JSON and XML) and for accessing the WorldBank data. It also includes helpers for parsing CSV, HTML and JSON files and for sending HTTP requests.
+                            
+  ...
 #+END_SRC
 
-Show a single package in ./packages (Project repository)
+***** Show a single package in project repository (./packages)
 
- - =$ pget.exe --show --pack [package-Id]= or - =$ pget.exe -sh -p [package-Id]=
+ - =$ pget.exe repo --show [package-Id]= or - =$ pget.exe repo -sh [package-Id]=
+
+Example:
 
 #+BEGIN_SRC sh
-  $ bin/pget.exe --show --pack NuGet.Core
+  $ bin/pget.exe repo --show NuGet.Core
 
   Id             NuGet.Core
   Title
@@ -379,17 +405,18 @@ Show a single package in ./packages (Project repository)
   Description    NuGet.Core is the core framework assembly for NuGet that the rest of NuGet builds upon.
 #+END_SRC
 
+***** Show a single package in a Local Repository
 
-Show a single package in a directory (Local Repository):
-
- - =$ pget.exe [repository] --show --pack [package-Id]=
+ - =$ pget.exe repo [path] --show [package-Id]=
 
 or
 
- - =$ pget.exe -sh [repository] -p [package-Id]=
+ - =$ pget.exe repo [path] -sh [package-Id]=
+
+Example:
 
 #+BEGIN_SRC txt
-  $ bin/pget.exe --show ~/nuget --pack NUnit.Console
+  $ bin/pget.exe repo ~/nuget --show NUnit.Console
 
   Id             NUnit.Console
   Title          NUnit Console Runner Version 3 Plus Extensions
@@ -412,13 +439,329 @@ or
 
         Other extensions, if needed, must be installed separately
 #+END_SRC
+**** Show package files
+***** Show files of a package in project repository ./packages
 
-*** Search a package
+ - =$ pget.exe repo --files [package-id]=
 
- - =$ pget.exe --search [keyword]= or - =$ pget.exe -s [keywork]=
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe repo --files OxyPlot.Core
+
+  packages/OxyPlot.Core.1.0.0/lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1+Xamarin.iOS10/OxyPlot.dll
+  packages/OxyPlot.Core.1.0.0/lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1+Xamarin.iOS10/OxyPlot.pdb
+  packages/OxyPlot.Core.1.0.0/lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1+Xamarin.iOS10/OxyPlot.xml
+  packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.dll
+  packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.pdb
+  packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.xml
+  packages/OxyPlot.Core.1.0.0/lib/net40-client/OxyPlot.dll
+  packages/OxyPlot.Core.1.0.0/lib/net40-client/OxyPlot.pdb
+  packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll
+  packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.pdb
+  packages/OxyPlot.Core.1.0.0/lib/sl5/OxyPlot.dll
+  packages/OxyPlot.Core.1.0.0/lib/sl5/OxyPlot.pdb
+  packages/OxyPlot.Core.1.0.0/README.md
+  packages/OxyPlot.Core.1.0.0/CHANGELOG.md
+
+
+  $ bin/pget.exe repo --files FParsec
+  packages/FParsec.1.0.2/lib/net40-client/FParsec.dll
+  packages/FParsec.1.0.2/lib/net40-client/FParsec.XML
+  packages/FParsec.1.0.2/lib/net40-client/FParsecCS.dll
+  packages/FParsec.1.0.2/lib/net40-client/FParsecCS.XML
+  packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll
+  packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.XML
+  packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll
+  packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.XML
+#+END_SRC
+
+***** Show files of a package in a local repository  
+
+ - =$ pget.exe repo [path] --files [package-id]=
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe repo ~/nuget --files FParsec
+
+  /home/arch/nuget/FParsec.1.0.2/lib/net40-client/FParsec.dll
+  /home/arch/nuget/FParsec.1.0.2/lib/net40-client/FParsec.XML
+  /home/arch/nuget/FParsec.1.0.2/lib/net40-client/FParsecCS.dll
+  /home/arch/nuget/FParsec.1.0.2/lib/net40-client/FParsecCS.XML
+  /home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll
+  /home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.XML
+  /home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll
+  /home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.XML
+
+
+  $ bin/pget.exe repo ~/nuget --files Mono.Cecil
+
+  /home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net20/Mono.Cecil.dll
+  /home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net20/Mono.Cecil.Mdb.dll
+  /home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net20/Mono.Cecil.Pdb.dll
+  /home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net35/Mono.Cecil.dll
+  /home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net35/Mono.Cecil.Mdb.dll
+  /home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net35/Mono.Cecil.Pdb.dll
+  /home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net35/Mono.Cecil.Rocks.dll
+  /home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net40/Mono.Cecil.dll
+  /home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net40/Mono.Cecil.Mdb.dll
+  /home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net40/Mono.Cecil.Pdb.dll
+  /home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net40/Mono.Cecil.Rocks.dll
+  /home/arch/nuget/Mono.Cecil.0.9.5.4/lib/sl40/Mono.Cecil.dll
+  /home/arch/nuget/Mono.Cecil.0.9.5.4/lib/sl40/Mono.Cecil.Rocks.dll
+
+#+END_SRC
+
+**** Install packages
+***** Install the lastest version of a package to ./packages (Project repository)
+
+ - =$ pget.exe repo --install [package-id]= or - =$ pget.exe repo -i [package-id]=
+
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe repo --install OxyPlot.Pdf
+  Installing: OxyPlot.Pdf 1.0.0
+
+  $ ls -l packages
+  total 0
+  drwxrwxrwx 1 arch arch 280 dez 19 00:52 Microsoft.Web.Xdt.2.1.1/
+  drwxrwxrwx 1 arch arch 264 dez 19 01:45 NuGet.Core.2.12.0/
+  drwxrwxrwx 1 arch arch 488 dez 19 02:22 OxyPlot.Core.1.0.0/
+  drwxrwxrwx 1 arch arch 480 dez 19 02:22 OxyPlot.Pdf.1.0.0/
+  drwxrwxrwx 1 arch arch 296 dez 19 02:22 PDFsharp-MigraDoc-GDI.1.32.4334.0/
+
+   bin/pget.exe repo -sh OxyPlot.Core
+
+  Id             OxyPlot.Core
+  Title          OxyPlot core library (PCL)
+  Tags            plotting plot charting chart
+  Version        1.0.0
+  Summary
+  Authors        Oystein Bjorke
+  Project URL    http://oxyplot.org/
+  Dependencies
+  Download Count -1
+
+  Description    OxyPlot is a plotting library for .NET. This is the portable core library that is referenced by the platform-specific OxyPlot packages.
+
+#+END_SRC
+
+***** Install a specific version of package  to ./packages
+
+ - =$ pget.exe repo --install [package-id] [version]=
+
+or
+
+ - =$ pget.exe repo -i [package-id] [version]=
+
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe repo -i FParsec 1.0.2
+
+  $ ls -l packages
+  total 0
+  drwxrwxrwx 1 arch arch 256 dez 19 02:31 FParsec.1.0.2/
+  drwxrwxrwx 1 arch arch 280 dez 19 00:52 Microsoft.Web.Xdt.2.1.1/
+  drwxrwxrwx 1 arch arch 264 dez 19 01:45 NuGet.Core.2.12.0/
+  drwxrwxrwx 1 arch arch 488 dez 19 02:22 OxyPlot.Core.1.0.0/
+  drwxrwxrwx 1 arch arch 480 dez 19 02:22 OxyPlot.Pdf.1.0.0/
+  drwxrwxrwx 1 arch arch 296 dez 19 02:22 PDFsharp-MigraDoc-GDI.1.32.4334.0/
+#+END_SRC
+
+***** Install the lastest version of a package to a local repository
+
+ - =$ pget.exe repo [path] --install [package-id]=
+
+or
+
+ - =$ pget.exe repo [path] -i [package-id] -r [path]=
+
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe repo -i /home/arch/nuget  OxyPlot.Pdf 
+  Installing: OxyPlot.Pdf 1.0.0
+
+  $ bin/pget.exe repo /home/arch/nuget -sh OxyPlot.Pdf
+
+  Id             OxyPlot.Pdf
+  Title          OxyPlot PDF extensions (for Silverlight and NET4)
+  Tags            pdf plotting plot charting chart
+  Version        1.0.0
+  Summary
+  Authors        Oystein Bjorke
+  Project URL    http://oxyplot.org/
+  Dependencies   OxyPlot.Core [1.0.0], PDFsharp-MigraDoc-GDI [1.32.4334], OxyPlot.Core [1.0.0], PDFsharp-MigraDoc-GDI [1.32.4334], OxyPlot.Core [1.0.0]
+  Download Count -1
+
+  Description    OxyPlot is a plotting library for .NET. This package contains .pdf export extensions for .NET 4 (based on PDFsharp) and Silverlight (based on SilverPDF).
+
+#+END_SRC
+
+***** Install a specific version of package to a local repository
+
+ - =$ pget.exe repo [path] --install [package-id] [version]=
+
+or
+
+ - =$ pget.exe repo [path] -i [package-id] -v [package]=
+
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe repo ~/nuget -i Microsoft.Web.Xdt 1.0.0
+#+END_SRC
+
+**** Install packages listed in a file
+****** Install all packages listed in the file ./packages.list to ./packages
+
+ - =$ pget.exe repo --install-from-file=
+
+or
+
+ - =$ pget.exe repo -if=
+
+Example of the file packages.list. If the version is not listed, it
+installs the latest version of the packages to ./packages.
+
+File: packages.list
+
+#+BEGIN_SRC sh
+  FSharp.Data              1.0.0
+  Deedle                   1.0.0
+  OxyPlot.Pdf
+  OxyPlot.WindowsForms
+#+END_SRC
+
+****** Install all packages listed in the file ./packages.list to ./packages
+
+ - =$ pget.exe repo --install-from-file [packages-list-file]=
+
+or
+
+ - =$ pget.exe repo -if [package-list-file]=
+
+**** Get assembly references for F# scripts
+***** Get all assembly references from current ./packages repository.
+
+ - =$ pget.exe repo --ref [framework]=
+
+The framework is the .NET framework version. It can be:
+
+ - net40 for .NET 4.0
+ - net45 for .NET 4.5
+
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe repo --ref net40
+  #r "packages/FParsec.1.0.2/lib/net40-client/FParsec.dll"
+  #r "packages/FParsec.1.0.2/lib/net40-client/FParsecCS.dll"
+  #r "packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll"
+  #r "packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll"
+  #r "packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll"
+  #r "packages/OxyPlot.Pdf.1.0.0/lib/net40/OxyPlot.Pdf.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.DocumentObjectModel.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.Rendering.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.RtfRendering.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.Charting.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.DocumentObjectModel.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.Rendering.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.RtfRendering.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.Charting.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.resources.dll"
+
+
+  $ bin/pget.exe repo --ref net45
+  #r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"
+  #r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"
+  #r "packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll"
+  #r "packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll"
+  #r "packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll"
+  #r "packages/OxyPlot.Pdf.1.0.0/lib/net40/OxyPlot.Pdf.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.DocumentObjectModel.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.Rendering.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.RtfRendering.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.Charting.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.DocumentObjectModel.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.Rendering.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.RtfRendering.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.Charting.resources.dll"
+  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.resources.dll"
+
+#+END_SRC
+
+***** Get all assembly references from a package in ./packages:
+
+ - =$ pget.exe repo --ref [framework] [package-id]=
+
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe repo --ref net45 FParsec
+  #r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"
+  #r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"
+#+END_SRC
+
+***** Get all assembly references from a local repository.
+
+ - =$ pget.exe repo [path] --ref [framework]=
+
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe repo /tmp/packages -i FSharp.Data 
+  Installing: FSharp.Data 2.3.2
+
+  $ bin/pget.exe repo /tmp/packages -i FParsec
+  Installing: FParsec 1.0.2
+
+
+  $ ls /tmp/packages/
+  FParsec.1.0.2/  FSharp.Data.2.3.2/  Zlib.Portable.1.11.0/
+
+  $ bin/pget.exe repo /tmp/packages --ref net40
+  #r "/tmp/packages/FParsec.1.0.2/lib/net40-client/FParsec.dll"
+  #r "/tmp/packages/FParsec.1.0.2/lib/net40-client/FParsecCS.dll"
+  #r "/tmp/packages/FSharp.Data.2.3.2/lib/net40/FSharp.Data.dll"
+  #r "/tmp/packages/FSharp.Data.2.3.2/lib/net40/FSharp.Data.DesignTime.dll"
+  #r "/tmp/packages/Zlib.Portable.1.11.0/lib/portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid/Zlib.Portable.dll"
+
+  $ bin/pget.exe repo /tmp/packages --ref net45
+  #r "/tmp/packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"
+  #r "/tmp/packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"
+  #r "/tmp/packages/FSharp.Data.2.3.2/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.dll"
+  #r "/tmp/packages/FSharp.Data.2.3.2/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.DesignTime.dll"
+  #r "/tmp/packages/Zlib.Portable.1.11.0/lib/portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid/Zlib.Portable.dll"
+#+END_SRC
+
+***** Get all assembly references from a package in a local repository
+
+ - =$ pget.exe repo [path --ref [framework] [package-id]=
+
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe repo ~/nuget --ref net45 FParsec
+  #r "/home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"
+  #r "/home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"
+
+  $ bin/pget.exe repo ~/nuget --ref net45 FSharp.Data
+  #r "/home/arch/nuget/FSharp.Data.2.3.1/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.dll"
+  #r "/home/arch/nuget/FSharp.Data.2.3.1/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.DesignTime.dll"
+#+END_SRC
+*** NuGet Repository 
+**** Search a package
+
+ - =$ pget.exe nuget --search [keyword]= or - =$ pget.exe nuget -s [keywork]=
+
+Example:
 
 #+BEGIN_SRC txt
-  $ bin/pget.exe -s oxyplot
+  $ bin/pget.exe nuget -s oxyplot
 
   Id             AnnotationGUIOxyplot
   Title
@@ -447,249 +790,46 @@ or
 
  ... ... ...
 #+END_SRC
-*** Install a package
 
-Install the lastest version of a package to ./packages (Project repository)
+**** Display package information (metadata)
 
- - =$ pget.exe --install [package-id]= or - =$ pget.exe -i [package-id]=
+ - =pget.exe nuget --show=
 
-#+BEGIN_SRC sh
-  $ bin/pget.exe --install OxyPlot.Pdf
-  Installing: OxyPlot.Pdf 1.0.0
+Example:
 
-  $ ls -l packages
-  total 0
-  drwxrwxrwx 1 arch arch 280 dez 19 00:52 Microsoft.Web.Xdt.2.1.1/
-  drwxrwxrwx 1 arch arch 264 dez 19 01:45 NuGet.Core.2.12.0/
-  drwxrwxrwx 1 arch arch 488 dez 19 02:22 OxyPlot.Core.1.0.0/
-  drwxrwxrwx 1 arch arch 480 dez 19 02:22 OxyPlot.Pdf.1.0.0/
-  drwxrwxrwx 1 arch arch 296 dez 19 02:22 PDFsharp-MigraDoc-GDI.1.32.4334.0/
+#+BEGIN_SRC txt
+  $ bin/pget.exe nuget --show FParsec
 
-   bin/pget.exe -sh -p OxyPlot.Core
+  Id             FParsec
+  Title          FParsec
+  Tags            parser combinator parsec fsharp 
+  Version        0.9.1
+  Summary        FParsec is a parser combinator library for F#.
+  Authors        Stephan Tolksdorf (FParsec),   Ryan Riley (NuGet Package)
+  Project URL    http://quanttec.com/fparsec/
+  Dependencies   
+  Download Count 66877
 
-  Id             OxyPlot.Core
-  Title          OxyPlot core library (PCL)
-  Tags            plotting plot charting chart
-  Version        1.0.0
-  Summary
-  Authors        Oystein Bjorke
-  Project URL    http://oxyplot.org/
-  Dependencies
-  Download Count -1
+  Description    FParsec is a parser combinator library for F#
 
-  Description    OxyPlot is a plotting library for .NET. This is the portable core library that is referenced by the platform-specific OxyPlot packages.
 
-#+END_SRC
+  $ bin/pget.exe nuget --show FParsecsdadfsf
+  Error: I can't find the package FParsecsdadfsf
 
-Install a given version of package  to ./packages
+  $ bin/pget.exe nuget --show FSharp.Core
 
- - =$ pget.exe --install [package-id] --version [version]=
+  Id             FSharp.Core
+  Title          FSharp.Core
+  Tags           f#
+  Version        2.0.0.0
+  Summary        FSharp.Core.dll
+  Authors        Microsoft
+  Project URL    
+  Dependencies   
+  Download Count 460728
 
-or
+  Description    FSharp.Core.dll which can be referenced in other nuget packages.
 
- - =$ pget.exe -i [package-id] --v [version]=
-
-#+BEGIN_SRC sh
-  $ bin/pget.exe -i FParsec -v 1.0.2
-
-  $ ls -l packages
-  total 0
-  drwxrwxrwx 1 arch arch 256 dez 19 02:31 FParsec.1.0.2/
-  drwxrwxrwx 1 arch arch 280 dez 19 00:52 Microsoft.Web.Xdt.2.1.1/
-  drwxrwxrwx 1 arch arch 264 dez 19 01:45 NuGet.Core.2.12.0/
-  drwxrwxrwx 1 arch arch 488 dez 19 02:22 OxyPlot.Core.1.0.0/
-  drwxrwxrwx 1 arch arch 480 dez 19 02:22 OxyPlot.Pdf.1.0.0/
-  drwxrwxrwx 1 arch arch 296 dez 19 02:22 PDFsharp-MigraDoc-GDI.1.32.4334.0/
-#+END_SRC
-
-Install the lastest version of a package to a local repository
-
- - =$ pget.exe --install [package-id] --repo [repository]=
-
-or
-
- - =$ pget.exe -i [package-id] -r [repository]=
-
-#+BEGIN_SRC sh
-  $ bin/pget.exe -i  OxyPlot.Pdf -r /home/arch/nuget
-  Installing: OxyPlot.Pdf 1.0.0
-
-  $ bin/pget.exe -sh /home/arch/nuget -p OxyPlot.Pdf
-
-  Id             OxyPlot.Pdf
-  Title          OxyPlot PDF extensions (for Silverlight and NET4)
-  Tags            pdf plotting plot charting chart
-  Version        1.0.0
-  Summary
-  Authors        Oystein Bjorke
-  Project URL    http://oxyplot.org/
-  Dependencies   OxyPlot.Core [1.0.0], PDFsharp-MigraDoc-GDI [1.32.4334], OxyPlot.Core [1.0.0], PDFsharp-MigraDoc-GDI [1.32.4334], OxyPlot.Core [1.0.0]
-  Download Count -1
-
-  Description    OxyPlot is a plotting library for .NET. This package contains .pdf export extensions for .NET 4 (based on PDFsharp) and Silverlight (based on SilverPDF).
-
-#+END_SRC
-
-Install a given version of package to a local repository
-
- - =$ pget.exe --install [package-id] --version [package] --repo [repository]=
-
-or
-
- - =$ pget.exe -i [package-id] -v [package] --r [repository]=
-
-#+BEGIN_SRC sh
-  $ bin/pget.exe -i Microsoft.Web.Xdt -v 1.0.0 -r ~/nuget
-#+END_SRC
-
-Install all packages listed in the file ./packages.list to ./packages
-
- - =$ pget.exe --install-from-file=
-
-or
-
- - =$ pget.exe -if=
-
-Example of the file packages.list. If the version is not listed, it
-installs the latest version of the packages to ./packages.
-
-File: packages.list
-
-#+BEGIN_SRC sh
-  FSharp.Data              1.0.0
-  Deedle                   1.0.0
-  OxyPlot.Pdf
-  OxyPlot.WindowsForms
-#+END_SRC
-
-Install all packages listed in the file ./packages.list to ./packages
-
- - =$ pget.exe --install-from-file [packages-list-file]=
-
-or
-
- - =$ pget.exe -if [package-list-file]=
-
-*** Get assembly references for F# scripts
-
-Get all assembly references from current ./packages repository.
-
- - =$ pget.exe --ref [framework]=
-
-The framework is the .NET framework version. It can be:
-
- - net40 for .NET 4.0
- - net45 for .NET 4.5
-
-#+BEGIN_SRC sh
-  $ bin/pget.exe --ref net40
-  #r "packages/FParsec.1.0.2/lib/net40-client/FParsec.dll"
-  #r "packages/FParsec.1.0.2/lib/net40-client/FParsecCS.dll"
-  #r "packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll"
-  #r "packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll"
-  #r "packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll"
-  #r "packages/OxyPlot.Pdf.1.0.0/lib/net40/OxyPlot.Pdf.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.DocumentObjectModel.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.Rendering.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.RtfRendering.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.Charting.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.DocumentObjectModel.resources.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.Rendering.resources.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.RtfRendering.resources.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.Charting.resources.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.resources.dll"
-
-
-  $ bin/pget.exe --ref net45
-  #r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"
-  #r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"
-  #r "packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll"
-  #r "packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll"
-  #r "packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll"
-  #r "packages/OxyPlot.Pdf.1.0.0/lib/net40/OxyPlot.Pdf.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.DocumentObjectModel.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.Rendering.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.RtfRendering.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.Charting.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.DocumentObjectModel.resources.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.Rendering.resources.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.RtfRendering.resources.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.Charting.resources.dll"
-  #r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.resources.dll"
-
-
-
-#+END_SRC
-
-
-Get all assembly references from a package in ./packages:
-
- - =$ pget.exe --ref [framework] --pack [package-id]=
-
-or
-
- - =$ pget.exe --ref [framework] --p [package-id]=
-
-#+BEGIN_SRC sh
-  $ bin/pget.exe --ref net45 --pack FParsec
-  #r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"
-  #r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"
-#+END_SRC
-
-
-Get all assembly references from a repository.
-
- - =$ pget.exe --ref [framework] --repo [repository]=
-
-or
-
- - =$ pget.exe --ref [framework] -r [repository]=
-
-#+BEGIN_SRC sh
-  $ bin/pget.exe -i FSharp.Data -r /tmp/packages
-  Installing: FSharp.Data 2.3.2
-
-  $ bin/pget.exe -i FParsec -r /tmp/packages
-  Installing: FParsec 1.0.2
-
-
-  $ ls /tmp/packages/
-  FParsec.1.0.2/  FSharp.Data.2.3.2/  Zlib.Portable.1.11.0/
-
-  $ bin/pget.exe --ref net40 --repo /tmp/packages
-  #r "/tmp/packages/FParsec.1.0.2/lib/net40-client/FParsec.dll"
-  #r "/tmp/packages/FParsec.1.0.2/lib/net40-client/FParsecCS.dll"
-  #r "/tmp/packages/FSharp.Data.2.3.2/lib/net40/FSharp.Data.dll"
-  #r "/tmp/packages/FSharp.Data.2.3.2/lib/net40/FSharp.Data.DesignTime.dll"
-  #r "/tmp/packages/Zlib.Portable.1.11.0/lib/portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid/Zlib.Portable.dll"
-
-  $ bin/pget.exe --ref net45 --repo /tmp/packages
-  #r "/tmp/packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"
-  #r "/tmp/packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"
-  #r "/tmp/packages/FSharp.Data.2.3.2/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.dll"
-  #r "/tmp/packages/FSharp.Data.2.3.2/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.DesignTime.dll"
-  #r "/tmp/packages/Zlib.Portable.1.11.0/lib/portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid/Zlib.Portable.dll"
-#+END_SRC
-
-Get all assembly references from a package in a repository
-
- - =$ pget.exe --ref [framework] --pack [package-id] --repo [repository]=
-
-or
-
- - =$ pget.exe --ref [framework] --p [package-id] --repo [repository]=
-
-
-#+BEGIN_SRC sh
-  $ bin/pget.exe --ref net45 --pack FParsec --repo ~/nuget
-  #r "/home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"
-  #r "/home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"
-
-  $ bin/pget.exe --ref net45 --pack FSharp.Data --repo ~/nuget
-  #r "/home/arch/nuget/FSharp.Data.2.3.1/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.dll"
-  #r "/home/arch/nuget/FSharp.Data.2.3.1/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.DesignTime.dll"
 #+END_SRC
 
 *** NuGet package files nupkg files
@@ -698,6 +838,8 @@ or
 Show a NuGet package metadata
 
  - =$ pget.xe nupkg --show [nupkg-file]=
+
+Example:
 
 #+BEGIN_SRC sh
   $ bin/pget.exe nupkg --show ./packages/FParsec.1.0.2/FParsec.1.0.2.nupkg
@@ -724,6 +866,8 @@ Show a NuGet package metadata
 
  - =$ pget.exe nupkg --files [nupkg-file]=
 
+Example:
+
 #+BEGIN_SRC sh 
   $ bin/pget.exe nupkg --files ./packages/FParsec.1.0.2/FParsec.1.0.2.nupkg
   lib/net40-client/FParsec.dll
@@ -736,15 +880,15 @@ Show a NuGet package metadata
   lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.XML
 #+END_SRC
 
-*** Show assembly metadata
+*** Assembly metadata
 **** Show Assembly Attributes
 
- - =$ pget.exe asm --show [assembly-file]=
+ - =$ pget.exe asm --info [assembly-file]=
 
-Example 1:
+Example:
 
 #+BEGIN_SRC sh
-  $ bin/pget.exe asm --show ~/bin/nuget.exe
+  $ bin/pget.exe asm --info ~/bin/nuget.exe
   Assembly Attributes
   -------------------------------------------
   Name         NuGet
@@ -763,7 +907,7 @@ Example 1:
 Example 2:
 
 #+BEGIN_SRC sh
-  $ bin/pget.exe asm --show ~/nuget/FSharp.Core.3.1.2.5/lib/net40/FSharp.Core.dll
+  $ bin/pget.exe asm --info ~/nuget/FSharp.Core.3.1.2.5/lib/net40/FSharp.Core.dll
   Assembly Attributes
   -------------------------------------------
   Name         FSharp.Core
@@ -783,10 +927,12 @@ Example 2:
 
 Show assemblies referenced by an assembly file
 
- - =$ pget.exe asm --show-ref [assembly-file]=
+ - =$ pget.exe asm --refs [assembly-file]=
+
+Example:
 
 #+BEGIN_SRC sh
-  $ bin/pget.exe asm --show-ref ~/bin/nuget.exe
+  $ bin/pget.exe asm --refs ~/bin/nuget.exe
   Name = mscorlib     Version = 4.0.0.0       Culture =
   Name = Microsoft.CSharp     Version = 4.0.0.0       Culture =
   Name = System.Core      Version = 4.0.0.0       Culture =
@@ -813,10 +959,12 @@ Show assemblies referenced by an assembly file
 
 **** Show Assembly Resources 
 
- - =$ pget.exe asm --show-resources [asmfile]= 
+ - =$ pget.exe asm --resources [asmfile]= 
+
+Example:
 
 #+BEGIN_SRC sh
-  $ bin/pget.exe asm --show-resources bin/pget.exe 
+  $ bin/pget.exe asm --resources bin/pget.exe 
   FSCore.resources
   NuGet.CommonResources.resources
   NuGet.NuGet.Frameworks.Strings.resources
@@ -828,6 +976,8 @@ Show assemblies referenced by an assembly file
 *** Generate GUID
 
  - =$ pget.exe --guid=
+
+Example:
 
 #+BEGIN_SRC sh
   $ bin/pget.exe --guid
