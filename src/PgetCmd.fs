@@ -274,14 +274,30 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
 
         // ================================= Repository related commands ==================
         //
-        | ["repo"; path; "--list"]                      ->  Pget.RepoLocal.showPackageList path
-        | ["repo"; "--list"]                            ->  Pget.RepoLocal.showPackageList "packages"
-        | ["repo"; path; "-l"]                          ->  Pget.RepoLocal.showPackageList path
-        | ["repo"; "-l"]                                ->  Pget.RepoLocal.showPackageList "packages"
+        | ["repo"; path; "--list"]                        ->  Pget.RepoLocal.showPackageList path
+        | ["repo"; "--list"]                              ->  Pget.RepoLocal.showPackageList "packages"
+        | ["repo"; path; "-l"]                            ->  Pget.RepoLocal.showPackageList path
+        | ["repo"; "-l"]                                  ->  Pget.RepoLocal.showPackageList "packages"
 
         // Show all packages in repository 
-        | ["repo"; path; "--show" ]                     ->  Pget.RepoLocal.showPackages path        
-        | ["repo"; "--show" ]                           ->  Pget.RepoLocal.showPackages "packages"    
+        | ["repo"; path; "--show" ]                       ->  Pget.RepoLocal.showPackages path        
+        | ["repo"; "--show" ]                             ->  Pget.RepoLocal.showPackages "packages"    
+        | ["repo"; path ; "--show"; pack ]                ->  Pget.RepoLocal.showPackage path pack 
+        | ["repo"; "--show"; pack ]                       ->  Pget.RepoLocal.showPackage "packages" pack 
+
+
+        | ["repo"; path; "-sh" ]                          ->  Pget.RepoLocal.showPackages path        
+        | ["repo"; "-sh" ]                                ->  Pget.RepoLocal.showPackages "packages"    
+        | ["repo"; path ; "-sh"; pack ]                   ->  Pget.RepoLocal.showPackage path pack 
+        | ["repo"; "-sh"; pack ]                          ->  Pget.RepoLocal.showPackage "packages" pack 
+
+
+        // Show files of a package in project repository
+        | ["repo"; "--show-files" ; pack ]                ->   Pget.RepoLocal.showPackageFiles "packages" pack
+        | ["repo"; "-sf" ; pack ]                         ->   Pget.RepoLocal.showPackageFiles  "packages" pack       
+        | ["repo"; path ; "--show-files" ; pack ]         ->   Pget.RepoLocal.showPackageFiles  path pack
+        | ["repo"; path; "-sf" ; pack ]                   ->   Pget.RepoLocal.showPackageFiles  path pack
+
 
         // Install package to repository 
         | ["repo"; path; "--install"; pack ]              ->  Pget.RepoLocal.installPackageLatest path pack
@@ -303,31 +319,23 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         | ["repo"; path; "-if" ; file ]                   ->  Pget.RepoLocal.installPackagesFromFile  path file
 
 
-
         // Generate F# include directives (#r) for all packages in a repository 
         | ["repo"; path ; "--ref"; framework  ]         ->  showScript framework  path
         | ["repo"; "--ref"; framework  ]                ->  showScript framework "packages"
 
-        // ==============================  Individual packages commands =====================
-        //
-        // show package metadata 
-        | ["pack"; pack ; "--show" ]           ->   Pget.RepoLocal.showPackage "packages" pack 
+        | ["repo"; path ; "--ref"; framework ; pack ]   ->  showRepoPackageRef framework path pack
+        | ["repo"; "--ref"; framework ; pack ]          ->  showRepoPackageRef framework "packages" pack
 
-        // show package files    
-        | ["pack"; pack ; "--show-files" ]     ->   Pget.RepoLocal.showPackageFiles "packages" pack
-
+       
         // ============================ NuGet Repository (Remote) ========================== 
+
         // search package 
-        | ["nuget"; pack; "--search" ]         ->  searchPackageById pack
-        | ["nuget"; pack; "-s" ]               ->  searchPackageById pack
+        | ["nuget"; "--search" ; pack  ]         ->  searchPackageById pack
+        | ["nuget"; "-s" ; pack  ]               ->  searchPackageById pack
         
         // | ["pack"; "--search"; pack ; "--repo"]                   ->  searchLocalPackage pack "pacakges"
         // | ["pack"; "--search"; pack ; "--repo"; path]             ->  searchLocalPackage pack  path
         
-        
-        // | ["pack"; pack; "--ref"; framework ;  "--repo"; path]    ->  showRepoPackageRef frm path pack
-        // | ["pack"; pack; "--ref"; fra  ; "-p";  pack]             ->  showLocalPackageRef frm pack
-
 
         // ======  Commands to Handle NuGet package Archives ============== //
         | ["nupkg"; "--show"; fname]                             ->  Pget.Nupkg.show fname
