@@ -237,9 +237,9 @@ module Main =
 
     Assembly files: *.exe or *.dll
 
-      asm show           [file]                   Show all assembly attributes from an assembly file.
-      asm show-ref       [file]                   Show all assembly references from an assembly file.
-      asm show-resources [file]                   Show resources from an assembly file.
+      asm --show           [file]                   Show all assembly attributes from an assembly file.
+      asm --show-ref       [file]                   Show all assembly references from an assembly file.
+      asm --show-resources [file]                   Show resources from an assembly file.
       
     Generate Guid - Globally Unique Identifier 
 
