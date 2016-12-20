@@ -111,6 +111,10 @@ module IPack =
     /// Get library files 
     let getLibFiles (pack: T): seq<NuGet.IPackageFile> = pack.GetLibFiles()
 
+    /// Get library files path
+    let getLibFilesPath (pack: T): seq<string> =
+        pack.GetFiles() |> Seq.map (fun p -> p.Path)
+
     /// Get all *.dll references in the package 
     let getLibDllFiles (pack: T): seq<NuGet.IPackageFile>  =
         pack.GetLibFiles() |> Seq.filter (fun p -> p.Path.EndsWith(".dll"))
