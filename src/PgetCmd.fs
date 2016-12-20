@@ -184,7 +184,7 @@ module Main =
 
     let showVersion () =
         Console.WriteLine """
-    Pget - Package Get - Version 1.0 
+    Pget - Package Get - Version 1.2 
     Copyright (C) 2016 Caio Rodrigues
         """
 
@@ -195,51 +195,62 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
   Commands                                      Description
   -----------------------------                -----------------------------------------------
 
-  List Commands:
+  List Repository
 
-    --list                                      List all packages in current repository ./package
-    --list [repo]                               List all package in [repo] repository.
+    repo --list                                 List all packages in current repository ./package
+    repo [path] --list                          List all package in [path] repository.
 
-    --show                                      Show all packages in current ./packages repository
-    --show [repo]                               Show all packages in [repo] repository.
-    --show --pack [pack]                        Show the package [pack] in ./packages directory
-    --show [repo] --pack [pack]                 Show the package [pack] in [repo] directory.
+  Show repository 
+ 
+    repo --show                                 Show all packages in current ./packages repository
+    repo [path] --show                          Show all packages in [path] repository.
+  
+  Show package metadata
 
-  Search commands:
+    repo --show  [pack]                         Show the package [pack] in ./packages directory
+    repo [path] --show [pack]                   Show the package [pack] in [repo] directory.
 
-    --search [package]                          Search a package by name.
-    --search [package] --repo                   Search a pacakge by name in a local repository
-    --search [package] --repo [repo]            Search a package in ./packages
+  Show package files 
 
-  Show references for F# *.fsx scripts:
+    repo --show-files [pack]                    Show content files of package [pack] in ./packages
+    repo [path] --show-files [pack]             Show content files of package [pack] in [repo]
 
-    --ref [frm]                                 Show all assembly references from current ./packages.
-    --ref [frm] --repo [repo]                   Show all assembly references from current [repo] directory.
-    --ref [frm] --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
-    --ref [frm] --pack [pack] --repo [path]     Show all assembly references from a package at [repo] directory
-                                                frm:  .NET Framework  net40 | net45
+  Install package to repository  
 
-  Install packages:
+    repo --install [pack]                       Install the latest version of package [pack] to ./packages
+    repo --install [pack] [ver]                 Install the version [ver] of package [pack]
+    repo [path] --install [pack]                Install the latest version of package [pack] to a repository [path] i.e: ~/nuget
+    repo [path] --install [pack] [ver]          Install the version [ver] of package [pack] to a repository [path]
 
-    --install [pack]                            Install the latest version of package [pack] to ./packages
-    --install [pack] --repo [repo]              Install the latest version of package [pack] to a repository [repo] i.e: ~/nuget
-    --install [pack] --ver [ver]                Install the version [ver] of package [pack]
-    --install [pack] --ver [ver] --repo [repo]  Install the version [ver] of package [pack] to a repository [repo]
+  Install a list of packages listed in a file
 
-    --install-from-file                         Install all packages listed in the file ./packages.lst to ./packages directory.
-    --install-from-file [file]                  Install all packages listed in the file [file] to ./packages
-    --install-from-file [file] --repo [repo]    Install all packages listed in the file [file] to [repo] directory.
+    repo --install-from-file                    Install all packages listed in the file ./packages.list to ./packages directory.
+    repo --install-from-file [file]             Install all packages listed in the file ./packages.list to ./packages directory.
+    repo [path] --install-from-file [file]      Install all packages listed in the file [file] to [path]
+
+
+  Show references for F# *.fsx scripts:        [frm]:  .NET Framework  net40 | net45   
+
+    repo --ref [frm]                            Show all assembly references from current ./packages.
+    repo --ref  --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
+    repo [path] --ref [frm]                     Show all assembly references from current [repo] directory.
+    repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory
+                            
+  Nuget commands:
+
+    nuget --search [package]                    Search a package by name.  
+    nuget --show   [package]                    Show package information (metadata).
 
   Nupkg Files:
 
-    nupkg --show  [file]                         Show metadata of a *.nupkg file
-    nupkg --files [file]                         Show files in nupkg [file]
+    nupkg --show  [file]                        Show metadata of a *.nupkg file
+    nupkg --files [file]                        Show files in nupkg [file]
 
   Assembly files: *.exe or *.dll
 
-    asm --show           [file]                   Show all assembly attributes from an assembly file.
-    asm --show-ref       [file]                   Show all assembly references from an assembly file.
-    asm --show-resources [file]                   Show resources from an assembly file.
+    asm --info [file]                           Show all assembly attributes from an assembly file.
+    asm --refs [file]                           Show all assembly references from an assembly file.
+    asm --resources [file]                      Show resources from an assembly file.
 
   Generate Guid - Globally Unique Identifier 
 
@@ -249,8 +260,7 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
 
   Command abbreviations:
 
-    --install            -i
-    --repo               -r
+    --install            -i  
     --help               -h
     --version            -v
     --ver                -v
@@ -332,6 +342,12 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         // search package 
         | ["nuget"; "--search" ; pack  ]         ->  searchPackageById pack
         | ["nuget"; "-s" ; pack  ]               ->  searchPackageById pack
+
+        // Show specific package metadata
+        | ["nuget"; "--show" ; pack  ]           ->  Nuget.showPackage  pack
+        | ["nuget"; "-sh" ; pack  ]              ->  Nuget.showPackage  pack
+
+        
         
         // | ["pack"; "--search"; pack ; "--repo"]                   ->  searchLocalPackage pack "pacakges"
         // | ["pack"; "--search"; pack ; "--repo"; path]             ->  searchLocalPackage pack  path
@@ -342,9 +358,9 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         | ["nupkg"; "--files"; fname]                            ->  Pget.Nupkg.showFiles fname
 
         // ==========  Commands to Handle .NET assembly ============== //
-        | ["asm" ; "--show" ; asmFile]                           -> AsmAttr.showFile asmFile
-        | ["asm" ; "--show-ref" ; asmFile]                       -> AsmAttr.showAsmReferences asmFile         
-        | ["asm" ; "--show-resources"; asmFile]                  -> AsmAttr.showResurces asmFile
+        | ["asm" ; "--info" ; asmFile]                          -> AsmAttr.showFile asmFile
+        | ["asm" ; "--refs" ; asmFile]                          -> AsmAttr.showAsmReferences asmFile         
+        | ["asm" ; "--resources"; asmFile]                      -> AsmAttr.showResurces asmFile
 
         | ["--guid" ]                                            -> Console.WriteLine(Guid.NewGuid().ToString() : string)
 
