@@ -3,7 +3,7 @@
 #+EMAIL:  caiorss [DOT] rodrigues [DOT] gmail [DOT] com
 #+DESCRIPTION: F# Command line interface to NuGet API.
 #+STARTUP: content
-#+KEYWORDS: NuGet F# fsharp csharp .net dotnet tool cli command line toolbox
+#+KEYWORDS: NuGet F# fsharp csharp .net dotnet tool cli command line toolbox cross-platform 
 
 * Pget.exe - Package Get
 ** Overview
@@ -143,7 +143,7 @@ or
  - =$ pget.exe=
 
 #+BEGIN_SRC txt
-  $ bin/pget.exe
+  $ bin/pget.exe 
 
       Pget - Package Get - Enhanced command line interface to NuGet.Core
 
@@ -170,7 +170,7 @@ or
 
         --ref [frm]                                 Show all assembly references from current ./packages.
         --ref [frm] --repo [repo]                   Show all assembly references from current [repo] directory.
-        --ref [frm] --pack [pack]                   Show all assembly references from a package [pack] at ./packages.
+        --ref [frm] --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
         --ref [frm] --pack [pack] --repo [path]     Show all assembly references from a package at [repo] directory
                                                     frm:  .NET Framework  net40 | net45
 
@@ -187,16 +187,18 @@ or
 
       Nupkg Files:
 
-        --nupkg show [file]                         Show metadata of a *.nupkg file
+        nupkg --show  [file]                         Show metadata of a *.nupkg file
+        nupkg --files [file]                         Show files in nupkg [file]
 
       Assembly files: *.exe or *.dll
 
-        asm show     [file]                         Show all assembly attributes from an assembly file.
-        asm show-ref [file]                         Show all assembly references from an assembly file.
+        asm show           [file]                   Show all assembly attributes from an assembly file.
+        asm show-ref       [file]                   Show all assembly references from an assembly file.
+        asm show-resources [file]                   Show resources from an assembly file.
+        
+      Generate Guid - Globally Unique Identifier 
 
-      Generate Guid - Globally Unique Identifier
-
-        --guid
+        --guid 
 
       --------------------------------------------------------------------------------------------------------------------
 
@@ -211,9 +213,9 @@ or
         --search             -s
         --show               -sh
         --install-from-file  -if
+          
 
-
-      Pget - Package Get - Version 1.0
+      Pget - Package Get - Version 1.0 
       Copyright (C) 2016 Caio Rodrigues
 
 #+END_SRC
@@ -678,29 +680,51 @@ or
 #+END_SRC
 
 *** NuGet package files nupkg files
+**** Show package file metadata
 
 Show a NuGet package metadata
 
- - =$ pget.xe --nupkg show [nupkg-file]=
+ - =$ pget.xe nupkg --show [nupkg-file]=
 
 #+BEGIN_SRC sh
-  $ pget.exe --nupkg show ./packages/OxyPlot.Core.1.0.0/OxyPlot.Core.1.0.0.nupkg
+  $ bin/pget.exe nupkg --show ./packages/FParsec.1.0.2/FParsec.1.0.2.nupkg
 
-  Id             OxyPlot.Core
-  Title          OxyPlot core library (PCL)
-  Tags            plotting plot charting chart
-  Version        1.0.0
-  Summary
-  Authors        Oystein Bjorke
-  Project URL    http://oxyplot.org/
-  Dependencies
+  Id             FParsec
+  Title          FParsec
+  Tags            parser combinator f# fsharp c# csharp parsec fparsec 
+  Version        1.0.2
+  Summary        
+  Authors        Stephan Tolksdorf
+  Project URL    http://www.quanttec.com/fparsec/
+  Dependencies   
   Download Count -1
 
-  Description    OxyPlot is a plotting library for .NET. This is the portable core library that is referenced by the platform-specific OxyPlot packages.
+  Description    FParsec is a parser combinator library for F#.
 
+  You can find comprehensive documentation for FParsec at http://www.quanttec.com/fparsec. The documentation includes a feature list, a tutorial, a user’s guide and an API reference.
+
+  This package uses the basic “low-trust” configuration of FParsec, which does not use any unverifiable code and is optimized for maximum portability. If you need to parse very large files or if you employ FParsec for performance-critical jobs, consider using the alternate “Big Data Edition” NuGet package (see nuget.org/packages/fparsec-big-data-edition).
+    
+#+END_SRC
+
+**** Show package files 
+
+ - =$ pget.exe nupkg --files [nupkg-file]=
+
+#+BEGIN_SRC sh 
+  $ bin/pget.exe nupkg --files ./packages/FParsec.1.0.2/FParsec.1.0.2.nupkg
+  lib/net40-client/FParsec.dll
+  lib/net40-client/FParsec.XML
+  lib/net40-client/FParsecCS.dll
+  lib/net40-client/FParsecCS.XML
+  lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll
+  lib/portable-net45+netcore45+wpa81+wp8/FParsec.XML
+  lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll
+  lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.XML
 #+END_SRC
 
 *** Show assembly metadata
+**** Show Assembly Attributes
 
  - =$ pget.exe asm --show [assembly-file]=
 
@@ -742,6 +766,8 @@ Example 2:
   Codebase     file:///home/arch/nuget/FSharp.Core.3.1.2.5/lib/net40/FSharp.Core.dll
 #+END_SRC
 
+**** Show assembly references
+
 Show assemblies referenced by an assembly file
 
  - =$ pget.exe asm --show-ref [assembly-file]=
@@ -770,6 +796,20 @@ Show assemblies referenced by an assembly file
   Name = System.Net.Http      Version = 4.0.0.0       Culture =
   Name = System.IdentityModel     Version = 4.0.0.0       Culture =
   Name = System.Net.Http.WebRequest       Version = 4.0.0.0       Culture =
+#+END_SRC
+
+**** Show Assembly Resources 
+
+ - =$ pget.exe asm --show-resources [asmfile]= 
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe asm --show-resources bin/pget.exe 
+  FSCore.resources
+  NuGet.CommonResources.resources
+  NuGet.NuGet.Frameworks.Strings.resources
+  NuGet.Resources.AnalysisResources.resources
+  NuGet.Resources.NuGetResources.resources
+  NuGet.Authoring.nuspec.xsd
 #+END_SRC
 
 *** Generate GUID
