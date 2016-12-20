@@ -303,11 +303,8 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
 
 
         // Show files of a package in project repository
-        | ["repo"; "--show-files" ; pack ]                ->   Pget.RepoLocal.showPackageFiles "packages" pack
-        | ["repo"; "-sf" ; pack ]                         ->   Pget.RepoLocal.showPackageFiles  "packages" pack       
-        | ["repo"; path ; "--show-files" ; pack ]         ->   Pget.RepoLocal.showPackageFiles  path pack
-        | ["repo"; path; "-sf" ; pack ]                   ->   Pget.RepoLocal.showPackageFiles  path pack
-
+        | ["repo"; "--files" ; pack ]                ->   Pget.RepoLocal.showPackageFiles "packages" pack
+        | ["repo"; path ; "--files" ; pack ]         ->   Pget.RepoLocal.showPackageFiles  path pack
 
         // Install package to repository 
         | ["repo"; path; "--install"; pack ]              ->  Pget.RepoLocal.installPackageLatest path pack
