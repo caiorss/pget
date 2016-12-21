@@ -65,7 +65,7 @@ module IPack =
     let packageId (pack: T) = pack.Id
 
     /// Get summary 
-    let summary (pack: T) = pack.Summary
+    let summary (pack: T) = Option.ofObj pack.Summary
 
     /// Get package title 
     let title  (pack: T) =   pack.Title
