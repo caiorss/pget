@@ -316,8 +316,8 @@ module Repo =
         let package = packageId
                       |> findPackagesById repo
                       |> Seq.filter IPack.isReleaseVersion
-                      |> Seq.last
-        package.Version.ToString()
+                      |> Seq.tryLast
+        package |> Option.map (fun pack -> pack.Version.ToString())
         // |> Seq.tryFind IPack.isLastestVersion
 
     /// Creates a repository given its uri     
