@@ -532,6 +532,21 @@ module RepoLocal =
         | Some v -> printfn "Installing: %s %s" package v
                     installPackage repoPath (package, v)
 
+    /// Install a list of packages to a given repository path
+    /// like [ "FSharp.Data"; "FParsec-1.0.0" ; "NuGet.Core-2.0"; "OxyPlot.Core"]
+    ///
+    /// If there is no version number it installs the package latest version.
+    ///
+    let installPackageList repoPath (packageList: string seq) =
+        packageList
+        |> Seq.iter (fun entry ->
+                         let row =  entry.Split([|'-'|], System.StringSplitOptions.RemoveEmptyEntries)
+                         match List.ofArray row with
+                         | [package; version  ]  -> installPackageSafe repoPath (package, version)
+                         | [ package          ]  -> installPackageLatest repoPath package
+                         | []                    -> printfn "Error: No packages to install."
+                         | _                     -> printfn "Error: Wrong package format."
+                     )
 
     /// Install all packages listed in a file to a given repository
     ///
