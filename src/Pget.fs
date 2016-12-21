@@ -89,6 +89,10 @@ module IPack =
     let projectUrl (pack: T) = Option.ofObj pack.ProjectUrl
                                |> Option.map (fun uri -> uri.ToString())
 
+    /// Return License URL
+    let licenseUrl (pack: T) = Option.ofObj pack.LicenseUrl
+                               |> Option.map (fun uri -> uri.ToString())
+
     /// Returns true if it as release version 
     let isReleaseVersion (pack: T): bool = pack.IsReleaseVersion()
    
