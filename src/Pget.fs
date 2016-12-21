@@ -527,8 +527,11 @@ module RepoLocal =
     ///     
     let installPackageLatest repoPath package =
         let version = Repo.findLatestStableVersion Nuget.nugetV2 package
-        printfn "Installing: %s %s" package version
-        installPackage repoPath (package, version)
+        match version with
+        | None   -> printfn "Error: I can't find the package %s" package
+        | Some v -> printfn "Installing: %s %s" package v
+                    installPackage repoPath (package, v)
+
 
     /// Install all packages listed in a file to a given repository
     ///
