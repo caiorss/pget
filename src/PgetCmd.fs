@@ -241,6 +241,11 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     repo [path] --install [pack]                Install the latest version of package [pack] to a repository [path] i.e: ~/nuget
     repo [path] --install [pack] [ver]          Install the version [ver] of package [pack] to a repository [path]
 
+
+  Install a list of packages passed as argument
+    repo --install-list FParsec NuGet.Core-2.0.0               Install those packages to ./packages
+    repo /tmp/repo --install-list FParsec NuGet.Core-2.0.0     Install those packages to /tmp/repository
+
   Install a list of packages listed in a file
 
     repo --install-from-file                    Install all packages listed in the file ./packages.list to ./packages directory.
@@ -286,15 +291,16 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
 
   Command abbreviations:
 
-    --install            -i  
+    --install            -i
+    --install-from-file  -if
+    --install-list       -il
     --help               -h
     --version            -v
     --ver                -v
     --list               -l
     --search             -s
     --show               -sh
-    --install-from-file  -if
-        """
+         """
 
         showVersion()
 
@@ -348,6 +354,12 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         | ["repo"; "-i"; pack ]                           ->  Pget.RepoLocal.installPackageLatest projectRepo pack
         | ["repo"; path ; "-i"; pack ; ver ]              ->  Pget.RepoLocal.installPackage path (pack, ver)    
         | ["repo"; "-i"; pack ;  ver  ]                   ->  Pget.RepoLocal.installPackage projectRepo (pack, ver)
+
+        | "repo" :: "--install-list" :: packageList          -> Pget.RepoLocal.installPackageList "pacakges" packageList 
+        | "repo" :: path :: "--install-list" :: packageList  -> Pget.RepoLocal.installPackageList  path      packageList 
+        | "repo" :: "-il" :: packageList                     -> Pget.RepoLocal.installPackageList "pacakges" packageList 
+        | "repo" :: path :: "-il" :: packageList             -> Pget.RepoLocal.installPackageList  path      packageList 
+
 
         // Install all packages from a list of package to repository
         | ["repo"; "--install-from-file" ]                ->  Pget.RepoLocal.installPackagesFromFile projectRepo "packages.list" 
