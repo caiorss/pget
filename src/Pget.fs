@@ -513,6 +513,16 @@ module RepoLocal =
         let pm = Repo.PM.makePackageManager Nuget.nugetV2 repoPath
         Repo.PM.installPackage pm (package, version)
 
+    /// Install a package to local repository, however
+    /// instead of throw an exception, it prints an error message
+    /// if the package is not found.
+    ///
+    let installPackageSafe repoPath (package, version) =
+        try
+            installPackage repoPath (package, version)
+        with
+            :? System.InvalidOperationException -> printfn "Error: I can't find the package %s-v%s" package version
+
     /// Install the latest version of a package to local repository
     ///     
     let installPackageLatest repoPath package =
