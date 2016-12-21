@@ -59,8 +59,8 @@ display packages' metadata from local repository or project repository
 
 Example:
 
-#+BEGIN_SRC sh
-$ pget.exe 
+#+BEGIN_SRC 
+  $ bin/pget.exe
 
   Pget - Package Get - Enhanced command line interface to NuGet.Core
 
@@ -93,6 +93,11 @@ $ pget.exe
       repo --install [pack] [ver]                 Install the version [ver] of package [pack]
       repo [path] --install [pack]                Install the latest version of package [pack] to a repository [path] i.e: ~/nuget
       repo [path] --install [pack] [ver]          Install the version [ver] of package [pack] to a repository [path]
+
+
+    Install a list of packages passed as argument
+      repo --install-list FParsec NuGet.Core-2.0.0               Install those packages to ./packages
+      repo /tmp/repo --install-list FParsec NuGet.Core-2.0.0     Install those packages to /tmp/repository
 
     Install a list of packages listed in a file
 
@@ -139,17 +144,18 @@ $ pget.exe
 
     Command abbreviations:
 
-      --install            -i  
+      --install            -i
+      --install-from-file  -if
+      --install-list       -il
       --help               -h
       --version            -v
       --ver                -v
       --list               -l
       --search             -s
       --show               -sh
-      --install-from-file  -if
-          
+           
 
-    Pget - Package Get - Version 1.2 
+    Pget - Package Get - Version 1.3 
     Copyright (C) 2016 Caio Rodrigues
 
 #+END_SRC
@@ -679,6 +685,25 @@ Example:
 #+BEGIN_SRC sh
   $ bin/pget.exe repo ~/nuget -i Microsoft.Web.Xdt 1.0.0
 #+END_SRC
+**** Install a list of packages 
+***** Install a list of packages to ./packages 
+
+ - =$ pget.exe repo --install-list FParsec-1.0.2 OxyPlot= 
+
+or
+
+- =$ pget.exe repo -il FParsec-1.0.2 OxyPlot= 
+
+If the version is not specified it installs the lastest version.
+
+***** Install a list of pacakges to a local repository 
+
+ - =$ pget.exe repo ~/nuget --install-list FParsec-1.0.2 OxyPlot= 
+
+or
+
+ - =$ pget.exe repo ~/nuget --install-list FParsec-1.0.2 OxyPlot ... packageN= 
+
 **** Install packages listed in a file
 ****** Install all packages listed in the file ./packages.list to ./packages
 
