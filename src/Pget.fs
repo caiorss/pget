@@ -342,9 +342,11 @@ module Repo =
             | Some v ->  pm.InstallPackage(package, v)
             | None   ->  failwith "Error: Wrong version name"
 
-        let installPackageLatest (pm: T) package repo =
-            let ver = findLatestStableVersion repo package
-            installPackage pm (package, ver)
+        let installPackageLatest (pm: T) packageId repo =
+            let ver = findLatestStableVersion repo packageId
+            match ver with
+            | Some v -> installPackage pm (packageId, v)
+            | None   -> printfn "Error: package %s not found" packageId
 
 
 module Nuget = 
