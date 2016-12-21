@@ -52,104 +52,6 @@ display packages' metadata from local repository or project repository
 
  - Get packages' assembly references from local repository and project
    repository (./packages) for F# scripts.
-
-** Build instructions
-*** Build with Makefile
-
-Run the command =$ make exe=. It assumes that fsc - the F# compiler
-and nuget.exe are in the $PATH variable. It builds the standlone app
-pget.exe with all dependencies static linked and also FSharp.Core (F#
-runtime) static linked.
-
-#+BEGIN_SRC sh
-  $ make exe
-  fsc src/Pget.fs src/PgetCmd.fsx --out:bin/pget.exe \
-  --target:exe \
-      --platform:anycpu \
-      -r:packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll \
-  -r:packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll \
-  --staticlink:NuGet.Core \
-  --standalone
-  F# Compiler for F# 4.1
-  Freely distributed under the Apache 2.0 Open Source License
-
-#+END_SRC
-
-Testing:
-
-#+BEGIN_SRC sh
-  $ file bin/pget.exe
-  bin/pget.exe: PE32 executable (console) Intel 80386 Mono/.Net assembly, for MS Windows
-
-  $ bin/pget.exe --version
-
-      Pget - Package Get - Version 1.0
-      Copyright (C) 2016 Caio Rodrigues
-#+END_SRC
-
-*** Build with Xbuild or Msbuild
-
- - =$ xbuild pget-exe.fsproj=
-
-Unfortunally is not possible yet to build an standalone app with xbuild.
-
-#+BEGIN_SRC sh
-  $ tree bin/
-  bin/
-  └── Debug
-      ├── FSharp.Core.dll
-      ├── Microsoft.Web.XmlTransform.dll
-      ├── NuGet.Core.dll
-      ├── Pget.exe
-      └── Pget.exe.mdb
-
-  1 directory, 5 files
-
-
-  $ bin/Debug/Pget.exe --version
-
-      Pget - Package Get - Version 1.0
-      Copyright (C) 2016 Caio Rodrigues
-
-#+END_SRC
-
-** Get binary release
-
-The binary releases are published to orphan-branch [[https://github.com/caiorss/pget/tree/build][build]]. 
-
-*Manual download*
-
- - [[https://github.com/caiorss/pget/raw/build/pget.exe][Download pget.exe]]
-
-*Automatic Download* 
-
-#+BEGIN_SRC sh 
-  ~/Downloads $ curl -O -L https://github.com/caiorss/pget/raw/build/pget.exe
-    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                   Dload  Upload   Total   Spent    Left  Speed
-  100   127  100   127    0     0    169      0 --:--:-- --:--:-- --:--:--   169
-  100 2143k  100 2143k    0     0   257k      0  0:00:08  0:00:08 --:--:--  529k
-  ~/Downloads $
-
-
-  ~/Downloads $ /usr/bin/chmod +x pget.exe
-
-  ~/Downloads $ ./pget.exe -v 
-
-      Pget - Package Get - Version 1.0 
-      Copyright (C) 2016 Caio Rodrigues        
-#+END_SRC
-
-or 
-
-#+BEGIN_SRC sh 
-  cd ~/bin 
-  curl -O -L https://github.com/caiorss/pget/raw/build/pget.exe
-  /usr/bin/chmod +x pget.exe
-  ./pget.exe -v 
-#+END_SRC
-
-** Install
 ** Commands
 *** Print help
 
@@ -157,7 +59,9 @@ or
 
 Example:
 
-#+BEGIN_SRC
+#+BEGIN_SRC sh
+$ pget.exe 
+
   Pget - Package Get - Enhanced command line interface to NuGet.Core
 
     Commands                                      Description
@@ -196,6 +100,13 @@ Example:
       repo --install-from-file [file]             Install all packages listed in the file ./packages.list to ./packages directory.
       repo [path] --install-from-file [file]      Install all packages listed in the file [file] to [path]
 
+
+    Open package project URL or Licence URL
+
+      repo --url [pack]                           Browse project URL of a package [pack] in ./packages.
+      repo --license [pack]                       Browse licence URL of a package [pack] in ./packages.
+      repo [path] --url [pack]                    Browse project URL of a package [pack] in [path]
+      repo [path] --license [pack]                Browse licence URL of a package [pack] in [path]
 
     Show references for F# *.fsx scripts:        [frm]:  .NET Framework  net40 | net45   
 
@@ -238,8 +149,8 @@ Example:
       --install-from-file  -if
           
 
-      Pget - Package Get - Version 1.2 
-      Copyright (C) 2016 Caio Rodrigues
+    Pget - Package Get - Version 1.2 
+    Copyright (C) 2016 Caio Rodrigues
 
 #+END_SRC
 
@@ -510,138 +421,6 @@ Example:
   /home/arch/nuget/Mono.Cecil.0.9.5.4/lib/sl40/Mono.Cecil.Rocks.dll
 
 #+END_SRC
-
-**** Install packages
-***** Install the lastest version of a package to ./packages (Project repository)
-
- - =$ pget.exe repo --install [package-id]= or - =$ pget.exe repo -i [package-id]=
-
-Example:
-
-#+BEGIN_SRC sh
-  $ bin/pget.exe repo --install OxyPlot.Pdf
-  Installing: OxyPlot.Pdf 1.0.0
-
-  $ ls -l packages
-  total 0
-  drwxrwxrwx 1 arch arch 280 dez 19 00:52 Microsoft.Web.Xdt.2.1.1/
-  drwxrwxrwx 1 arch arch 264 dez 19 01:45 NuGet.Core.2.12.0/
-  drwxrwxrwx 1 arch arch 488 dez 19 02:22 OxyPlot.Core.1.0.0/
-  drwxrwxrwx 1 arch arch 480 dez 19 02:22 OxyPlot.Pdf.1.0.0/
-  drwxrwxrwx 1 arch arch 296 dez 19 02:22 PDFsharp-MigraDoc-GDI.1.32.4334.0/
-
-   bin/pget.exe repo -sh OxyPlot.Core
-
-  Id             OxyPlot.Core
-  Title          OxyPlot core library (PCL)
-  Tags            plotting plot charting chart
-  Version        1.0.0
-  Summary
-  Authors        Oystein Bjorke
-  Project URL    http://oxyplot.org/
-  Dependencies
-  Download Count -1
-
-  Description    OxyPlot is a plotting library for .NET. This is the portable core library that is referenced by the platform-specific OxyPlot packages.
-
-#+END_SRC
-
-***** Install a specific version of package  to ./packages
-
- - =$ pget.exe repo --install [package-id] [version]=
-
-or
-
- - =$ pget.exe repo -i [package-id] [version]=
-
-Example:
-
-#+BEGIN_SRC sh
-  $ bin/pget.exe repo -i FParsec 1.0.2
-
-  $ ls -l packages
-  total 0
-  drwxrwxrwx 1 arch arch 256 dez 19 02:31 FParsec.1.0.2/
-  drwxrwxrwx 1 arch arch 280 dez 19 00:52 Microsoft.Web.Xdt.2.1.1/
-  drwxrwxrwx 1 arch arch 264 dez 19 01:45 NuGet.Core.2.12.0/
-  drwxrwxrwx 1 arch arch 488 dez 19 02:22 OxyPlot.Core.1.0.0/
-  drwxrwxrwx 1 arch arch 480 dez 19 02:22 OxyPlot.Pdf.1.0.0/
-  drwxrwxrwx 1 arch arch 296 dez 19 02:22 PDFsharp-MigraDoc-GDI.1.32.4334.0/
-#+END_SRC
-
-***** Install the lastest version of a package to a local repository
-
- - =$ pget.exe repo [path] --install [package-id]=
-
-or
-
- - =$ pget.exe repo [path] -i [package-id] -r [path]=
-
-Example:
-
-#+BEGIN_SRC sh
-  $ bin/pget.exe repo -i /home/arch/nuget  OxyPlot.Pdf 
-  Installing: OxyPlot.Pdf 1.0.0
-
-  $ bin/pget.exe repo /home/arch/nuget -sh OxyPlot.Pdf
-
-  Id             OxyPlot.Pdf
-  Title          OxyPlot PDF extensions (for Silverlight and NET4)
-  Tags            pdf plotting plot charting chart
-  Version        1.0.0
-  Summary
-  Authors        Oystein Bjorke
-  Project URL    http://oxyplot.org/
-  Dependencies   OxyPlot.Core [1.0.0], PDFsharp-MigraDoc-GDI [1.32.4334], OxyPlot.Core [1.0.0], PDFsharp-MigraDoc-GDI [1.32.4334], OxyPlot.Core [1.0.0]
-  Download Count -1
-
-  Description    OxyPlot is a plotting library for .NET. This package contains .pdf export extensions for .NET 4 (based on PDFsharp) and Silverlight (based on SilverPDF).
-
-#+END_SRC
-
-***** Install a specific version of package to a local repository
-
- - =$ pget.exe repo [path] --install [package-id] [version]=
-
-or
-
- - =$ pget.exe repo [path] -i [package-id] -v [package]=
-
-Example:
-
-#+BEGIN_SRC sh
-  $ bin/pget.exe repo ~/nuget -i Microsoft.Web.Xdt 1.0.0
-#+END_SRC
-
-**** Install packages listed in a file
-****** Install all packages listed in the file ./packages.list to ./packages
-
- - =$ pget.exe repo --install-from-file=
-
-or
-
- - =$ pget.exe repo -if=
-
-Example of the file packages.list. If the version is not listed, it
-installs the latest version of the packages to ./packages.
-
-File: packages.list
-
-#+BEGIN_SRC sh
-  FSharp.Data              1.0.0
-  Deedle                   1.0.0
-  OxyPlot.Pdf
-  OxyPlot.WindowsForms
-#+END_SRC
-
-****** Install all packages listed in the file ./packages.list to ./packages
-
- - =$ pget.exe repo --install-from-file [packages-list-file]=
-
-or
-
- - =$ pget.exe repo -if [package-list-file]=
-
 **** Get assembly references for F# scripts
 ***** Get all assembly references from current ./packages repository.
 
@@ -753,6 +532,181 @@ Example:
   #r "/home/arch/nuget/FSharp.Data.2.3.1/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.dll"
   #r "/home/arch/nuget/FSharp.Data.2.3.1/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.DesignTime.dll"
 #+END_SRC
+**** Open package project URL in the browser 
+***** Open project URL of package in ./packages
+
+ - =$ pget.exe repo --url [packageId]= 
+
+Example: 
+
+#+BEGIN_SRC sh
+$ bin/pget.exe repo --url Mono.CSharp
+#+END_SRC
+
+It will open the URL: http://www.mono-project.com/docs/about-mono/languages/csharp/
+
+***** Open project URL of package in a local repository
+
+ - =$ pget.exe repo [path] --url [packageId]= 
+
+Example: 
+
+#+BEGIN_SRC sh
+$ bin/pget.exe repo ~/nuget --url Mono.CSharp
+#+END_SRC
+
+It will open the URL: http://www.mono-project.com/docs/about-mono/languages/csharp/
+
+**** Open package licensee URL in the browser
+***** Open license URL of package in ./packages
+
+ - =$ pget.exe repo --license [packageId]= 
+
+Example: 
+
+#+BEGIN_SRC sh
+$ bin/pget.exe repo --license Mono.CSharp
+#+END_SRC
+
+***** Open project URL of package in a local repository
+
+ - =$ pget.exe repo [path]  --licence [packageId]=
+
+Example:
+
+#+BEGIN_SRC sh
+$ bin/pget.exe repo ~/nuget --license Mono.CSharp
+#+END_SRC
+
+**** Install packages
+***** Install the lastest version of a package to ./packages (Project repository)
+
+ - =$ pget.exe repo --install [package-id]= or - =$ pget.exe repo -i [package-id]=
+
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe repo --install OxyPlot.Pdf
+  Installing: OxyPlot.Pdf 1.0.0
+
+  $ ls -l packages
+  total 0
+  drwxrwxrwx 1 arch arch 280 dez 19 00:52 Microsoft.Web.Xdt.2.1.1/
+  drwxrwxrwx 1 arch arch 264 dez 19 01:45 NuGet.Core.2.12.0/
+  drwxrwxrwx 1 arch arch 488 dez 19 02:22 OxyPlot.Core.1.0.0/
+  drwxrwxrwx 1 arch arch 480 dez 19 02:22 OxyPlot.Pdf.1.0.0/
+  drwxrwxrwx 1 arch arch 296 dez 19 02:22 PDFsharp-MigraDoc-GDI.1.32.4334.0/
+
+   bin/pget.exe repo -sh OxyPlot.Core
+
+  Id             OxyPlot.Core
+  Title          OxyPlot core library (PCL)
+  Tags            plotting plot charting chart
+  Version        1.0.0
+  Summary
+  Authors        Oystein Bjorke
+  Project URL    http://oxyplot.org/
+  Dependencies
+  Download Count -1
+
+  Description    OxyPlot is a plotting library for .NET. This is the portable core library that is referenced by the platform-specific OxyPlot packages.
+
+#+END_SRC
+
+***** Install a specific version of package  to ./packages
+
+ - =$ pget.exe repo --install [package-id] [version]=
+
+or
+
+ - =$ pget.exe repo -i [package-id] [version]=
+
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe repo -i FParsec 1.0.2
+
+  $ ls -l packages
+  total 0
+  drwxrwxrwx 1 arch arch 256 dez 19 02:31 FParsec.1.0.2/
+  drwxrwxrwx 1 arch arch 280 dez 19 00:52 Microsoft.Web.Xdt.2.1.1/
+  drwxrwxrwx 1 arch arch 264 dez 19 01:45 NuGet.Core.2.12.0/
+  drwxrwxrwx 1 arch arch 488 dez 19 02:22 OxyPlot.Core.1.0.0/
+  drwxrwxrwx 1 arch arch 480 dez 19 02:22 OxyPlot.Pdf.1.0.0/
+  drwxrwxrwx 1 arch arch 296 dez 19 02:22 PDFsharp-MigraDoc-GDI.1.32.4334.0/
+#+END_SRC
+
+***** Install the lastest version of a package to a local repository
+
+ - =$ pget.exe repo [path] --install [package-id]=
+
+or
+
+ - =$ pget.exe repo [path] -i [package-id] -r [path]=
+
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe repo -i /home/arch/nuget  OxyPlot.Pdf 
+  Installing: OxyPlot.Pdf 1.0.0
+
+  $ bin/pget.exe repo /home/arch/nuget -sh OxyPlot.Pdf
+
+  Id             OxyPlot.Pdf
+  Title          OxyPlot PDF extensions (for Silverlight and NET4)
+  Tags            pdf plotting plot charting chart
+  Version        1.0.0
+  Summary
+  Authors        Oystein Bjorke
+  Project URL    http://oxyplot.org/
+  Dependencies   OxyPlot.Core [1.0.0], PDFsharp-MigraDoc-GDI [1.32.4334], OxyPlot.Core [1.0.0], PDFsharp-MigraDoc-GDI [1.32.4334], OxyPlot.Core [1.0.0]
+  Download Count -1
+
+  Description    OxyPlot is a plotting library for .NET. This package contains .pdf export extensions for .NET 4 (based on PDFsharp) and Silverlight (based on SilverPDF).
+
+#+END_SRC
+
+***** Install a specific version of package to a local repository
+
+ - =$ pget.exe repo [path] --install [package-id] [version]=
+
+or
+
+ - =$ pget.exe repo [path] -i [package-id] -v [package]=
+
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe repo ~/nuget -i Microsoft.Web.Xdt 1.0.0
+#+END_SRC
+**** Install packages listed in a file
+****** Install all packages listed in the file ./packages.list to ./packages
+
+ - =$ pget.exe repo --install-from-file=
+
+or
+
+ - =$ pget.exe repo -if=
+
+Example of the file packages.list. If the version is not listed, it
+installs the latest version of the packages to ./packages.
+
+File: packages.list
+
+#+BEGIN_SRC sh
+  FSharp.Data              1.0.0
+  Deedle                   1.0.0
+  OxyPlot.Pdf
+  OxyPlot.WindowsForms
+#+END_SRC
+
+****** Install all packages listed in the file ./packages.list to ./packages
+
+ - =$ pget.exe repo --install-from-file [packages-list-file]=
+
+or
+
+ - =$ pget.exe repo -if [package-list-file]=
 *** NuGet Repository 
 **** Search a package
 
@@ -984,6 +938,101 @@ Example:
   c4969f50-7a17-4f8f-ac9d-d783a9a8f8d4
 #+END_SRC
 
+** Build instructions
+*** Build with Makefile
+
+Run the command =$ make exe=. It assumes that fsc - the F# compiler
+and nuget.exe are in the $PATH variable. It builds the standlone app
+pget.exe with all dependencies static linked and also FSharp.Core (F#
+runtime) static linked.
+
+#+BEGIN_SRC sh
+  $ make exe
+  fsc src/Pget.fs src/PgetCmd.fsx --out:bin/pget.exe \
+  --target:exe \
+      --platform:anycpu \
+      -r:packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll \
+  -r:packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll \
+  --staticlink:NuGet.Core \
+  --standalone
+  F# Compiler for F# 4.1
+  Freely distributed under the Apache 2.0 Open Source License
+
+#+END_SRC
+
+Testing:
+
+#+BEGIN_SRC sh
+  $ file bin/pget.exe
+  bin/pget.exe: PE32 executable (console) Intel 80386 Mono/.Net assembly, for MS Windows
+
+  $ bin/pget.exe --version
+
+      Pget - Package Get - Version 1.0
+      Copyright (C) 2016 Caio Rodrigues
+#+END_SRC
+
+*** Build with Xbuild or Msbuild
+
+ - =$ xbuild pget-exe.fsproj=
+
+Unfortunally is not possible yet to build an standalone app with xbuild.
+
+#+BEGIN_SRC sh
+  $ tree bin/
+  bin/
+  └── Debug
+      ├── FSharp.Core.dll
+      ├── Microsoft.Web.XmlTransform.dll
+      ├── NuGet.Core.dll
+      ├── Pget.exe
+      └── Pget.exe.mdb
+
+  1 directory, 5 files
+
+
+  $ bin/Debug/Pget.exe --version
+
+      Pget - Package Get - Version 1.0
+      Copyright (C) 2016 Caio Rodrigues
+
+#+END_SRC
+** Install
+** Get binary release
+
+The binary releases are published to orphan-branch [[https://github.com/caiorss/pget/tree/build][build]]. 
+
+*Manual download*
+
+ - [[https://github.com/caiorss/pget/raw/build/pget.exe][Download pget.exe]]
+
+*Automatic Download* 
+
+#+BEGIN_SRC sh 
+  ~/Downloads $ curl -O -L https://github.com/caiorss/pget/raw/build/pget.exe
+    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                   Dload  Upload   Total   Spent    Left  Speed
+  100   127  100   127    0     0    169      0 --:--:-- --:--:-- --:--:--   169
+  100 2143k  100 2143k    0     0   257k      0  0:00:08  0:00:08 --:--:--  529k
+  ~/Downloads $
+
+
+  ~/Downloads $ /usr/bin/chmod +x pget.exe
+
+  ~/Downloads $ ./pget.exe -v 
+
+      Pget - Package Get - Version 1.0 
+      Copyright (C) 2016 Caio Rodrigues        
+#+END_SRC
+
+or 
+
+#+BEGIN_SRC sh 
+  cd ~/bin 
+  curl -O -L https://github.com/caiorss/pget/raw/build/pget.exe
+  /usr/bin/chmod +x pget.exe
+  ./pget.exe -v 
+#+END_SRC
 * Pget.dll
 
 Pget.dll is a F# library that provides a high level interface and
