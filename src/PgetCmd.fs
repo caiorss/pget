@@ -1,18 +1,7 @@
 namespace Pget 
 
-// #if INTERACTIVE
-// #r "../packages/NuGet.Core/lib/net40-Client/NuGet.Core.dll"
-// #r "../packages/Microsoft.Web.Xdt/lib/net40/Microsoft.Web.XmlTransform.dll"
-// #r "System.Linq.dll"
-// #r "System.Xml.Linq.dll"
-// #endif
-
-
 open System 
 open System.Linq 
-
-
-// #load "Pget.fs"
 open NuGet
 
 
