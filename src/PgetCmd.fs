@@ -138,6 +138,13 @@ module AsmAttr =
 
 module Main =
 
+    
+    /// 
+    /// Default repository ./packages or the top level 'packages'
+    /// directory in a project.
+    /// 
+    let projectRepo = "packages"
+
     let commandLineArgsInteractive () =
         let args = Environment.GetCommandLineArgs()
         let idx = Array.tryFindIndex (fun a -> a = "--") args
@@ -158,23 +165,44 @@ module Main =
     let showScript framework repoPath  =
         match Pget.Framework.parseFramework framework with
         | Some fr -> Pget.RepoLocal.showScript fr repoPath
-        | None    -> Console.WriteLine("Error: Wrong framework parameter")
+        | None    -> Console.WriteLine("Error: Wrong framework parameter.")
 
     let showLocalPackageRef framework packageId = 
         match Pget.Framework.parseFramework framework with
         | Some fr -> Pget.RepoLocal.showPackageRefsFsx "packages" fr packageId
-        | None    -> Console.WriteLine("Error: Wrong framework parameter")
+        | None    -> Console.WriteLine("Error: Wrong framework parameter.")
 
     let showRepoPackageRef framework repo packageId =
         match Pget.Framework.parseFramework framework with
         | Some fr -> Pget.RepoLocal.showPackageRefsFsx repo fr packageId
-        | None    -> Console.WriteLine("Error: Wrong framework parameter")
+        | None    -> Console.WriteLine("Error: Wrong framework parameter.")
 
+    /// Open package's project web site in default web browser    
+    let openProjectUrl repoPath packageId =
+        let pack = Pget.RepoLocal.findPackageById2 repoPath packageId
+        let urlOpt =  Option.bind Pget.IPack.projectUrl pack
 
+        match pack with
+        | None        ->  printfn "Error: I can't find the package %s in %s" packageId repoPath
+        | Some pack'  ->  match urlOpt with
+                          | None     -> printfn "Error: Package doesn't have project URL."
+                          | Some url -> ignore <| System.Diagnostics.Process.Start (url: string)
+                          
+    /// Open package's license URL  in default web browser    
+    let openLicenseUrl repoPath packageId =               
+        let pack = Pget.RepoLocal.findPackageById2 repoPath packageId
+        let urlOpt =  Option.bind Pget.IPack.licenceUrl pack 
+
+        match pack with
+        | None        ->  printfn "Error: I can't find the package %s in %s" packageId repoPath
+        | Some pack'  ->  match urlOpt with
+                          | None     -> printfn "Error: Package doesn't have a licence URL."
+                          | Some url -> ignore <| System.Diagnostics.Process.Start (url: string)
+        
     let showVersion () =
         Console.WriteLine """
-    Pget - Package Get - Version 1.2 
-    Copyright (C) 2016 Caio Rodrigues
+  Pget - Package Get - Version 1.2 
+  Copyright (C) 2016 Caio Rodrigues
         """
 
     let showHelp () =
@@ -217,6 +245,13 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     repo --install-from-file [file]             Install all packages listed in the file ./packages.list to ./packages directory.
     repo [path] --install-from-file [file]      Install all packages listed in the file [file] to [path]
 
+
+  Open package project URL or Licence URL
+
+    repo --url [pack]                           Browse project URL of a package [pack] in ./packages.
+    repo --license [pack]                       Browse licence URL of a package [pack] in ./packages.
+    repo [path] --url [pack]                    Browse project URL of a package [pack] in [path]
+    repo [path] --license [pack]                Browse licence URL of a package [pack] in [path]
 
   Show references for F# *.fsx scripts:        [frm]:  .NET Framework  net40 | net45   
 
@@ -274,53 +309,60 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         // ================================= Repository related commands ==================
         //
         | ["repo"; path; "--list"]                        ->  Pget.RepoLocal.showPackageList path
-        | ["repo"; "--list"]                              ->  Pget.RepoLocal.showPackageList "packages"
+        | ["repo"; "--list"]                              ->  Pget.RepoLocal.showPackageList projectRepo
         | ["repo"; path; "-l"]                            ->  Pget.RepoLocal.showPackageList path
-        | ["repo"; "-l"]                                  ->  Pget.RepoLocal.showPackageList "packages"
+        | ["repo"; "-l"]                                  ->  Pget.RepoLocal.showPackageList projectRepo
 
         // Show all packages in repository 
         | ["repo"; path; "--show" ]                       ->  Pget.RepoLocal.showPackages path        
-        | ["repo"; "--show" ]                             ->  Pget.RepoLocal.showPackages "packages"    
+        | ["repo"; "--show" ]                             ->  Pget.RepoLocal.showPackages projectRepo    
         | ["repo"; path ; "--show"; pack ]                ->  Pget.RepoLocal.showPackage path pack 
-        | ["repo"; "--show"; pack ]                       ->  Pget.RepoLocal.showPackage "packages" pack 
+        | ["repo"; "--show"; pack ]                       ->  Pget.RepoLocal.showPackage projectRepo pack 
 
 
         | ["repo"; path; "-sh" ]                          ->  Pget.RepoLocal.showPackages path        
-        | ["repo"; "-sh" ]                                ->  Pget.RepoLocal.showPackages "packages"    
+        | ["repo"; "-sh" ]                                ->  Pget.RepoLocal.showPackages projectRepo    
         | ["repo"; path ; "-sh"; pack ]                   ->  Pget.RepoLocal.showPackage path pack 
-        | ["repo"; "-sh"; pack ]                          ->  Pget.RepoLocal.showPackage "packages" pack 
+        | ["repo"; "-sh"; pack ]                          ->  Pget.RepoLocal.showPackage projectRepo pack  
 
+        // Open project URL 
+        | [ "repo"; "--url" ; pack ]                      -> openProjectUrl projectRepo pack
+        | [ "repo"; path; "--url" ; pack ]                -> openProjectUrl path pack
 
+        // Open licence URL 
+        | [ "repo"; "--license"; pack ]                   -> openLicenseUrl projectRepo pack 
+        | [ "repo"; path; "--license"; pack ]             -> openLicenseUrl path pack 
+        
         // Show files of a package in project repository
-        | ["repo"; "--files" ; pack ]                ->   Pget.RepoLocal.showPackageFiles "packages" pack
+        | ["repo"; "--files" ; pack ]                ->   Pget.RepoLocal.showPackageFiles projectRepo pack
         | ["repo"; path ; "--files" ; pack ]         ->   Pget.RepoLocal.showPackageFiles  path pack
 
         // Install package to repository 
         | ["repo"; path; "--install"; pack ]              ->  Pget.RepoLocal.installPackageLatest path pack
-        | ["repo"; "--install"; pack ]                    ->  Pget.RepoLocal.installPackageLatest "packages" pack
+        | ["repo"; "--install"; pack ]                    ->  Pget.RepoLocal.installPackageLatest projectRepo pack
         | ["repo"; path ; "--install"; pack ; ver ]       ->  Pget.RepoLocal.installPackage path (pack, ver)        
-        | ["repo"; "--install"; pack ;  ver  ]            ->  Pget.RepoLocal.installPackage "packages" (pack, ver)
+        | ["repo"; "--install"; pack ;  ver  ]            ->  Pget.RepoLocal.installPackage projectRepo (pack, ver)
         | ["repo"; path; "-i"; pack ]                     ->  Pget.RepoLocal.installPackageLatest path pack
-        | ["repo"; "-i"; pack ]                           ->  Pget.RepoLocal.installPackageLatest "packages" pack
+        | ["repo"; "-i"; pack ]                           ->  Pget.RepoLocal.installPackageLatest projectRepo pack
         | ["repo"; path ; "-i"; pack ; ver ]              ->  Pget.RepoLocal.installPackage path (pack, ver)    
-        | ["repo"; "-i"; pack ;  ver  ]                   ->  Pget.RepoLocal.installPackage "packages" (pack, ver)
+        | ["repo"; "-i"; pack ;  ver  ]                   ->  Pget.RepoLocal.installPackage projectRepo (pack, ver)
 
         // Install all packages from a list of package to repository
-        | ["repo"; "--install-from-file" ]                ->  Pget.RepoLocal.installPackagesFromFile "packages" "packages.list" 
-        | ["repo"; "--install-from-file" ; file ]         ->  Pget.RepoLocal.installPackagesFromFile "packages" file
+        | ["repo"; "--install-from-file" ]                ->  Pget.RepoLocal.installPackagesFromFile projectRepo "packages.list" 
+        | ["repo"; "--install-from-file" ; file ]         ->  Pget.RepoLocal.installPackagesFromFile projectRepo file
         | ["repo"; path; "--install-from-file" ; file ]   ->  Pget.RepoLocal.installPackagesFromFile  path file
 
-        | ["repo"; "-if" ]                                ->  Pget.RepoLocal.installPackagesFromFile "packages" "packages.list" 
-        | ["repo"; "-if" ; file ]                         ->  Pget.RepoLocal.installPackagesFromFile "packages" file
+        | ["repo"; "-if" ]                                ->  Pget.RepoLocal.installPackagesFromFile projectRepo "packages.list" 
+        | ["repo"; "-if" ; file ]                         ->  Pget.RepoLocal.installPackagesFromFile projectRepo file
         | ["repo"; path; "-if" ; file ]                   ->  Pget.RepoLocal.installPackagesFromFile  path file
 
 
         // Generate F# include directives (#r) for all packages in a repository 
         | ["repo"; path ; "--ref"; framework  ]         ->  showScript framework  path
-        | ["repo"; "--ref"; framework  ]                ->  showScript framework "packages"
+        | ["repo"; "--ref"; framework  ]                ->  showScript framework projectRepo
 
         | ["repo"; path ; "--ref"; framework ; pack ]   ->  showRepoPackageRef framework path pack
-        | ["repo"; "--ref"; framework ; pack ]          ->  showRepoPackageRef framework "packages" pack
+        | ["repo"; "--ref"; framework ; pack ]          ->  showRepoPackageRef framework projectRepo pack
 
        
         // ============================ NuGet Repository (Remote) ========================== 
