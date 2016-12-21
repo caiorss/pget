@@ -186,18 +186,20 @@ module Main =
         | None        ->  printfn "Error: I can't find the package %s in %s" packageId repoPath
         | Some pack'  ->  match urlOpt with
                           | None     -> printfn "Error: Package doesn't have project URL."
-                          | Some url -> ignore <| System.Diagnostics.Process.Start (url: string)
+                          | Some url -> printfn "Opening %s" url
+                                        ignore <| System.Diagnostics.Process.Start (url: string)
                           
     /// Open package's license URL  in default web browser    
     let openLicenseUrl repoPath packageId =               
         let pack = Pget.RepoLocal.findPackageById2 repoPath packageId
-        let urlOpt =  Option.bind Pget.IPack.licenceUrl pack 
+        let urlOpt =  Option.bind Pget.IPack.licenseUrl pack 
 
         match pack with
         | None        ->  printfn "Error: I can't find the package %s in %s" packageId repoPath
         | Some pack'  ->  match urlOpt with
                           | None     -> printfn "Error: Package doesn't have a licence URL."
-                          | Some url -> ignore <| System.Diagnostics.Process.Start (url: string)
+                          | Some url -> printfn "Opening %s" url
+                                        ignore <| System.Diagnostics.Process.Start (url: string)
         
     let showVersion () =
         Console.WriteLine """
@@ -330,8 +332,8 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         | [ "repo"; path; "--url" ; pack ]                -> openProjectUrl path pack
 
         // Open licence URL 
-        | [ "repo"; "--license"; pack ]                   -> openLicenseUrl projectRepo pack 
-        | [ "repo"; path; "--license"; pack ]             -> openLicenseUrl path pack 
+        | ["repo"; "--license"; pack ]                   -> openLicenseUrl projectRepo pack 
+        | ["repo"; path; "--license"; pack ]             -> openLicenseUrl path pack 
         
         // Show files of a package in project repository
         | ["repo"; "--files" ; pack ]                ->   Pget.RepoLocal.showPackageFiles projectRepo pack
