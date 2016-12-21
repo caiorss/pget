@@ -86,7 +86,8 @@ module IPack =
     let dependencies (pack: T) = pack.DependencySets
 
     /// Get project URL 
-    let projectUrl (pack: T) = pack.ProjectUrl.ToString()
+    let projectUrl (pack: T) = Option.ofObj pack.ProjectUrl
+                               |> Option.map (fun uri -> uri.ToString())
 
     /// Returns true if it as release version 
     let isReleaseVersion (pack: T): bool = pack.IsReleaseVersion()
