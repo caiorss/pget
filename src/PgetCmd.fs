@@ -203,7 +203,7 @@ module Main =
         
     let showVersion () =
         Console.WriteLine """
-  Pget - Package Get - Version 1.2 
+  Pget - Package Get - Version 1.3 
   Copyright (C) 2016 Caio Rodrigues
         """
 
