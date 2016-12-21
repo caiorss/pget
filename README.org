@@ -540,10 +540,9 @@ Example:
 Example: 
 
 #+BEGIN_SRC sh
-$ bin/pget.exe repo --url Mono.CSharp
+$ bin/pget.exe repo --url FParsec
+Opening http://www.quanttec.com/fparsec/
 #+END_SRC
-
-It will open the URL: http://www.mono-project.com/docs/about-mono/languages/csharp/
 
 ***** Open project URL of package in a local repository
 
@@ -552,10 +551,9 @@ It will open the URL: http://www.mono-project.com/docs/about-mono/languages/csha
 Example: 
 
 #+BEGIN_SRC sh
-$ bin/pget.exe repo ~/nuget --url Mono.CSharp
+$ bin/pget.exe repo ~/nuget --url Eto.Forms
+Opening https://github.com/picoe/Eto
 #+END_SRC
-
-It will open the URL: http://www.mono-project.com/docs/about-mono/languages/csharp/
 
 **** Open package licensee URL in the browser
 ***** Open license URL of package in ./packages
@@ -565,17 +563,19 @@ It will open the URL: http://www.mono-project.com/docs/about-mono/languages/csha
 Example: 
 
 #+BEGIN_SRC sh
-$ bin/pget.exe repo --license Mono.CSharp
+$ bin/pget.exe repo --license FParsec
+Opening http://www.quanttec.com/fparsec/license.html
 #+END_SRC
 
-***** Open project URL of package in a local repository
+***** Open license URL of package in a local repository
 
  - =$ pget.exe repo [path]  --licence [packageId]=
 
 Example:
 
 #+BEGIN_SRC sh
-$ bin/pget.exe repo ~/nuget --license Mono.CSharp
+$ bin/pget.exe repo ~/nuget --license NUnit.Console
+Opening http://nunit.org/nuget/nunit3-license.txt
 #+END_SRC
 
 **** Install packages
