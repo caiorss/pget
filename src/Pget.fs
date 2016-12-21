@@ -393,16 +393,18 @@ module RepoLocal =
 
     type R = NuGet.IPackageRepository
 
-    /// Find a package by Id in local repository
+    /// Creates a repository object given a path to local repository
+    let localRepository (relPath: string) =
+        PackageRepositoryFactory.Default.CreateRepository(System.IO.Path.GetFullPath(relPath))
+
+    /// Find a package by Id in a repository object
     let findPackageById (repo: R) (packageId: string): NuGet.IPackage option =
         let packs = repo.FindPackagesById (packageId)
         Seq.tryItem 0 packs
 
-
-
-    /// Creates a local repository
-    let localRepository (relPath: string) =
-        PackageRepositoryFactory.Default.CreateRepository(System.IO.Path.GetFullPath(relPath))
+    /// Find a package by Id  in a repository given its path.
+    let findPackageById2 (repoPath: string) (packageId: string): NuGet.IPackage option =
+        findPackageById (localRepository repoPath) packageId
 
     //// Returns all packages from a local repository
     let getPackages (repoPath: string) =
