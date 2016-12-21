@@ -98,6 +98,19 @@ module IPack =
    
     let isLastestVersion (pack: T) = pack.IsLatestVersion
 
+    /// Return package Icon URL
+    let iconUrl (pack: T) = pack.IconUrl
+                            |> Option.ofObj
+                            |> Option.map (fun uri -> uri.ToString())
+
+    /// Return package's tags
+    let tags (pack: T) = Option.ofObj pack.Tags
+
+    /// Return package's release notes
+    let releaseNotes (pack: T) = Option.ofObj pack.ReleaseNotes
+
+    let copyRight (pack: T) = pack.Copyright
+
     /// Package full name  <Package ID>.<Version>
     let fullName (pack: T) = pack.Id + "." + pack.Version.ToString()
 
