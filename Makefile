@@ -3,17 +3,18 @@ all: help
 
 help:
 	@echo "Enter $ make lib - to build a library src/bin/pget.dll"
-	@echo "Enter $ make app - to build command line application src/bin/pget.exe"
+	@echo "Enter $ make exe - to build command line application src/bin/pget.exe"
 
 
 ## F# Compiler Location - Change this for your platform 
 #
-CC := /usr/lib/mono/4.5/fsc.exe
+#CC := /usr/lib/mono/4.5/fsc.exe
+CC := fsc
 
 # Nuget client - Change this for your platform 
 #
-NUGET := ~/nuget.exe
-
+#NUGET := ~/bin/nuget.exe
+NUGET := nuget.exe
 
 lib:= bin/pget.dll
 lib: $(lib)
