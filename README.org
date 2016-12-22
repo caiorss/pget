@@ -52,14 +52,128 @@ display packages' metadata from local repository or project repository
 
  - Get packages' assembly references from local repository and project
    repository (./packages) for F# scripts.
+
+*Repository:*
+
+ -  https://www.github.com/caiorss/pget
+
+** Get binary release
+
+The binary releases are published to orphan-branch [[https://github.com/caiorss/pget/tree/build][build]]. 
+
+*Manual download*
+
+ - [[https://github.com/caiorss/pget/raw/build/pget.exe][Download pget.exe]]
+
+*Automatic Download* 
+
+#+BEGIN_SRC sh 
+  ~/Downloads $ curl -O -L https://github.com/caiorss/pget/raw/build/pget.exe
+    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                   Dload  Upload   Total   Spent    Left  Speed
+  100   127  100   127    0     0    169      0 --:--:-- --:--:-- --:--:--   169
+  100 2143k  100 2143k    0     0   257k      0  0:00:08  0:00:08 --:--:--  529k
+  ~/Downloads $
+
+
+  ~/Downloads $ /usr/bin/chmod +x pget.exe
+
+  ~/Downloads $ ./pget.exe -v 
+
+      Pget - Package Get - Version 1.0 
+      Copyright (C) 2016 Caio Rodrigues        
+#+END_SRC
+
+or 
+
+#+BEGIN_SRC sh 
+  cd ~/bin 
+  curl -O -L https://github.com/caiorss/pget/raw/build/pget.exe
+  /usr/bin/chmod +x pget.exe
+  ./pget.exe -v 
+#+END_SRC
+
+** Build instructions
+*** Build with Makefile
+
+Run the command =$ make exe=. It assumes that fsc - the F# compiler
+and nuget.exe are in the $PATH variable. It builds the standlone app
+pget.exe with all dependencies static linked and also FSharp.Core (F#
+runtime) static linked.
+
+#+BEGIN_SRC sh
+  $ make exe
+  fsc src/Pget.fs src/PgetCmd.fsx --out:bin/pget.exe \
+  --target:exe \
+      --platform:anycpu \
+      -r:packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll \
+  -r:packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll \
+  --staticlink:NuGet.Core \
+  --standalone
+  F# Compiler for F# 4.1
+  Freely distributed under the Apache 2.0 Open Source License
+
+#+END_SRC
+
+Testing:
+
+#+BEGIN_SRC sh
+  $ file bin/pget.exe
+  bin/pget.exe: PE32 executable (console) Intel 80386 Mono/.Net assembly, for MS Windows
+
+  $ bin/pget.exe --version
+
+      Pget - Package Get - Version 1.0
+      Copyright (C) 2016 Caio Rodrigues
+#+END_SRC
+
+*** Build with Xbuild or Msbuild
+
+ - =$ xbuild pget-exe.fsproj=
+
+Unfortunally is not possible yet to build an standalone app with xbuild.
+
+#+BEGIN_SRC sh
+  $ tree bin/
+  bin/
+  └── Debug
+      ├── FSharp.Core.dll
+      ├── Microsoft.Web.XmlTransform.dll
+      ├── NuGet.Core.dll
+      ├── Pget.exe
+      └── Pget.exe.mdb
+
+  1 directory, 5 files
+
+
+  $ bin/Debug/Pget.exe --version
+
+      Pget - Package Get - Version 1.0
+      Copyright (C) 2016 Caio Rodrigues
+
+#+END_SRC
+** Install
 ** Commands
+*** Print Version
+
+ - =$ pget.exe --version= or =$ pget.exe -v=
+
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe -v
+
+   Pget - Package Get - Version 1.3.1 
+   2016 Public Domain Software
+   Repository - https://github.com/caiorss/pge
+#+END_SRC
 *** Print help
 
  - =$ pget.exe=
 
 Example:
 
-#+BEGIN_SRC 
+#+BEGIN_SRC
   $ bin/pget.exe
 
   Pget - Package Get - Enhanced command line interface to NuGet.Core
@@ -155,22 +269,10 @@ Example:
       --show               -sh
            
 
-    Pget - Package Get - Version 1.3 
-    Copyright (C) 2016 Caio Rodrigues
+   Pget - Package Get - Version 1.3.1 
+   2016 Public Domain Software
+   Repository - https://github.com/caiorss/pget
 
-#+END_SRC
-
-*** Print Version
-
- - =$ pget.exe --version= or =$ pget.exe -v=
-
-Example:
-
-#+BEGIN_SRC sh
-  $ bin/pget.exe --version
-
-      Pget - Package Get - Version 1.2 
-      Copyright (C) 2016 Caio Rodrigues
 #+END_SRC
 
 *** Local Repository
@@ -962,107 +1064,9 @@ Example:
   $ bin/pget.exe --guid
   c4969f50-7a17-4f8f-ac9d-d783a9a8f8d4
 #+END_SRC
-
-** Build instructions
-*** Build with Makefile
-
-Run the command =$ make exe=. It assumes that fsc - the F# compiler
-and nuget.exe are in the $PATH variable. It builds the standlone app
-pget.exe with all dependencies static linked and also FSharp.Core (F#
-runtime) static linked.
-
-#+BEGIN_SRC sh
-  $ make exe
-  fsc src/Pget.fs src/PgetCmd.fsx --out:bin/pget.exe \
-  --target:exe \
-      --platform:anycpu \
-      -r:packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll \
-  -r:packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll \
-  --staticlink:NuGet.Core \
-  --standalone
-  F# Compiler for F# 4.1
-  Freely distributed under the Apache 2.0 Open Source License
-
-#+END_SRC
-
-Testing:
-
-#+BEGIN_SRC sh
-  $ file bin/pget.exe
-  bin/pget.exe: PE32 executable (console) Intel 80386 Mono/.Net assembly, for MS Windows
-
-  $ bin/pget.exe --version
-
-      Pget - Package Get - Version 1.0
-      Copyright (C) 2016 Caio Rodrigues
-#+END_SRC
-
-*** Build with Xbuild or Msbuild
-
- - =$ xbuild pget-exe.fsproj=
-
-Unfortunally is not possible yet to build an standalone app with xbuild.
-
-#+BEGIN_SRC sh
-  $ tree bin/
-  bin/
-  └── Debug
-      ├── FSharp.Core.dll
-      ├── Microsoft.Web.XmlTransform.dll
-      ├── NuGet.Core.dll
-      ├── Pget.exe
-      └── Pget.exe.mdb
-
-  1 directory, 5 files
-
-
-  $ bin/Debug/Pget.exe --version
-
-      Pget - Package Get - Version 1.0
-      Copyright (C) 2016 Caio Rodrigues
-
-#+END_SRC
-** Install
-** Get binary release
-
-The binary releases are published to orphan-branch [[https://github.com/caiorss/pget/tree/build][build]]. 
-
-*Manual download*
-
- - [[https://github.com/caiorss/pget/raw/build/pget.exe][Download pget.exe]]
-
-*Automatic Download* 
-
-#+BEGIN_SRC sh 
-  ~/Downloads $ curl -O -L https://github.com/caiorss/pget/raw/build/pget.exe
-    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                   Dload  Upload   Total   Spent    Left  Speed
-  100   127  100   127    0     0    169      0 --:--:-- --:--:-- --:--:--   169
-  100 2143k  100 2143k    0     0   257k      0  0:00:08  0:00:08 --:--:--  529k
-  ~/Downloads $
-
-
-  ~/Downloads $ /usr/bin/chmod +x pget.exe
-
-  ~/Downloads $ ./pget.exe -v 
-
-      Pget - Package Get - Version 1.0 
-      Copyright (C) 2016 Caio Rodrigues        
-#+END_SRC
-
-or 
-
-#+BEGIN_SRC sh 
-  cd ~/bin 
-  curl -O -L https://github.com/caiorss/pget/raw/build/pget.exe
-  /usr/bin/chmod +x pget.exe
-  ./pget.exe -v 
-#+END_SRC
 * Pget.dll
 
 Pget.dll is a F# library that provides a high level interface and
 functional wrappers to NuGet.Core API.
 
-* Repository
 
- - https://www.github.com/caiorss/pget
