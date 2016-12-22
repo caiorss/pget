@@ -203,8 +203,9 @@ module Main =
         
     let showVersion () =
         Console.WriteLine """
-  Pget - Package Get - Version 1.3 
-  Copyright (C) 2016 Caio Rodrigues
+ Pget - Package Get - Version 1.3.1 
+ 2016 Public Domain Software
+ Repository - https://github.com/caiorss/pget
         """
 
     let showHelp () =
@@ -355,9 +356,9 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         | ["repo"; path ; "-i"; pack ; ver ]              ->  Pget.RepoLocal.installPackage path (pack, ver)    
         | ["repo"; "-i"; pack ;  ver  ]                   ->  Pget.RepoLocal.installPackage projectRepo (pack, ver)
 
-        | "repo" :: "--install-list" :: packageList          -> Pget.RepoLocal.installPackageList "pacakges" packageList 
+        | "repo" :: "--install-list" :: packageList          -> Pget.RepoLocal.installPackageList projectRepo packageList 
         | "repo" :: path :: "--install-list" :: packageList  -> Pget.RepoLocal.installPackageList  path      packageList 
-        | "repo" :: "-il" :: packageList                     -> Pget.RepoLocal.installPackageList "pacakges" packageList 
+        | "repo" :: "-il" :: packageList                     -> Pget.RepoLocal.installPackageList projectRepo packageList 
         | "repo" :: path :: "-il" :: packageList             -> Pget.RepoLocal.installPackageList  path      packageList 
 
 
