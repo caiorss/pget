@@ -200,6 +200,11 @@ module Main =
                           | None     -> printfn "Error: Package doesn't have a licence URL."
                           | Some url -> printfn "Opening %s" url
                                         ignore <| System.Diagnostics.Process.Start (url: string)
+                                        
+    /// Open NuGet web site - https://www.nuget.org/
+    let openNugetWebsite () =
+        ignore <| System.Diagnostics.Process.Start ("https://www.nuget.org/")
+        
         
     let showVersion () =
         Console.WriteLine """
@@ -272,6 +277,7 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
 
     nuget --search [package]                    Search a package by name.  
     nuget --show   [package]                    Show package information (metadata).
+    nuget --open                                Open NuGet web site - https://www.nuget.org
 
   Nupkg Files:
 
@@ -390,7 +396,7 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         | ["nuget"; "--show" ; pack  ]           ->  Nuget.showPackage  pack
         | ["nuget"; "-sh" ; pack  ]              ->  Nuget.showPackage  pack
 
-        
+        | ["nuget"; "--open"]                    ->  openNugetWebsite ()           
         
         // | ["pack"; "--search"; pack ; "--repo"]                   ->  searchLocalPackage pack "pacakges"
         // | ["pack"; "--search"; pack ; "--repo"; path]             ->  searchLocalPackage pack  path
