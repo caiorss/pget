@@ -10,10 +10,10 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Pget</RootNamespace>
     <AssemblyName>Pget</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>2
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>   
-    <Name>Pget</Name>
+    <Name>pget</Name>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -24,8 +24,8 @@
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <Standalone>true</Standalone>    
-    <!-- <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile> -->
+    
+     <!-- <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile> -->
   </PropertyGroup>
 
 
@@ -36,8 +36,8 @@
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
-    <Standalone>true</Standalone>    
+    <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>    
+    <OtherFlags>--standalone --staticlink:NuGet.Core</OtherFlags>
   </PropertyGroup>
 
 <!-- Dependencies / Packages-->
@@ -77,6 +77,7 @@
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">14</MinimumVisualStudioVersion>
   </PropertyGroup>
+  
   <Choose>
     <When Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets')">
         <PropertyGroup>
