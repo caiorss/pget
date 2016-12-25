@@ -131,30 +131,22 @@ Testing:
 
 *** Build with Xbuild or Msbuild
 
- - =$ xbuild pget-exe.fsproj=
+Msbuild 
 
-Unfortunally is not possible yet to build an standalone app with xbuild.
+- =$ msbuild pget-exe.fsproj /p:Configuration=Release=
+
+Xbuild 
+
+ - =$ xbuild pget-exe.fsproj /p:Configuration=Release=
 
 #+BEGIN_SRC sh
-  $ tree bin/
-  bin/
-  └── Debug
-      ├── FSharp.Core.dll
-      ├── Microsoft.Web.XmlTransform.dll
-      ├── NuGet.Core.dll
-      ├── Pget.exe
-      └── Pget.exe.mdb
+$ cd obj/Release && ./Pget.exe -v
 
-  1 directory, 5 files
-
-
-  $ bin/Debug/Pget.exe --version
-
-      Pget - Package Get - Version 1.0
-      Copyright (C) 2016 Caio Rodrigues
-
+ Pget - Package Get - Version 1.3.1 
+ 2016 Public Domain Software
+ Repository - https://github.com/caiorss/pget
 #+END_SRC
-** Install
+
 ** Commands
 *** Print Version
 
