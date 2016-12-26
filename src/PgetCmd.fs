@@ -114,6 +114,12 @@ module AsmAttr =
                                                  an.CultureInfo.Name
                                                  ))
 
+    /// Print all namespaces from an assembly (.exe or .dll)
+    let showNamespaces (asmFile: string) =
+        let asm = loadFrom asmFile 
+        asm.GetTypes() |> Seq.distinctBy (fun t -> t.Namespace)
+                       |> Seq.iter (fun t -> Console.WriteLine(t.Namespace))        
+
 
     /// Print assembly file attributes
     ///
@@ -288,7 +294,8 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
 
     asm --info [file]                           Show all assembly attributes from an assembly file.
     asm --refs [file]                           Show all assembly references from an assembly file.
-    asm --resources [file]                      Show resources from an assembly file.
+    asm --resources  [file]                     Show resources from an assembly file.
+    asm --namespaces [file]                     Display all assembly namespaces.
 
   Generate Guid - Globally Unique Identifier 
 
@@ -410,6 +417,7 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         | ["asm" ; "--info" ; asmFile]                          -> AsmAttr.showFile asmFile
         | ["asm" ; "--refs" ; asmFile]                          -> AsmAttr.showAsmReferences asmFile         
         | ["asm" ; "--resources"; asmFile]                      -> AsmAttr.showResurces asmFile
+        | ["asm" ; "--namespaces"; asmFile]                     -> AsmAttr.showNamespaces asmFile 
 
         | ["--guid" ]                                            -> Console.WriteLine(Guid.NewGuid().ToString() : string)
 
