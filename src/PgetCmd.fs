@@ -120,7 +120,22 @@ module AsmAttr =
         asm.GetTypes() |> Seq.distinctBy (fun t -> t.Namespace)
                        |> Seq.iter (fun t -> Console.WriteLine(t.Namespace))        
 
+    let getPublicTypesInNamespace  (asmFile: string) selector (ns: string) =
+        let asm = loadFrom asmFile 
+        asm.GetTypes()
+        |> Seq.filter (fun (atype: Type) ->
+                       atype.Namespace = ns
+                       && atype.IsPublic
+                       && selector atype
+                       )
 
+     
+
+    let showClassesInNamespace (asmFile: string) ns =
+        getPublicTypesInNamespace asmFile (fun atype -> atype.IsClass) ns 
+        |> Seq.iter Console.WriteLine
+
+                       
     /// Print assembly file attributes
     ///
     let showFile (asmFile: string) =
@@ -292,10 +307,12 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
 
   Assembly files: *.exe or *.dll
 
-    asm --info [file]                           Show all assembly attributes from an assembly file.
-    asm --refs [file]                           Show all assembly references from an assembly file.
-    asm --resources  [file]                     Show resources from an assembly file.
-    asm --namespaces [file]                     Display all assembly namespaces.
+    asm --info [file]                                    Show all assembly attributes from an assembly [file].
+    asm --refs [file]                                    Show all assembly references from an assembly [file].
+    asm --resources  [file]                              Show resources from an assembly file.
+    asm --namespace|-ns [file]                           Display all assembly namespaces.
+    asm --namespace|-ns [file] --classes|-cls [ns]       Show all classes from namespace [ns] in assembly [file]
+
 
   Generate Guid - Globally Unique Identifier 
 
@@ -410,19 +427,24 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         
 
         // ======  Commands to Handle NuGet package Archives ============== //
-        | ["nupkg"; "--show"; fname]                             ->  Pget.Nupkg.show fname
-        | ["nupkg"; "--files"; fname]                            ->  Pget.Nupkg.showFiles fname
+        | ["nupkg"; "--show"; fname]                         ->  Pget.Nupkg.show fname
+        | ["nupkg"; "--files"; fname]                        ->  Pget.Nupkg.showFiles fname
 
         // ==========  Commands to Handle .NET assembly ============== //
-        | ["asm" ; "--info" ; asmFile]                          -> AsmAttr.showFile asmFile
-        | ["asm" ; "--refs" ; asmFile]                          -> AsmAttr.showAsmReferences asmFile         
-        | ["asm" ; "--resources"; asmFile]                      -> AsmAttr.showResurces asmFile
-        | ["asm" ; "--namespaces"; asmFile]                     -> AsmAttr.showNamespaces asmFile 
+        | ["asm" ; "--info" ;  asmFile]                      -> AsmAttr.showFile asmFile
+        | ["asm" ; "--refs" ; asmFile ]                      -> AsmAttr.showAsmReferences asmFile         
+        | ["asm" ; "--resources"; asmFile ]                  -> AsmAttr.showResurces asmFile
 
-        | ["--guid" ]                                            -> Console.WriteLine(Guid.NewGuid().ToString() : string)
+        | ["asm" ; "--namespace"; asmFile]                   -> AsmAttr.showNamespaces asmFile 
+        | ["asm" ; "-ns"; asmFile]                           -> AsmAttr.showNamespaces asmFile 
 
-        | []                                  ->  showHelp ()
-        | _                                   ->  Console.WriteLine "Error: Invalid option."
+        | ["asm" ; "--namespace"; asmFile ; "--classes"; ns] -> AsmAttr.showClassesInNamespace asmFile ns
+        | ["asm" ; "-ns"; asmFile ; "-cls"; ns]              -> AsmAttr.showClassesInNamespace asmFile ns
+        
+        | ["--guid" ]                                        -> Console.WriteLine(Guid.NewGuid().ToString() : string)
+
+        | []                                                 ->  showHelp ()
+        | _                                                  ->  Console.WriteLine "Error: Invalid option."
 
 
     [<EntryPoint>]    
