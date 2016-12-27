@@ -955,6 +955,43 @@ Example:
   lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.XML
 #+END_SRC
 
+*** Fsproj Helpers
+
+Generate include tags for all packages in project repository (./packages)
+
+- =$ pget.exe fsproj --ref [framework]=
+
+Where framework can be
+
+ - net40 for .NET 4.0
+ - net45 for .NET 4.5
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe fsproj --ref net45
+  <Reference Include="FParsec">
+       <HintPath>packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll</HintPath>
+  </Reference>
+  <Reference Include="FParsecCS">
+       <HintPath>packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll</HintPath>
+  </Reference>
+  <Reference Include="FS.INIReader">
+       <HintPath>packages/FS.INIReader.1.0.3/lib/net45/FS.INIReader.dll</HintPath>
+  </Reference>
+  <Reference Include="Microsoft.Web.XmlTransform">
+       <HintPath>packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll</HintPath>
+  </Reference>
+  <Reference Include="NuGet.Core">
+       <HintPath>packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll</HintPath>
+  </Reference>
+  <Reference Include="OxyPlot">
+       <HintPath>packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll</HintPath>
+  </Reference>
+  <Reference Include="OxyPlot.Pdf">
+       <HintPath>packages/OxyPlot.Pdf.1.0.0/lib/net40/OxyPlot.Pdf.dll</HintPath>
+  </Reference>
+  ...
+#+END_SRC
+
 *** Assembly metadata
 **** Show Assembly Attributes
 
@@ -1048,6 +1085,119 @@ Example:
   NuGet.Authoring.nuspec.xsd
 #+END_SRC
 
+**** Show all Namespaces of an Assembly
+
+ - =pget.exe asm --namespace [asmFile]=
+
+or
+
+ - =pget.exe asm --ns [asmFile]=
+
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe asm  -ns /usr/lib/mono/4.5-api/System.Xml.dll
+
+  System.Runtime.CompilerServices
+  System.Xml
+  System.Xml.Utils
+  System.Xml.Xsl.IlGen
+  System.Xml.Xsl
+  System.Xml.Xsl.Qil
+  System.Xml.Xsl.Runtime
+  System.Xml.Xsl.XPath
+  System.Xml.Xsl.Xslt
+  System.Xml.Xsl.XsltOld
+  System.Xml.Xsl.XsltOld.Debugger
+  Microsoft.Win32
+  System
+  System.Configuration
+  MS.Internal.Xml.Cache
+  System.Xml.XmlConfiguration
+  System.Xml.Resolvers
+  System.Xml.Schema
+  System.Xml.Serialization
+  System.Xml.Serialization.Advanced
+  System.Xml.Serialization.Configuration
+  MS.Internal.Xml.XPath
+  System.Xml.XPath
+#+END_SRC
+
+**** Show all classes from an Assembly within a Namespace
+
+ - =$ pget.exe asm --namespace [asmFile] --class [namespace]=
+
+or
+
+ - =$ pget.exe asm --ns [asmFile] --cls [namespace]=
+
+#+BEGIN_SRC sh
+$ bin/pget.exe asm -ns /usr/lib/mono/4.5-api/System.Xml.dll -cls System.Xml
+
+System.Xml.XmlParserContext
+System.Xml.XmlReader
+System.Xml.XmlReaderSettings
+System.Xml.XmlTextReader
+System.Xml.XmlTextWriter
+System.Xml.XmlValidatingReader
+System.Xml.XmlWriter
+System.Xml.XmlWriterSettings
+System.Xml.XmlAttributeCollection
+System.Xml.XmlAttribute
+System.Xml.XmlCDataSection
+System.Xml.XmlCharacterData
+...
+System.Xml.XmlQualifiedName
+System.Xml.XmlResolver
+System.Xml.XmlSecureResolver
+System.Xml.XmlUrlResolver
+System.Xml.XmlXapResolver
+
+#+END_SRC
+
+**** Show class public non-static methods
+
+ - =$ bin/pget.exe asm --class [asmFile] --public [className]=
+
+#+BEGIN_SRC sh
+$ bin/pget.exe asm --class /usr/lib/mono/4.5-api/System.Xml.dll --public System.Xml.XmlDocument
+
+System.Xml.XmlNode CloneNode(Boolean)
+
+System.Xml.XmlNodeType get_NodeType()
+
+System.Xml.XmlNode get_ParentNode()
+
+System.Xml.XmlDocumentType get_DocumentType()
+
+System.Xml.XmlImplementation get_Implementation()
+
+ ...  ...  ...
+
+Void add_NodeChanged(System.Xml.XmlNodeChangedEventHandler)
+
+Void remove_NodeChanged(System.Xml.XmlNodeChangedEventHandler)
+
+System.Xml.Schema.IXmlSchemaInfo get_SchemaInfo()
+
+System.String get_BaseURI()
+
+#+END_SRC
+
+**** Show class public static methods
+
+ - =$ pget.exe --clss [asmFile] --static [className]=
+
+#+BEGIN_SRC sh
+$ bin/pget.exe asm --class packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.dll --static OxyPlot.Arrays
+
+T[] CopyOfRange[T](T[], Int32, Int32)
+
+T[] CopyOf[T](T[], Int32)
+
+Void Fill[T](T[], Int32, Int32, T)
+
+#+END_SRC
 *** Generate GUID
 
  - =$ pget.exe --guid=
