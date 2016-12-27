@@ -110,8 +110,8 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
 
   Show package files 
 
-    repo --show-files [pack]                    Show content files of package [pack] in ./packages
-    repo [path] --show-files [pack]             Show content files of package [pack] in [repo]
+    repo --files [pack]                    Show content files of package [pack] in ./packages
+    repo [path] --files [pack]             Show content files of package [pack] in [repo]
 
   Install package to repository  
 
