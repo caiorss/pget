@@ -139,7 +139,43 @@ module AsmAttr =
         getPublicTypesInNamespace asmFile (fun atype -> atype.IsClass) ns 
         |> Seq.iter Console.WriteLine
 
-                       
+
+    let showMethods bindingFlags (asmFile: string) (className: string) =
+        loadFrom asmFile
+        |> getTypes
+        |> Seq.tryFind(fun atype -> atype.FullName = className)
+        |> Option.map(fun atype -> atype.GetMethods(bindingFlags))
+        |> Option.iter (Seq.iter (fun m -> Console.WriteLine("")
+                                           Console.WriteLine m)
+                        )
+
+    let showPublicMethods  (asmFile: string) (className: string) =
+        let flags = BindingFlags.Public |||  BindingFlags.Instance ||| BindingFlags.DeclaredOnly
+        showMethods flags asmFile className
+
+    let showPublicStaticMethods  (asmFile: string) (className: string) =
+        let flags = BindingFlags.Public |||  BindingFlags.Static ||| BindingFlags.DeclaredOnly
+        showMethods flags asmFile className
+
+    let showPrivateMethods  (asmFile: string) (className: string) =
+        let flags = BindingFlags.Static |||  BindingFlags.Instance ||| BindingFlags.NonPublic
+        showMethods flags asmFile className
+
+    let showPrivateStaticMethods  (asmFile: string) (className: string) =
+        let flags = BindingFlags.Static |||  BindingFlags.NonPublic
+        showMethods flags asmFile className
+
+    let showAllMethods (asmFile: string) (className: string) =
+        Console.WriteLine "\n\nPublic Methods"
+        Console.WriteLine "--------------------------------------"
+        showPublicMethods asmFile className
+        Console.WriteLine "\nPublic Static Methods"
+        Console.WriteLine "--------------------------------------"
+        showPublicStaticMethods asmFile className
+        Console.WriteLine "\nPrivate Static Methods"
+        Console.WriteLine "--------------------------------------"
+        showPrivateStaticMethods asmFile className
+
     /// Print assembly file attributes
     ///
     let showFile (asmFile: string) =
