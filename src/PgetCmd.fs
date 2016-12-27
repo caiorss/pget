@@ -80,11 +80,15 @@ module Main =
         
         
     let showVersion () =
-        Console.WriteLine """
- Pget - Package Get - Version 1.3.1 
+        let version = System.Reflection.Assembly
+                                       .GetExecutingAssembly()
+                                       .GetName()
+                                       .Version.ToString()
+        Console.WriteLine("""
+ Pget - Package Get - Version {0} 
  2016 Public Domain Software
  Repository - https://github.com/caiorss/pget
-        """
+        """, version)
 
     let showHelp () =
         Console.WriteLine """
