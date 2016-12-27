@@ -18,6 +18,10 @@ module AsmAttr =
     let loadFrom (assemblyFile: string) =
         Assembly.LoadFrom assemblyFile
 
+    /// Get types from an assembly
+    let getTypes (asm: Assembly) =
+        asm.GetTypes()
+
     /// Return assembly name
     let getName (asm: Assembly) =
         asm.GetName().Name
