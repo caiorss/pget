@@ -1198,6 +1198,62 @@ T[] CopyOf[T](T[], Int32)
 Void Fill[T](T[], Int32, Int32, T)
 
 #+END_SRC
+**** Show all class methods 
+
+ - =$ pget.exe asm --class [asmFile] --methods [className]=
+
+Example:
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe asm --class /usr/lib/mono/4.5-api/System.Windows.Forms.dll --methods System.Windows.Forms.Form
+
+
+  Public Methods
+  --------------------------------------
+
+  System.Windows.Forms.IButtonControl get_AcceptButton()
+
+  Void set_AcceptButton(System.Windows.Forms.IButtonControl)
+
+  Boolean get_AllowTransparency()
+
+  Void set_AllowTransparency(Boolean)
+
+  Boolean get_AutoScale()
+
+  Void set_AutoScale(Boolean)
+
+  System.Drawing.Size get_AutoScaleBaseSize()
+
+  Void set_AutoScaleBaseSize(System.Drawing.Size)
+
+  Boolean get_AutoScroll()
+
+  Void set_AutoScroll(Boolean)
+
+  Boolean get_AutoSize()
+
+  Void set_AutoSize(Boolean)
+
+  System.Windows.Forms.AutoSizeMode get_AutoSizeMode()
+
+  Void set_AutoSizeMode(System.Windows.Forms.AutoSizeMode)
+
+  System.Windows.Forms.AutoValidate get_AutoValidate()
+
+  ... ...  ...
+
+
+  Public Static Methods
+  --------------------------------------
+
+  System.Windows.Forms.Form get_ActiveForm()
+
+  System.Drawing.SizeF GetAutoScaleSize(System.Drawing.Font)
+
+  Private Static Methods
+  -------------------------
+#+END_SRC
 *** Generate GUID
 
  - =$ pget.exe --guid=
