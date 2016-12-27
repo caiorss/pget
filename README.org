@@ -1,9 +1,15 @@
-#+TITLE: Pget - .NET Command Line toolbox and Interface for NuGet.Core and F#
+#+TITLE: Pget .NET Command Line toolbox and Interface for NuGet.Core and F#
 #+AUTHOR: Caio Rodrigues
 #+EMAIL:  caiorss [DOT] rodrigues [DOT] gmail [DOT] com
 #+DESCRIPTION: F# Command line interface to NuGet API.
+#+KEYWORDS: NuGet F# fsharp csharp .net dotnet tool cli command line toolbox cross-platform
+
 #+STARTUP: content
-#+KEYWORDS: NuGet F# fsharp csharp .net dotnet tool cli command line toolbox cross-platform 
+#+LANGUAGE: en
+#+OPTIONS:   H:4
+
+#+INFOJS_OPT: view:info toc:t ltoc:t ftoc:nil mouse:underline button:nil path:theme/org-info.js
+#+HTML_HEAD: <link href="theme/style.css" rel="stylesheet"> 
 
 * Pget.exe - Package Get
 ** Overview
