@@ -145,6 +145,10 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     repo --ref  --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
     repo [path] --ref [frm]                     Show all assembly references from current [repo] directory.
     repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory
+
+  Fsproj - Helpers for fsproj files.
+
+    fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
                             
   Nuget commands:
 
