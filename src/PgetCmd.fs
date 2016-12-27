@@ -159,7 +159,9 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     asm --resources  [file]                              Show resources from an assembly file.
     asm --namespace|-ns [file]                           Display all assembly namespaces.
     asm --namespace|-ns [file] --classes|-cls [ns]       Show all classes from namespace [ns] in assembly [file]
-
+    asm --class [file] --public  [class]                 Show all public non-static methods of a [class] in a assembly [file]
+    asm --class [file] --static  [class]                 Show all static methods of a [class] in a assembly [file]
+    asm --class [file] --methods [class]                 Show all methods of a [class] in a assembly [file].
 
   Generate Guid - Globally Unique Identifier 
 
