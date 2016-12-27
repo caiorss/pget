@@ -46,6 +46,9 @@ display packages' metadata from local repository or project repository
    - Show .NET assemblies metadata
    - Show .NET referenced assemblies
    - Show assembly resources
+   - Show namespaces in assembly
+   - Show classes in assembly
+   - Show class methods 
 
  - Show NuGet packages *.nupkg file metadata.
 
