@@ -496,6 +496,22 @@ module RepoLocal =
         |> getPackages
         |> Seq.collect (IPack.getDllFilesRefsCompatibleUnique repoPath frameWork)
 
+    // @DONE: Implement function generateFSprojInclude to include references in a fsproj file.
+    let generateFsprojInclude repoPath framework = 
+        getRefs repoPath framework
+        |> Seq.map (fun reference ->
+                    let refname = System.IO.Path.GetFileNameWithoutExtension reference
+                    let out = sprintf """
+<Reference Include="%s"> 
+     <HintPath>%s</HintPath>
+</Reference>
+                                      """ refname  reference
+
+                    out.Trim()
+                    )
+        |> Seq.iter Console.WriteLine
+
+
     /// Generate a script to load all packages from the repository into REPL.
     ///
     let generateScript repoPath framework =
