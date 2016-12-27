@@ -379,112 +379,116 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
 
     let parseCommands cmdargs =
         match List.ofArray cmdargs with
-        | ["--version" ]                      ->  showVersion ()
-        | ["-v" ]                             ->  showVersion ()
+        | ["--version" ]                                    ->  showVersion ()
+        | ["-v" ]                                           ->  showVersion ()
 
-        | ["--help" ]                         ->  showHelp ()    
-        | ["-h" ]                             ->  showHelp ()
+        | ["--help" ]                                       ->  showHelp ()    
+        | ["-h" ]                                           ->  showHelp ()
 
         // ================================= Repository related commands ==================
         //
-        | ["repo"; path; "--list"]                        ->  Pget.RepoLocal.showPackageList path
-        | ["repo"; "--list"]                              ->  Pget.RepoLocal.showPackageList projectRepo
-        | ["repo"; path; "-l"]                            ->  Pget.RepoLocal.showPackageList path
-        | ["repo"; "-l"]                                  ->  Pget.RepoLocal.showPackageList projectRepo
+        | ["repo"; path; "--list"]                          ->  Pget.RepoLocal.showPackageList path
+        | ["repo"; "--list"]                                ->  Pget.RepoLocal.showPackageList projectRepo
+        | ["repo"; path; "-l"]                              ->  Pget.RepoLocal.showPackageList path
+        | ["repo"; "-l"]                                    ->  Pget.RepoLocal.showPackageList projectRepo
 
         // Show all packages in repository 
-        | ["repo"; path; "--show" ]                       ->  Pget.RepoLocal.showPackages path        
-        | ["repo"; "--show" ]                             ->  Pget.RepoLocal.showPackages projectRepo    
-        | ["repo"; path ; "--show"; pack ]                ->  Pget.RepoLocal.showPackage path pack 
-        | ["repo"; "--show"; pack ]                       ->  Pget.RepoLocal.showPackage projectRepo pack 
+        | ["repo"; path; "--show" ]                         ->  Pget.RepoLocal.showPackages path        
+        | ["repo"; "--show" ]                               ->  Pget.RepoLocal.showPackages projectRepo    
+        | ["repo"; path ; "--show"; pack ]                  ->  Pget.RepoLocal.showPackage path pack 
+        | ["repo"; "--show"; pack ]                         ->  Pget.RepoLocal.showPackage projectRepo pack 
 
 
-        | ["repo"; path; "-sh" ]                          ->  Pget.RepoLocal.showPackages path        
-        | ["repo"; "-sh" ]                                ->  Pget.RepoLocal.showPackages projectRepo    
-        | ["repo"; path ; "-sh"; pack ]                   ->  Pget.RepoLocal.showPackage path pack 
-        | ["repo"; "-sh"; pack ]                          ->  Pget.RepoLocal.showPackage projectRepo pack  
+        | ["repo"; path; "-sh" ]                            ->  Pget.RepoLocal.showPackages path        
+        | ["repo"; "-sh" ]                                  ->  Pget.RepoLocal.showPackages projectRepo    
+        | ["repo"; path ; "-sh"; pack ]                     ->  Pget.RepoLocal.showPackage path pack 
+        | ["repo"; "-sh"; pack ]                            ->  Pget.RepoLocal.showPackage projectRepo pack  
 
         // Open project URL 
-        | [ "repo"; "--url" ; pack ]                      -> openProjectUrl projectRepo pack
-        | [ "repo"; path; "--url" ; pack ]                -> openProjectUrl path pack
+        | [ "repo"; "--url" ; pack ]                        -> openProjectUrl projectRepo pack
+        | [ "repo"; path; "--url" ; pack ]                  -> openProjectUrl path pack
 
         // Open licence URL 
-        | ["repo"; "--license"; pack ]                   -> openLicenseUrl projectRepo pack 
-        | ["repo"; path; "--license"; pack ]             -> openLicenseUrl path pack 
+        | ["repo"; "--license"; pack ]                      -> openLicenseUrl projectRepo pack 
+        | ["repo"; path; "--license"; pack ]                -> openLicenseUrl path pack 
         
         // Show files of a package in project repository
-        | ["repo"; "--files" ; pack ]                ->   Pget.RepoLocal.showPackageFiles projectRepo pack
-        | ["repo"; path ; "--files" ; pack ]         ->   Pget.RepoLocal.showPackageFiles  path pack
+        | ["repo"; "--files" ; pack ]                       ->   Pget.RepoLocal.showPackageFiles projectRepo pack
+        | ["repo"; path ; "--files" ; pack ]                ->   Pget.RepoLocal.showPackageFiles  path pack
 
         // Install package to repository 
-        | ["repo"; path; "--install"; pack ]              ->  Pget.RepoLocal.installPackageLatest path pack
-        | ["repo"; "--install"; pack ]                    ->  Pget.RepoLocal.installPackageLatest projectRepo pack
-        | ["repo"; path ; "--install"; pack ; ver ]       ->  Pget.RepoLocal.installPackage path (pack, ver)        
-        | ["repo"; "--install"; pack ;  ver  ]            ->  Pget.RepoLocal.installPackage projectRepo (pack, ver)
-        | ["repo"; path; "-i"; pack ]                     ->  Pget.RepoLocal.installPackageLatest path pack
-        | ["repo"; "-i"; pack ]                           ->  Pget.RepoLocal.installPackageLatest projectRepo pack
-        | ["repo"; path ; "-i"; pack ; ver ]              ->  Pget.RepoLocal.installPackage path (pack, ver)    
-        | ["repo"; "-i"; pack ;  ver  ]                   ->  Pget.RepoLocal.installPackage projectRepo (pack, ver)
+        | ["repo"; path; "--install"; pack ]                ->  Pget.RepoLocal.installPackageLatest path pack
+        | ["repo"; "--install"; pack ]                      ->  Pget.RepoLocal.installPackageLatest projectRepo pack
+        | ["repo"; path ; "--install"; pack ; ver ]         ->  Pget.RepoLocal.installPackage path (pack, ver)        
+        | ["repo"; "--install"; pack ;  ver  ]              ->  Pget.RepoLocal.installPackage projectRepo (pack, ver)
+        | ["repo"; path; "-i"; pack ]                       ->  Pget.RepoLocal.installPackageLatest path pack
+        | ["repo"; "-i"; pack ]                             ->  Pget.RepoLocal.installPackageLatest projectRepo pack
+        | ["repo"; path ; "-i"; pack ; ver ]                ->  Pget.RepoLocal.installPackage path (pack, ver)    
+        | ["repo"; "-i"; pack ;  ver  ]                     ->  Pget.RepoLocal.installPackage projectRepo (pack, ver)
 
-        | "repo" :: "--install-list" :: packageList          -> Pget.RepoLocal.installPackageList projectRepo packageList 
-        | "repo" :: path :: "--install-list" :: packageList  -> Pget.RepoLocal.installPackageList  path      packageList 
-        | "repo" :: "-il" :: packageList                     -> Pget.RepoLocal.installPackageList projectRepo packageList 
-        | "repo" :: path :: "-il" :: packageList             -> Pget.RepoLocal.installPackageList  path      packageList 
+        | "repo" :: "--install-list" :: packageList         -> Pget.RepoLocal.installPackageList projectRepo packageList 
+        | "repo" :: path :: "--install-list" :: packageList -> Pget.RepoLocal.installPackageList  path      packageList 
+        | "repo" :: "-il" :: packageList                    -> Pget.RepoLocal.installPackageList projectRepo packageList 
+        | "repo" :: path :: "-il" :: packageList            -> Pget.RepoLocal.installPackageList  path      packageList 
 
 
         // Install all packages from a list of package to repository
-        | ["repo"; "--install-from-file" ]                ->  Pget.RepoLocal.installPackagesFromFile projectRepo "packages.list" 
-        | ["repo"; "--install-from-file" ; file ]         ->  Pget.RepoLocal.installPackagesFromFile projectRepo file
-        | ["repo"; path; "--install-from-file" ; file ]   ->  Pget.RepoLocal.installPackagesFromFile  path file
+        | ["repo"; "--install-from-file" ]                  ->  Pget.RepoLocal.installPackagesFromFile projectRepo "packages.list" 
+        | ["repo"; "--install-from-file" ; file ]           ->  Pget.RepoLocal.installPackagesFromFile projectRepo file
+        | ["repo"; path; "--install-from-file" ; file ]     ->  Pget.RepoLocal.installPackagesFromFile  path file
 
-        | ["repo"; "-if" ]                                ->  Pget.RepoLocal.installPackagesFromFile projectRepo "packages.list" 
-        | ["repo"; "-if" ; file ]                         ->  Pget.RepoLocal.installPackagesFromFile projectRepo file
-        | ["repo"; path; "-if" ; file ]                   ->  Pget.RepoLocal.installPackagesFromFile  path file
+        | ["repo"; "-if" ]                                  ->  Pget.RepoLocal.installPackagesFromFile projectRepo "packages.list" 
+        | ["repo"; "-if" ; file ]                           ->  Pget.RepoLocal.installPackagesFromFile projectRepo file
+        | ["repo"; path; "-if" ; file ]                     ->  Pget.RepoLocal.installPackagesFromFile  path file
 
 
         // Generate F# include directives (#r) for all packages in a repository 
-        | ["repo"; path ; "--ref"; framework  ]         ->  showScript framework  path
-        | ["repo"; "--ref"; framework  ]                ->  showScript framework projectRepo
+        | ["repo"; path ; "--ref"; framework  ]             ->  showScript framework  path
+        | ["repo"; "--ref"; framework  ]                    ->  showScript framework projectRepo
 
-        | ["repo"; path ; "--ref"; framework ; pack ]   ->  showRepoPackageRef framework path pack
-        | ["repo"; "--ref"; framework ; pack ]          ->  showRepoPackageRef framework projectRepo pack
+        | ["repo"; path ; "--ref"; framework ; pack ]       ->  showRepoPackageRef framework path pack
+        | ["repo"; "--ref"; framework ; pack ]              ->  showRepoPackageRef framework projectRepo pack
 
        
         // ============================ NuGet Repository (Remote) ========================== 
 
         // search package 
-        | ["nuget"; "--search" ; pack  ]         ->  searchPackageById pack
-        | ["nuget"; "-s" ; pack  ]               ->  searchPackageById pack
+        | ["nuget"; "--search" ; pack  ]                    ->  searchPackageById pack
+        | ["nuget"; "-s" ; pack  ]                          ->  searchPackageById pack
 
         // Show specific package metadata
-        | ["nuget"; "--show" ; pack  ]           ->  Nuget.showPackage  pack
-        | ["nuget"; "-sh" ; pack  ]              ->  Nuget.showPackage  pack
+        | ["nuget"; "--show" ; pack  ]                      ->  Nuget.showPackage  pack
+        | ["nuget"; "-sh" ; pack  ]                         ->  Nuget.showPackage  pack
 
-        | ["nuget"; "--open"]                    ->  openNugetWebsite ()           
+        | ["nuget"; "--open"]                               ->  openNugetWebsite ()           
         
-        // | ["pack"; "--search"; pack ; "--repo"]                   ->  searchLocalPackage pack "pacakges"
-        // | ["pack"; "--search"; pack ; "--repo"; path]             ->  searchLocalPackage pack  path
+        // | ["pack"; "--search"; pack ; "--repo"]          ->  searchLocalPackage pack "pacakges"
+        // | ["pack"; "--search"; pack ; "--repo"; path]    ->  searchLocalPackage pack  path
         
 
         // ======  Commands to Handle NuGet package Archives ============== //
-        | ["nupkg"; "--show"; fname]                         ->  Pget.Nupkg.show fname
-        | ["nupkg"; "--files"; fname]                        ->  Pget.Nupkg.showFiles fname
+        | ["nupkg"; "--show"; fname]                        ->  Pget.Nupkg.show fname
+        | ["nupkg"; "--files"; fname]                       ->  Pget.Nupkg.showFiles fname
 
         // ==========  Commands to Handle .NET assembly ============== //
-        | ["asm" ; "--info" ;  asmFile]                      -> AsmAttr.showFile asmFile
-        | ["asm" ; "--refs" ; asmFile ]                      -> AsmAttr.showAsmReferences asmFile         
-        | ["asm" ; "--resources"; asmFile ]                  -> AsmAttr.showResurces asmFile
+        | ["asm" ; "--info" ;  asmFile]                     -> AsmAttr.showFile asmFile
+        | ["asm" ; "--refs" ; asmFile ]                     -> AsmAttr.showAsmReferences asmFile         
+        | ["asm" ; "--resources"; asmFile ]                 -> AsmAttr.showResurces asmFile
 
-        | ["asm" ; "--namespace"; asmFile]                   -> AsmAttr.showNamespaces asmFile 
-        | ["asm" ; "-ns"; asmFile]                           -> AsmAttr.showNamespaces asmFile 
+        | ["asm" ; "--namespace"; asmFile]                  -> AsmAttr.showNamespaces asmFile 
+        | ["asm" ; "-ns"; asmFile]                          -> AsmAttr.showNamespaces asmFile 
 
-        | ["asm" ; "--namespace"; asmFile ; "--classes"; ns] -> AsmAttr.showClassesInNamespace asmFile ns
-        | ["asm" ; "-ns"; asmFile ; "-cls"; ns]              -> AsmAttr.showClassesInNamespace asmFile ns
-        
-        | ["--guid" ]                                        -> Console.WriteLine(Guid.NewGuid().ToString() : string)
+        | ["asm" ; "--namespace"; asmFile ; "--class"; ns]  -> AsmAttr.showClassesInNamespace asmFile ns
+        | ["asm" ; "-ns"; asmFile ; "-cls"; ns]             -> AsmAttr.showClassesInNamespace asmFile ns
 
-        | []                                                 ->  showHelp ()
-        | _                                                  ->  Console.WriteLine "Error: Invalid option."
+        | ["asm" ; "--class" ; asmFile; "--public"; cls]    -> AsmAttr.showPublicMethods asmFile cls
+        | ["asm" ; "--class" ; asmFile; "--static"; cls]    -> AsmAttr.showPublicStaticMethods asmFile cls
+        | ["asm" ; "--class" ; asmFile; "--methods"; cls]  -> AsmAttr.showAllMethods asmFile cls
+
+        | ["--guid" ]                                       -> Console.WriteLine(Guid.NewGuid().ToString() : string)
+
+        | []                                                ->  showHelp ()
+        | _                                                 ->  Console.WriteLine "Error: Invalid option."
 
 
     [<EntryPoint>]    
