@@ -1,4 +1,18 @@
-* Buil Orphan Branch 
+* Build - Orphan Branch 
 
  - It is placeholder. All binary releases will be placed here.
 
+Most recent version:
+
+ - [[https://github.com/caiorss/pget/raw/build/pget.exe][pget.exe]]
+
+pget.exe download hyperlinks:
+
+ - [[https://github.com/caiorss/pget/raw/v1.4-release/pget.exe][pget.exe - v1.4]]
+
+ - [[https://github.com/caiorss/pget/raw/v1.3.1-release/pget.exe][pget.exe - v1.3.1]]
+
+ - [[https://github.com/caiorss/pget/raw/v1.3.1-release/pget.exe][pget.exe - v1.3]]
+
+ - [[https://github.com/caiorss/pget/raw/v1.2-release/pget.exe][pget.exe - v1.2]]
+ 
