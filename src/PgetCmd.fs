@@ -45,6 +45,11 @@ module Main =
         | Some fr -> Pget.RepoLocal.showPackageRefsFsx repo fr packageId
         | None    -> Console.WriteLine("Error: Wrong framework parameter.")
 
+    let fsprojGenerateRefs framework repo =
+        match Pget.Framework.parseFramework framework with
+        | Some fr -> Pget.RepoLocal.generateFsprojInclude repo fr
+        | None    -> Console.WriteLine("Error: Wrong framework parameter.")
+
     /// Open package's project web site in default web browser    
     let openProjectUrl repoPath packageId =
         let pack = Pget.RepoLocal.findPackageById2 repoPath packageId
