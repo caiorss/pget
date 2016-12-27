@@ -1,0 +1,1936 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Pget - .NET Command Line toolbox and Interface for NuGet.Core and F#</title>
+<!-- 2016-12-27 ter 13:59 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Caio Rodrigues" />
+<meta  name="description" content="F# Command line interface to NuGet API."
+ />
+<meta  name="keywords" content="NuGet F# fsharp csharp .net dotnet tool cli command line toolbox cross-platform" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Pget - .NET Command Line toolbox and Interface for NuGet.Core and F#</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Pget.exe - Package Get</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Overview</a></li>
+<li><a href="#sec-1-2">1.2. Get binary release</a></li>
+<li><a href="#sec-1-3">1.3. Build instructions</a>
+<ul>
+<li><a href="#sec-1-3-1">1.3.1. Build with Makefile</a></li>
+<li><a href="#sec-1-3-2">1.3.2. Build with Xbuild or Msbuild</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">1.4. Commands</a>
+<ul>
+<li><a href="#sec-1-4-1">1.4.1. Print Version</a></li>
+<li><a href="#sec-1-4-2">1.4.2. Print help</a></li>
+<li><a href="#sec-1-4-3">1.4.3. Local Repository</a></li>
+<li><a href="#sec-1-4-4">1.4.4. NuGet Repository</a></li>
+<li><a href="#sec-1-4-5">1.4.5. NuGet package files nupkg files</a></li>
+<li><a href="#sec-1-4-6">1.4.6. Fsproj Helpers</a></li>
+<li><a href="#sec-1-4-7">1.4.7. Assembly metadata</a></li>
+<li><a href="#sec-1-4-8">1.4.8. Generate GUID</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-2">2. Pget.dll</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Pget.exe - Package Get</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Overview</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Pget.exe is high level wrapper to NuGet.core package which provides
+command line tools to manage dependencies in F# projects or .NET projects.
+</p>
+
+<p>
+Objective: Provide NuGet.Core integration with external tools, text editors
+like Emacs and VIM and also command line integration with NuGet API. 
+</p>
+
+
+<p>
+<b>WHY pget ?</b> 
+</p>
+
+<p>
+I create pget because existing command line tools doesn't have all
+functionality provided by Visual Studio and Package Manager Console
+like display package metadata, search packages in NuGet repository,
+display packages' metadata from local repository or project repository
+./packages and show Nuget package file metadata and files.
+</p>
+
+
+<p>
+<b>Feature</b>
+</p>
+
+<ul class="org-ul">
+<li>Search  packages in Nuget repository
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li>Install NuGet packages
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li>Display all assembly references in a repository
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li>Generate assembly references from all repository or single package
+for F# scripts. 
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li>Show packages' metadata like description, summary, web site and so on.
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li>Inspect .NET assemblies.
+<ul class="org-ul">
+<li>Show .NET assemblies metadata
+</li>
+<li>Show .NET referenced assemblies
+</li>
+<li>Show assembly resources
+</li>
+<li>Show namespaces in assembly
+</li>
+<li>Show classes in assembly
+</li>
+<li>Show class methods 
+</li>
+</ul>
+</li>
+
+<li>Show NuGet packages *.nupkg file metadata.
+</li>
+</ul>
+
+
+<ul class="org-ul">
+<li>Get packages' assembly references from local repository and project
+repository (./packages) for F# scripts.
+</li>
+</ul>
+
+<p>
+<b>Repository:</b>
+</p>
+
+<ul class="org-ul">
+<li><a href="https://www.github.com/caiorss/pget">https://www.github.com/caiorss/pget</a>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Get binary release</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+The binary releases are published to orphan-branch <a href="https://github.com/caiorss/pget/tree/build">build</a>. 
+</p>
+
+<p>
+<b>Manual download</b>
+</p>
+
+<ul class="org-ul">
+<li><a href="https://github.com/caiorss/pget/raw/build/pget.exe">Download pget.exe</a>
+</li>
+</ul>
+
+<p>
+<b>Automatic Download</b> 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">~/Downloads $ curl -O -L https://github.com/caiorss/pget/raw/build/pget.exe
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   127  100   127    0     0    169      0 --:--:-- --:--:-- --:--:--   169
+100 2143k  100 2143k    0     0   257k      0  0:00:08  0:00:08 --:--:--  529k
+~/Downloads $
+
+
+~/Downloads $ /usr/bin/chmod +x pget.exe
+
+~/Downloads $ ./pget.exe -v 
+
+    Pget - Package Get - Version 1.0 
+    Copyright (C) 2016 Caio Rodrigues
+</pre>
+</div>
+
+<p>
+or 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span class="org-builtin">cd</span> ~/bin 
+curl -O -L https://github.com/caiorss/pget/raw/build/pget.exe
+/usr/bin/chmod +x pget.exe
+./pget.exe -v
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Build instructions</h3>
+<div class="outline-text-3" id="text-1-3">
+</div><div id="outline-container-sec-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1"><span class="section-number-4">1.3.1</span> Build with Makefile</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+Run the command <code>$ make exe</code>. It assumes that fsc - the F# compiler
+and nuget.exe are in the $PATH variable. It builds the standlone app
+pget.exe with all dependencies static linked and also FSharp.Core (F#
+runtime) static linked.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ make exe
+fsc src/Pget.fs src/PgetCmd.fsx --out:bin/pget.exe <span class="org-sh-escaped-newline">\</span>
+<span class="org-function-name">--target</span>:exe <span class="org-sh-escaped-newline">\</span>
+    --platform:anycpu <span class="org-sh-escaped-newline">\</span>
+    -r:packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll <span class="org-sh-escaped-newline">\</span>
+<span class="org-function-name">-r</span>:packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll <span class="org-sh-escaped-newline">\</span>
+<span class="org-function-name">--staticlink</span>:NuGet.Core <span class="org-sh-escaped-newline">\</span>
+--standalone
+F# Compiler for F# 4.1
+Freely distributed under the Apache 2.0 Open Source License
+</pre>
+</div>
+
+<p>
+Testing:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ file bin/pget.exe
+<span class="org-function-name">bin/pget.exe</span>: PE32 executable (console) Intel 80386 Mono/.Net assembly, for MS Windows
+
+$ bin/pget.exe --version
+
+ Pget - Package Get - Version 1.3.1 
+ 2016 Public Domain Software
+ Repository - https://github.com/caiorss/pget
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> Build with Xbuild or Msbuild</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<p>
+Msbuild 
+</p>
+
+<ul class="org-ul">
+<li><code>$ msbuild pget-exe.fsproj /p:Configuration=Release</code>
+</li>
+</ul>
+
+<p>
+Xbuild 
+</p>
+
+<ul class="org-ul">
+<li><code>$ xbuild pget-exe.fsproj /p:Configuration=Release</code>
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ cd obj/Release &amp;&amp; ./Pget.exe -v
+
+ Pget - Package Get - Version 1.3.1 
+ 2016 Public Domain Software
+ Repository - https://github.com/caiorss/pget
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> Commands</h3>
+<div class="outline-text-3" id="text-1-4">
+</div><div id="outline-container-sec-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1"><span class="section-number-4">1.4.1</span> Print Version</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<ul class="org-ul">
+<li><code>$ pget.exe --version</code> or <code>$ pget.exe -v</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe -v
+
+ Pget - Package Get - Version 1.3.1 
+ 2016 Public Domain Software
+ Repository - https://github.com/caiorss/pge
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2"><span class="section-number-4">1.4.2</span> Print help</h4>
+<div class="outline-text-4" id="text-1-4-2">
+<ul class="org-ul">
+<li><code>$ pget.exe</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<pre class="example">
+$ bin/pget.exe
+
+Pget - Package Get - Enhanced command line interface to NuGet.Core
+
+  Commands                                      Description
+  -----------------------------                -----------------------------------------------
+
+  List Repository
+
+    repo --list                                 List all packages in current repository ./package
+    repo [path] --list                          List all package in [path] repository.
+
+  Show repository 
+
+    repo --show                                 Show all packages in current ./packages repository
+    repo [path] --show                          Show all packages in [path] repository.
+
+  Show package metadata
+
+    repo --show  [pack]                         Show the package [pack] in ./packages directory
+    repo [path] --show [pack]                   Show the package [pack] in [repo] directory.
+
+  Show package files 
+
+    repo --show-files [pack]                    Show content files of package [pack] in ./packages
+    repo [path] --show-files [pack]             Show content files of package [pack] in [repo]
+
+  Install package to repository  
+
+    repo --install [pack]                       Install the latest version of package [pack] to ./packages
+    repo --install [pack] [ver]                 Install the version [ver] of package [pack]
+    repo [path] --install [pack]                Install the latest version of package [pack] to a repository [path] i.e: ~/nuget
+    repo [path] --install [pack] [ver]          Install the version [ver] of package [pack] to a repository [path]
+
+
+  Install a list of packages passed as argument
+    repo --install-list FParsec NuGet.Core-2.0.0               Install those packages to ./packages
+    repo /tmp/repo --install-list FParsec NuGet.Core-2.0.0     Install those packages to /tmp/repository
+
+  Install a list of packages listed in a file
+
+    repo --install-from-file                    Install all packages listed in the file ./packages.list to ./packages directory.
+    repo --install-from-file [file]             Install all packages listed in the file ./packages.list to ./packages directory.
+    repo [path] --install-from-file [file]      Install all packages listed in the file [file] to [path]
+
+
+  Open package project URL or Licence URL
+
+    repo --url [pack]                           Browse project URL of a package [pack] in ./packages.
+    repo --license [pack]                       Browse licence URL of a package [pack] in ./packages.
+    repo [path] --url [pack]                    Browse project URL of a package [pack] in [path]
+    repo [path] --license [pack]                Browse licence URL of a package [pack] in [path]
+
+  Show references for F# *.fsx scripts:        [frm]:  .NET Framework  net40 | net45   
+
+    repo --ref [frm]                            Show all assembly references from current ./packages.
+    repo --ref  --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
+    repo [path] --ref [frm]                     Show all assembly references from current [repo] directory.
+    repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory
+
+  Nuget commands:
+
+    nuget --search [package]                    Search a package by name.  
+    nuget --show   [package]                    Show package information (metadata).
+
+  Nupkg Files:
+
+    nupkg --show  [file]                        Show metadata of a *.nupkg file
+    nupkg --files [file]                        Show files in nupkg [file]
+
+  Assembly files: *.exe or *.dll
+
+    asm --info [file]                           Show all assembly attributes from an assembly file.
+    asm --refs [file]                           Show all assembly references from an assembly file.
+    asm --resources [file]                      Show resources from an assembly file.
+
+  Generate Guid - Globally Unique Identifier 
+
+    --guid 
+
+  --------------------------------------------
+
+  Command abbreviations:
+
+    --install            -i
+    --install-from-file  -if
+    --install-list       -il
+    --help               -h
+    --version            -v
+    --ver                -v
+    --list               -l
+    --search             -s
+    --show               -sh
+
+
+ Pget - Package Get - Version 1.3.1 
+ 2016 Public Domain Software
+ Repository - https://github.com/caiorss/pget
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4-3" class="outline-4">
+<h4 id="sec-1-4-3"><span class="section-number-4">1.4.3</span> Local Repository</h4>
+<div class="outline-text-4" id="text-1-4-3">
+</div><ol class="org-ol"><li><a id="sec-1-4-3-1" name="sec-1-4-3-1"></a>List packages<br  /><ol class="org-ol"><li><a id="sec-1-4-3-1-1" name="sec-1-4-3-1-1"></a>List packages in project repository ./packages directory:<br  /><div class="outline-text-6" id="text-1-4-3-1-1">
+<ul class="org-ul">
+<li><code>$ pget.exe repo --list</code> or <code>$ pget.exe -l</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo -l
+Microsoft.Web.Xdt 2.1.1
+NuGet.Core 2.12.0
+
+
+$ tree packages
+packages
+&#9500;&#9472;&#9472; Microsoft.Web.Xdt.2.1.1
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; lib
+&#9474;&#160;&#160; &#9474;&#160;&#160; &#9492;&#9472;&#9472; net40
+&#9474;&#160;&#160; &#9474;&#160;&#160;     &#9492;&#9472;&#9472; Microsoft.Web.XmlTransform.dll
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; Microsoft.Web.Xdt.2.1.1.nupkg
+&#9492;&#9472;&#9472; NuGet.Core.2.12.0
+    &#9500;&#9472;&#9472; lib
+    &#9474;&#160;&#160; &#9492;&#9472;&#9472; net40-Client
+    &#9474;&#160;&#160;     &#9492;&#9472;&#9472; NuGet.Core.dll
+    &#9492;&#9472;&#9472; NuGet.Core.2.12.0.nupkg
+
+6 directories, 4 files
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-3-1-2" name="sec-1-4-3-1-2"></a>List packages in a local repository<br  /><div class="outline-text-6" id="text-1-4-3-1-2">
+<ul class="org-ul">
+<li><code>$ pget.exe repo --list [directory]</code> or <code>$ pget.exe --l [directory]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo -l /home/arch/nuget
+Common.Logging 2.1.2
+Deedle 1.2.5
+Deedle.RPlugin 1.2.5
+DynamicInterop 0.7.4
+EntityFramework 6.0.0
+Eto.Forms 2.2.0
+Eto.Platform.Gtk 2.2.0
+Eto.Platform.Gtk3 2.2.0
+FAKE 4.39.0
+...
+</pre>
+</div>
+</div>
+</li></ol>
+</li>
+<li><a id="sec-1-4-3-2" name="sec-1-4-3-2"></a>Show package information (metadata)<br  /><ol class="org-ol"><li><a id="sec-1-4-3-2-1" name="sec-1-4-3-2-1"></a>Show all packages in project repository (./packages)<br  /><div class="outline-text-6" id="text-1-4-3-2-1">
+<ul class="org-ul">
+<li><code>$ pget.exe pget repo --show</code> or <code>$ pget.exe repo -sh</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-txt">$ bin/pget.exe repo --show
+
+Id             Microsoft.Web.Xdt
+Title          Microsoft Xml Document Transformation
+Tags
+Version        2.1.1
+Summary        Microsoft Xml Document Transformation (XDT) enables transformig XML files. This is the same technology used to transform web.config files for Visual Studio web projects.
+Authors        Microsoft Corporation
+Project URL
+Dependencies
+Download Count -1
+
+Description    Microsoft Xml Document Transformation (XDT) library. For more info on XDT please visit http://msdn.microsoft.com/en-us/library/dd465326.aspx.
+
+
+Id             NuGet.Core
+Title
+Tags            nuget
+Version        2.12.0
+Summary
+Authors        Outercurve Foundation
+Project URL    https://github.com/NuGet/NuGet2
+Dependencies   Microsoft.Web.Xdt 2.1.0
+Download Count -1
+
+Description    NuGet.Core is the core framework assembly for NuGet that the rest of NuGet builds upon.
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-3-2-2" name="sec-1-4-3-2-2"></a>Show all packages in a local repository<br  /><div class="outline-text-6" id="text-1-4-3-2-2">
+<ul class="org-ul">
+<li><code>$ pget.exe repo [path] --show</code> or <code>$ pget.exe repo [path] -sh</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-txt">$ bin/pget.exe repo /tmp/testrepo --show
+
+Id             FParsec
+Title          FParsec
+Tags            parser combinator f# fsharp c# csharp parsec fparsec 
+Version        1.0.2
+Summary        
+Authors        Stephan Tolksdorf
+Project URL    http://www.quanttec.com/fparsec/
+Dependencies   
+Download Count -1
+
+Description    FParsec is a parser combinator library for F#.
+
+You can find comprehensive documentation for FParsec at http://www.quanttec.com/fparsec. The documentation includes a feature list, a tutorial, a user’s guide and an API reference.
+
+This package uses the basic “low-trust” configuration of FParsec, which does not use any unverifiable code and is optimized for maximum portability. If you need to parse very large files or if you employ FParsec for performance-critical jobs, consider using the alternate “Big Data Edition” NuGet package (see nuget.org/packages/fparsec-big-data-edition).
+
+
+Id             FSharp.Data
+Title          F# Data
+Tags            F# fsharp data typeprovider WorldBank CSV HTML CSS JSON XML HTTP linqpad-samples 
+Version        2.3.2
+Summary        Library of F# type providers and data access tools
+Authors        Tomas Petricek,  Gustavo Guerra,  Colin Bull
+Project URL    http://fsharp.github.io/FSharp.Data
+Dependencies   Zlib.Portable 1.11.0, Zlib.Portable 1.11.0, Zlib.Portable 1.11.0
+Download Count -1
+
+Description    The F# Data library (FSharp.Data.dll) implements everything you need to access data in your F# applications and scripts. It implements F# type providers for working with structured file formats (CSV, HTML, JSON and XML) and for accessing the WorldBank data. It also includes helpers for parsing CSV, HTML and JSON files and for sending HTTP requests.
+
+...
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-3-2-3" name="sec-1-4-3-2-3"></a>Show a single package in project repository (./packages)<br  /><div class="outline-text-6" id="text-1-4-3-2-3">
+<ul class="org-ul">
+<li><code>$ pget.exe repo --show [package-Id]</code> or - <code>$ pget.exe repo -sh [package-Id]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo --show NuGet.Core
+
+Id             NuGet.Core
+Title
+Tags            nuget
+Version        2.12.0
+Summary
+Authors        Outercurve Foundation
+Project URL    https://github.com/NuGet/NuGet2
+Dependencies   Microsoft.Web.Xdt 2.1.0
+Download Count -1
+
+Description    NuGet.Core is the core framework assembly for NuGet that the rest of NuGet builds upon.
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-3-2-4" name="sec-1-4-3-2-4"></a>Show a single package in a Local Repository<br  /><div class="outline-text-6" id="text-1-4-3-2-4">
+<ul class="org-ul">
+<li><code>$ pget.exe repo [path] --show [package-Id]</code>
+</li>
+</ul>
+
+<p>
+or
+</p>
+
+<ul class="org-ul">
+<li><code>$ pget.exe repo [path] -sh [package-Id]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-txt">$ bin/pget.exe repo ~/nuget --show NUnit.Console
+
+Id             NUnit.Console
+Title          NUnit Console Runner Version 3 Plus Extensions
+Tags            nunit test testing tdd runner
+Version        3.5.0
+Summary        Console runner for the NUnit 3 unit-testing framework with selected extensions.
+Authors        Charlie Poole
+Project URL    http://nunit.org/
+Dependencies   NUnit.ConsoleRunner 3.5.0, NUnit.Extension.NUnitProjectLoader 3.5.0, NUnit.Extension.VSProjectLoader 3.5.0, NUnit.Extension.NUnitV2ResultWriter 3.5.0, NUnit.Extension.NUnitV2Driver 3.5.0, NUnit.Extension.TeamCityEventListener 1.0.2
+Download Count -1
+
+Description    This package includes the nunit3-console runner and test engine for version 3.0 of the NUnit unit-testing framework.
+
+      The following extensions are included with this package:
+      * NUnitProjectLoader     - loads tests from NUnit projects
+      * VSProjectLoader        - loads tests from Visual Studio projects
+      * NUnitV2ResultWriter    - saves results in NUnit V2 format.
+      * NUnitV2FrameworkDriver - runs NUnit V2 tests.
+      * TeamCityEventListener - supports special progress messages used by teamcity.
+
+      Other extensions, if needed, must be installed separately
+</pre>
+</div>
+</div>
+</li></ol>
+</li>
+<li><a id="sec-1-4-3-3" name="sec-1-4-3-3"></a>Show package files<br  /><ol class="org-ol"><li><a id="sec-1-4-3-3-1" name="sec-1-4-3-3-1"></a>Show files of a package in project repository ./packages<br  /><div class="outline-text-6" id="text-1-4-3-3-1">
+<ul class="org-ul">
+<li><code>$ pget.exe repo --files [package-id]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo --files OxyPlot.Core
+
+packages/OxyPlot.Core.1.0.0/lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1+Xamarin.iOS10/OxyPlot.dll
+packages/OxyPlot.Core.1.0.0/lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1+Xamarin.iOS10/OxyPlot.pdb
+packages/OxyPlot.Core.1.0.0/lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1+Xamarin.iOS10/OxyPlot.xml
+packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.dll
+packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.pdb
+packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.xml
+packages/OxyPlot.Core.1.0.0/lib/net40-client/OxyPlot.dll
+packages/OxyPlot.Core.1.0.0/lib/net40-client/OxyPlot.pdb
+packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll
+packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.pdb
+packages/OxyPlot.Core.1.0.0/lib/sl5/OxyPlot.dll
+packages/OxyPlot.Core.1.0.0/lib/sl5/OxyPlot.pdb
+packages/OxyPlot.Core.1.0.0/README.md
+packages/OxyPlot.Core.1.0.0/CHANGELOG.md
+
+
+$ bin/pget.exe repo --files FParsec
+packages/FParsec.1.0.2/lib/net40-client/FParsec.dll
+packages/FParsec.1.0.2/lib/net40-client/FParsec.XML
+packages/FParsec.1.0.2/lib/net40-client/FParsecCS.dll
+packages/FParsec.1.0.2/lib/net40-client/FParsecCS.XML
+packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll
+packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.XML
+packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll
+packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.XML
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-3-3-2" name="sec-1-4-3-3-2"></a>Show files of a package in a local repository<br  /><div class="outline-text-6" id="text-1-4-3-3-2">
+<ul class="org-ul">
+<li><code>$ pget.exe repo [path] --files [package-id]</code>
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo ~/nuget --files FParsec
+
+/home/arch/nuget/FParsec.1.0.2/lib/net40-client/FParsec.dll
+/home/arch/nuget/FParsec.1.0.2/lib/net40-client/FParsec.XML
+/home/arch/nuget/FParsec.1.0.2/lib/net40-client/FParsecCS.dll
+/home/arch/nuget/FParsec.1.0.2/lib/net40-client/FParsecCS.XML
+/home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll
+/home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.XML
+/home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll
+/home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.XML
+
+
+$ bin/pget.exe repo ~/nuget --files Mono.Cecil
+
+/home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net20/Mono.Cecil.dll
+/home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net20/Mono.Cecil.Mdb.dll
+/home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net20/Mono.Cecil.Pdb.dll
+/home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net35/Mono.Cecil.dll
+/home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net35/Mono.Cecil.Mdb.dll
+/home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net35/Mono.Cecil.Pdb.dll
+/home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net35/Mono.Cecil.Rocks.dll
+/home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net40/Mono.Cecil.dll
+/home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net40/Mono.Cecil.Mdb.dll
+/home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net40/Mono.Cecil.Pdb.dll
+/home/arch/nuget/Mono.Cecil.0.9.5.4/lib/net40/Mono.Cecil.Rocks.dll
+/home/arch/nuget/Mono.Cecil.0.9.5.4/lib/sl40/Mono.Cecil.dll
+/home/arch/nuget/Mono.Cecil.0.9.5.4/lib/sl40/Mono.Cecil.Rocks.dll
+</pre>
+</div>
+</div>
+</li></ol>
+</li>
+<li><a id="sec-1-4-3-4" name="sec-1-4-3-4"></a>Get assembly references for F# scripts<br  /><ol class="org-ol"><li><a id="sec-1-4-3-4-1" name="sec-1-4-3-4-1"></a>Get all assembly references from current ./packages repository.<br  /><div class="outline-text-6" id="text-1-4-3-4-1">
+<ul class="org-ul">
+<li><code>$ pget.exe repo --ref [framework]</code>
+</li>
+</ul>
+
+<p>
+The framework is the .NET framework version. It can be:
+</p>
+
+<ul class="org-ul">
+<li>net40 for .NET 4.0
+</li>
+<li>net45 for .NET 4.5
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo --ref net40
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/FParsec.1.0.2/lib/net40-client/FParsec.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/FParsec.1.0.2/lib/net40-client/FParsecCS.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/OxyPlot.Pdf.1.0.0/lib/net40/OxyPlot.Pdf.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.DocumentObjectModel.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.Rendering.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.RtfRendering.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.Charting.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.DocumentObjectModel.resources.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.Rendering.resources.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.RtfRendering.resources.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.Charting.resources.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.resources.dll"</span>
+
+
+$ bin/pget.exe repo --ref net45
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/OxyPlot.Pdf.1.0.0/lib/net40/OxyPlot.Pdf.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.DocumentObjectModel.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.Rendering.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/MigraDoc.RtfRendering.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.Charting.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/PdfSharp.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.DocumentObjectModel.resources.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.Rendering.resources.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/MigraDoc.RtfRendering.resources.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.Charting.resources.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/PDFsharp-MigraDoc-GDI.1.32.4334.0/lib/net20/de/PdfSharp.resources.dll"</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-3-4-2" name="sec-1-4-3-4-2"></a>Get all assembly references from a package in ./packages:<br  /><div class="outline-text-6" id="text-1-4-3-4-2">
+<ul class="org-ul">
+<li><code>$ pget.exe repo --ref [framework] [package-id]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo --ref net45 FParsec
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-3-4-3" name="sec-1-4-3-4-3"></a>Get all assembly references from a local repository.<br  /><div class="outline-text-6" id="text-1-4-3-4-3">
+<ul class="org-ul">
+<li><code>$ pget.exe repo [path] --ref [framework]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo /tmp/packages -i FSharp.Data 
+<span class="org-function-name">Installing</span>: FSharp.Data 2.3.2
+
+$ bin/pget.exe repo /tmp/packages -i FParsec
+<span class="org-function-name">Installing</span>: FParsec 1.0.2
+
+
+$ ls /tmp/packages/
+FParsec.1.0.2/  FSharp.Data.2.3.2/  Zlib.Portable.1.11.0/
+
+$ bin/pget.exe repo /tmp/packages --ref net40
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "/tmp/packages/FParsec.1.0.2/lib/net40-client/FParsec.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "/tmp/packages/FParsec.1.0.2/lib/net40-client/FParsecCS.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "/tmp/packages/FSharp.Data.2.3.2/lib/net40/FSharp.Data.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "/tmp/packages/FSharp.Data.2.3.2/lib/net40/FSharp.Data.DesignTime.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "/tmp/packages/Zlib.Portable.1.11.0/lib/portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid/Zlib.Portable.dll"</span>
+
+$ bin/pget.exe repo /tmp/packages --ref net45
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "/tmp/packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "/tmp/packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "/tmp/packages/FSharp.Data.2.3.2/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "/tmp/packages/FSharp.Data.2.3.2/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.DesignTime.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "/tmp/packages/Zlib.Portable.1.11.0/lib/portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid/Zlib.Portable.dll"</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-3-4-4" name="sec-1-4-3-4-4"></a>Get all assembly references from a package in a local repository<br  /><div class="outline-text-6" id="text-1-4-3-4-4">
+<ul class="org-ul">
+<li><code>$ pget.exe repo [path --ref [framework] [package-id]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo ~/nuget --ref net45 FParsec
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "/home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "/home/arch/nuget/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll"</span>
+
+$ bin/pget.exe repo ~/nuget --ref net45 FSharp.Data
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "/home/arch/nuget/FSharp.Data.2.3.1/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.dll"</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">r "/home/arch/nuget/FSharp.Data.2.3.1/lib/portable-net45+netcore45+wpa81+wp8/FSharp.Data.DesignTime.dll"</span>
+</pre>
+</div>
+</div>
+</li></ol>
+</li>
+<li><a id="sec-1-4-3-5" name="sec-1-4-3-5"></a>Open package project URL in the browser<br  /><ol class="org-ol"><li><a id="sec-1-4-3-5-1" name="sec-1-4-3-5-1"></a>Open project URL of package in ./packages<br  /><div class="outline-text-6" id="text-1-4-3-5-1">
+<ul class="org-ul">
+<li><code>$ pget.exe repo --url [packageId]</code> 
+</li>
+</ul>
+
+<p>
+Example: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo --url FParsec
+Opening http://www.quanttec.com/fparsec/
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-3-5-2" name="sec-1-4-3-5-2"></a>Open project URL of package in a local repository<br  /><div class="outline-text-6" id="text-1-4-3-5-2">
+<ul class="org-ul">
+<li><code>$ pget.exe repo [path] --url [packageId]</code> 
+</li>
+</ul>
+
+<p>
+Example: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo ~/nuget --url Eto.Forms
+Opening https://github.com/picoe/Eto
+</pre>
+</div>
+</div>
+</li></ol>
+</li>
+
+<li><a id="sec-1-4-3-6" name="sec-1-4-3-6"></a>Open package licensee URL in the browser<br  /><ol class="org-ol"><li><a id="sec-1-4-3-6-1" name="sec-1-4-3-6-1"></a>Open license URL of package in ./packages<br  /><div class="outline-text-6" id="text-1-4-3-6-1">
+<ul class="org-ul">
+<li><code>$ pget.exe repo --license [packageId]</code> 
+</li>
+</ul>
+
+<p>
+Example: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo --license FParsec
+Opening http://www.quanttec.com/fparsec/license.html
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-3-6-2" name="sec-1-4-3-6-2"></a>Open license URL of package in a local repository<br  /><div class="outline-text-6" id="text-1-4-3-6-2">
+<ul class="org-ul">
+<li><code>$ pget.exe repo [path]  --licence [packageId]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo ~/nuget --license NUnit.Console
+Opening http://nunit.org/nuget/nunit3-license.txt
+</pre>
+</div>
+</div>
+</li></ol>
+</li>
+
+<li><a id="sec-1-4-3-7" name="sec-1-4-3-7"></a>Install packages<br  /><ol class="org-ol"><li><a id="sec-1-4-3-7-1" name="sec-1-4-3-7-1"></a>Install the lastest version of a package to ./packages (Project repository)<br  /><div class="outline-text-6" id="text-1-4-3-7-1">
+<ul class="org-ul">
+<li><code>$ pget.exe repo --install [package-id]</code> or - <code>$ pget.exe repo -i [package-id]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo --install OxyPlot.Pdf
+<span class="org-function-name">Installing</span>: OxyPlot.Pdf 1.0.0
+
+$ ls -l packages
+total 0
+drwxrwxrwx 1 arch arch 280 dez 19 00:52 Microsoft.Web.Xdt.2.1.1/
+drwxrwxrwx 1 arch arch 264 dez 19 01:45 NuGet.Core.2.12.0/
+drwxrwxrwx 1 arch arch 488 dez 19 02:22 OxyPlot.Core.1.0.0/
+drwxrwxrwx 1 arch arch 480 dez 19 02:22 OxyPlot.Pdf.1.0.0/
+drwxrwxrwx 1 arch arch 296 dez 19 02:22 PDFsharp-MigraDoc-GDI.1.32.4334.0/
+
+ bin/pget.exe repo -sh OxyPlot.Core
+
+Id             OxyPlot.Core
+Title          OxyPlot core library (PCL)
+Tags            plotting plot charting chart
+Version        1.0.0
+Summary
+Authors        Oystein Bjorke
+Project URL    http://oxyplot.org/
+Dependencies
+Download Count -1
+
+Description    OxyPlot is a plotting library for .NET. This is the portable core library that is referenced by the platform-specific OxyPlot packages.
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-3-7-2" name="sec-1-4-3-7-2"></a>Install a specific version of package  to ./packages<br  /><div class="outline-text-6" id="text-1-4-3-7-2">
+<ul class="org-ul">
+<li><code>$ pget.exe repo --install [package-id] [version]</code>
+</li>
+</ul>
+
+<p>
+or
+</p>
+
+<ul class="org-ul">
+<li><code>$ pget.exe repo -i [package-id] [version]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo -i FParsec 1.0.2
+
+$ ls -l packages
+total 0
+drwxrwxrwx 1 arch arch 256 dez 19 02:31 FParsec.1.0.2/
+drwxrwxrwx 1 arch arch 280 dez 19 00:52 Microsoft.Web.Xdt.2.1.1/
+drwxrwxrwx 1 arch arch 264 dez 19 01:45 NuGet.Core.2.12.0/
+drwxrwxrwx 1 arch arch 488 dez 19 02:22 OxyPlot.Core.1.0.0/
+drwxrwxrwx 1 arch arch 480 dez 19 02:22 OxyPlot.Pdf.1.0.0/
+drwxrwxrwx 1 arch arch 296 dez 19 02:22 PDFsharp-MigraDoc-GDI.1.32.4334.0/
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-3-7-3" name="sec-1-4-3-7-3"></a>Install the lastest version of a package to a local repository<br  /><div class="outline-text-6" id="text-1-4-3-7-3">
+<ul class="org-ul">
+<li><code>$ pget.exe repo [path] --install [package-id]</code>
+</li>
+</ul>
+
+<p>
+or
+</p>
+
+<ul class="org-ul">
+<li><code>$ pget.exe repo [path] -i [package-id] -r [path]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo -i /home/arch/nuget  OxyPlot.Pdf 
+<span class="org-function-name">Installing</span>: OxyPlot.Pdf 1.0.0
+
+$ bin/pget.exe repo /home/arch/nuget -sh OxyPlot.Pdf
+
+Id             OxyPlot.Pdf
+Title          OxyPlot PDF extensions (<span class="org-keyword">for</span> Silverlight and NET4)
+Tags            pdf plotting plot charting chart
+Version        1.0.0
+Summary
+Authors        Oystein Bjorke
+Project URL    http://oxyplot.org/
+Dependencies   OxyPlot.Core [1.0.0], PDFsharp-MigraDoc-GDI [1.32.4334], OxyPlot.Core [1.0.0], PDFsharp-MigraDoc-GDI [1.32.4334], OxyPlot.Core [1.0.0]
+Download Count -1
+
+Description    OxyPlot is a plotting library for .NET. This package contains .pdf export extensions for .NET 4 (based on PDFsharp) and Silverlight (based on SilverPDF)<span class="org-builtin">.</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-3-7-4" name="sec-1-4-3-7-4"></a>Install a specific version of package to a local repository<br  /><div class="outline-text-6" id="text-1-4-3-7-4">
+<ul class="org-ul">
+<li><code>$ pget.exe repo [path] --install [package-id] [version]</code>
+</li>
+</ul>
+
+<p>
+or
+</p>
+
+<ul class="org-ul">
+<li><code>$ pget.exe repo [path] -i [package-id] -v [package]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe repo ~/nuget -i Microsoft.Web.Xdt 1.0.0
+</pre>
+</div>
+</div>
+</li></ol>
+</li>
+<li><a id="sec-1-4-3-8" name="sec-1-4-3-8"></a>Install a list of packages<br  /><ol class="org-ol"><li><a id="sec-1-4-3-8-1" name="sec-1-4-3-8-1"></a>Install a list of packages to ./packages<br  /><div class="outline-text-6" id="text-1-4-3-8-1">
+<ul class="org-ul">
+<li><code>$ pget.exe repo --install-list FParsec-1.0.2 OxyPlot</code> 
+</li>
+</ul>
+
+<p>
+or
+</p>
+
+<ul class="org-ul">
+<li><code>$ pget.exe repo -il FParsec-1.0.2 OxyPlot</code> 
+</li>
+</ul>
+
+<p>
+If the version is not specified it installs the lastest version.
+</p>
+</div>
+</li>
+
+<li><a id="sec-1-4-3-8-2" name="sec-1-4-3-8-2"></a>Install a list of pacakges to a local repository<br  /><div class="outline-text-6" id="text-1-4-3-8-2">
+<ul class="org-ul">
+<li><code>$ pget.exe repo ~/nuget --install-list FParsec-1.0.2 OxyPlot</code> 
+</li>
+</ul>
+
+<p>
+or
+</p>
+
+<ul class="org-ul">
+<li><code>$ pget.exe repo ~/nuget -il FParsec-1.0.2 OxyPlot ... packageN</code> 
+</li>
+</ul>
+</div>
+</li></ol>
+</li>
+
+<li><a id="sec-1-4-3-9" name="sec-1-4-3-9"></a>Install packages listed in a file<br  /><ol class="org-ol"><li><a id="sec-1-4-3-9-0-1" name="sec-1-4-3-9-0-1"></a>Install all packages listed in the file ./packages.list to ./packages<br  /><div class="outline-text-7" id="text-1-4-3-9-0-1">
+<ul class="org-ul">
+<li><code>$ pget.exe repo --install-from-file</code>
+</li>
+</ul>
+
+<p>
+or
+</p>
+
+<ul class="org-ul">
+<li><code>$ pget.exe repo -if</code>
+</li>
+</ul>
+
+<p>
+Example of the file packages.list. If the version is not listed, it
+installs the latest version of the packages to ./packages.
+</p>
+
+<p>
+File: packages.list
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">FSharp.Data              1.0.0
+Deedle                   1.0.0
+OxyPlot.Pdf
+OxyPlot.WindowsForms
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-3-9-0-2" name="sec-1-4-3-9-0-2"></a>Install all packages listed in the file ./packages.list to ./packages<br  /><div class="outline-text-7" id="text-1-4-3-9-0-2">
+<ul class="org-ul">
+<li><code>$ pget.exe repo --install-from-file [packages-list-file]</code>
+</li>
+</ul>
+
+<p>
+or
+</p>
+
+<ul class="org-ul">
+<li><code>$ pget.exe repo -if [package-list-file]</code>
+</li>
+</ul>
+</div>
+</li></ol>
+</li></ol>
+</div>
+<div id="outline-container-sec-1-4-4" class="outline-4">
+<h4 id="sec-1-4-4"><span class="section-number-4">1.4.4</span> NuGet Repository</h4>
+<div class="outline-text-4" id="text-1-4-4">
+</div><ol class="org-ol"><li><a id="sec-1-4-4-1" name="sec-1-4-4-1"></a>Search a package<br  /><div class="outline-text-5" id="text-1-4-4-1">
+<ul class="org-ul">
+<li><code>$ pget.exe nuget --search [keyword]</code> or - <code>$ pget.exe nuget -s [keywork]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-txt"> $ bin/pget.exe nuget -s oxyplot
+
+ Id             AnnotationGUIOxyplot
+ Title
+ Tags
+ Version        0.0.1
+ Summary
+ Authors        tschwarz
+ Project URL
+ Dependencies
+ Download Count 68
+
+ Description    My package description.
+
+
+ Id             Eto.OxyPlot
+ Title          Eto.OxyPlot
+ Tags
+ Version        1.2.0-beta
+ Summary
+ Authors        Loren Van Spronsen
+ Project URL
+ Dependencies   Eto.Forms 2.2.0, OxyPlot.Core 1.0.0-unstable2063
+ Download Count 3382
+
+ Description    OxyPlot bindings for the Eto UI framework
+
+... ... ...
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-4-2" name="sec-1-4-4-2"></a>Display package information (metadata)<br  /><div class="outline-text-5" id="text-1-4-4-2">
+<ul class="org-ul">
+<li><code>pget.exe nuget --show</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-txt">$ bin/pget.exe nuget --show FParsec
+
+Id             FParsec
+Title          FParsec
+Tags            parser combinator parsec fsharp 
+Version        0.9.1
+Summary        FParsec is a parser combinator library for F#.
+Authors        Stephan Tolksdorf (FParsec),   Ryan Riley (NuGet Package)
+Project URL    http://quanttec.com/fparsec/
+Dependencies   
+Download Count 66877
+
+Description    FParsec is a parser combinator library for F#
+
+
+$ bin/pget.exe nuget --show FParsecsdadfsf
+Error: I can't find the package FParsecsdadfsf
+
+$ bin/pget.exe nuget --show FSharp.Core
+
+Id             FSharp.Core
+Title          FSharp.Core
+Tags           f#
+Version        2.0.0.0
+Summary        FSharp.Core.dll
+Authors        Microsoft
+Project URL    
+Dependencies   
+Download Count 460728
+
+Description    FSharp.Core.dll which can be referenced in other nuget packages.
+</pre>
+</div>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-1-4-5" class="outline-4">
+<h4 id="sec-1-4-5"><span class="section-number-4">1.4.5</span> NuGet package files nupkg files</h4>
+<div class="outline-text-4" id="text-1-4-5">
+</div><ol class="org-ol"><li><a id="sec-1-4-5-1" name="sec-1-4-5-1"></a>Show package file metadata<br  /><div class="outline-text-5" id="text-1-4-5-1">
+<p>
+Show a NuGet package metadata
+</p>
+
+<ul class="org-ul">
+<li><code>$ pget.xe nupkg --show [nupkg-file]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe nupkg --show ./packages/FParsec.1.0.2/FParsec.1.0.2.nupkg
+
+Id             FParsec
+Title          FParsec
+Tags            parser combinator f# fsharp c# csharp parsec fparsec 
+Version        1.0.2
+Summary        
+Authors        Stephan Tolksdorf
+Project URL    http://www.quanttec.com/fparsec/
+Dependencies   
+Download Count -1
+
+Description    FParsec is a parser combinator library for F#.
+
+You can find comprehensive documentation for FParsec at http://www.quanttec.com/fparsec. The documentation includes a feature list, a tutorial, a user&#8217;s guide and an API reference.
+
+This package uses the basic &#8220;low-trust&#8221; configuration of FParsec, which does not use any unverifiable code and is optimized for maximum portability. If you need to parse very large files or if you employ FParsec for performance-critical jobs, consider using the alternate &#8220;Big Data Edition&#8221; NuGet package (see nuget.org/packages/fparsec-big-data-edition)<span class="org-builtin">.</span>
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-5-2" name="sec-1-4-5-2"></a>Show package files<br  /><div class="outline-text-5" id="text-1-4-5-2">
+<ul class="org-ul">
+<li><code>$ pget.exe nupkg --files [nupkg-file]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe nupkg --files ./packages/FParsec.1.0.2/FParsec.1.0.2.nupkg
+lib/net40-client/FParsec.dll
+lib/net40-client/FParsec.XML
+lib/net40-client/FParsecCS.dll
+lib/net40-client/FParsecCS.XML
+lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll
+lib/portable-net45+netcore45+wpa81+wp8/FParsec.XML
+lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll
+lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.XML
+</pre>
+</div>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-1-4-6" class="outline-4">
+<h4 id="sec-1-4-6"><span class="section-number-4">1.4.6</span> Fsproj Helpers</h4>
+<div class="outline-text-4" id="text-1-4-6">
+<p>
+Generate include tags for all packages in project repository (./packages)
+</p>
+
+<ul class="org-ul">
+<li><code>$ pget.exe fsproj --ref [framework]</code>
+</li>
+</ul>
+
+<p>
+Where framework can be
+</p>
+
+<ul class="org-ul">
+<li>net40 for .NET 4.0
+</li>
+<li>net45 for .NET 4.5
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe fsproj --ref net45
+&lt;Reference <span class="org-variable-name">Include</span>=<span class="org-string">"FParsec"</span>&gt;
+     &lt;HintPath&gt;packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll&lt;/HintPath&gt;
+&lt;/Reference&gt;
+&lt;Reference <span class="org-variable-name">Include</span>=<span class="org-string">"FParsecCS"</span>&gt;
+     &lt;HintPath&gt;packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll&lt;/HintPath&gt;
+&lt;/Reference&gt;
+&lt;Reference <span class="org-variable-name">Include</span>=<span class="org-string">"FS.INIReader"</span>&gt;
+     &lt;HintPath&gt;packages/FS.INIReader.1.0.3/lib/net45/FS.INIReader.dll&lt;/HintPath&gt;
+&lt;/Reference&gt;
+&lt;Reference <span class="org-variable-name">Include</span>=<span class="org-string">"Microsoft.Web.XmlTransform"</span>&gt;
+     &lt;HintPath&gt;packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll&lt;/HintPath&gt;
+&lt;/Reference&gt;
+&lt;Reference <span class="org-variable-name">Include</span>=<span class="org-string">"NuGet.Core"</span>&gt;
+     &lt;HintPath&gt;packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll&lt;/HintPath&gt;
+&lt;/Reference&gt;
+&lt;Reference <span class="org-variable-name">Include</span>=<span class="org-string">"OxyPlot"</span>&gt;
+     &lt;HintPath&gt;packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll&lt;/HintPath&gt;
+&lt;/Reference&gt;
+&lt;Reference <span class="org-variable-name">Include</span>=<span class="org-string">"OxyPlot.Pdf"</span>&gt;
+     &lt;HintPath&gt;packages/OxyPlot.Pdf.1.0.0/lib/net40/OxyPlot.Pdf.dll&lt;/HintPath&gt;
+&lt;/Reference&gt;
+...
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4-7" class="outline-4">
+<h4 id="sec-1-4-7"><span class="section-number-4">1.4.7</span> Assembly metadata</h4>
+<div class="outline-text-4" id="text-1-4-7">
+</div><ol class="org-ol"><li><a id="sec-1-4-7-1" name="sec-1-4-7-1"></a>Show Assembly Attributes<br  /><div class="outline-text-5" id="text-1-4-7-1">
+<ul class="org-ul">
+<li><code>$ pget.exe asm --info [assembly-file]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe asm --info ~/bin/nuget.exe
+Assembly Attributes
+-------------------------------------------
+Name         NuGet
+Version      3.4.4.1321
+CLR Version  v4.0.30319
+Product      NuGet
+Culture
+Company      Microsoft Corporation
+Description  NuGet Command Line
+Copyright    Microsoft Corporation. All rights reserved.
+GUID
+Com Visible  False
+Codebase     file:///home/arch/bin/nuget.exe
+</pre>
+</div>
+
+<p>
+Example 2:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe asm --info ~/nuget/FSharp.Core.3.1.2.5/lib/net40/FSharp.Core.dll
+Assembly Attributes
+-------------------------------------------
+Name         FSharp.Core
+Version      4.3.1.0
+CLR Version  v4.0.30319
+Product      Microsoft&#174; Visual Studio&#174; 2013
+Culture
+Company      Microsoft Corporation
+Description  FSharp.Core.dll
+Copyright    &#169; Microsoft Corporation. All rights reserved.
+GUID
+Com Visible  False
+Codebase     file:///home/arch/nuget/FSharp.Core.3.1.2.5/lib/net40/FSharp.Core.dll
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-7-2" name="sec-1-4-7-2"></a>Show assembly references<br  /><div class="outline-text-5" id="text-1-4-7-2">
+<p>
+Show assemblies referenced by an assembly file
+</p>
+
+<ul class="org-ul">
+<li><code>$ pget.exe asm --refs [assembly-file]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe asm --refs ~/bin/nuget.exe
+Name = mscorlib     Version = 4.0.0.0       Culture =
+Name = Microsoft.CSharp     Version = 4.0.0.0       Culture =
+Name = System.Core      Version = 4.0.0.0       Culture =
+Name = System       Version = 4.0.0.0       Culture =
+Name = System.Xml.Linq      Version = 4.0.0.0       Culture =
+Name = System.Xml       Version = 4.0.0.0       Culture =
+Name = Microsoft.Build      Version = 4.0.0.0       Culture =
+Name = Microsoft.Build.Framework        Version = 4.0.0.0       Culture =
+Name = System.ComponentModel.Composition        Version = 4.0.0.0       Culture =
+Name = Microsoft.Build.Utilities.v4.0       Version = 4.0.0.0       Culture =
+Name = System.Numerics      Version = 4.0.0.0       Culture =
+Name = System.Data      Version = 4.0.0.0       Culture =
+Name = System.Runtime.Serialization     Version = 4.0.0.0       Culture =
+Name = System.Security      Version = 4.0.0.0       Culture =
+Name = System.ComponentModel.DataAnnotations        Version = 4.0.0.0       Culture =
+Name = WindowsBase      Version = 4.0.0.0       Culture =
+Name = System.ServiceModel      Version = 4.0.0.0       Culture =
+Name = System.Data.Services.Client      Version = 4.0.0.0       Culture =
+Name = System.IO.Compression        Version = 4.0.0.0       Culture =
+Name = System.Net.Http      Version = 4.0.0.0       Culture =
+Name = System.IdentityModel     Version = 4.0.0.0       Culture =
+Name = System.Net.Http.WebRequest       Version = 4.0.0.0       Culture =
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-7-3" name="sec-1-4-7-3"></a>Show Assembly Resources<br  /><div class="outline-text-5" id="text-1-4-7-3">
+<ul class="org-ul">
+<li><code>$ pget.exe asm --resources [asmfile]</code> 
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe asm --resources bin/pget.exe 
+FSCore.resources
+NuGet.CommonResources.resources
+NuGet.NuGet.Frameworks.Strings.resources
+NuGet.Resources.AnalysisResources.resources
+NuGet.Resources.NuGetResources.resources
+NuGet.Authoring.nuspec.xsd
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-7-4" name="sec-1-4-7-4"></a>Show all Namespaces of an Assembly<br  /><div class="outline-text-5" id="text-1-4-7-4">
+<ul class="org-ul">
+<li><code>pget.exe asm --namespace [asmFile]</code>
+</li>
+</ul>
+
+<p>
+or
+</p>
+
+<ul class="org-ul">
+<li><code>pget.exe asm --ns [asmFile]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe asm  -ns /usr/lib/mono/4.5-api/System.Xml.dll
+
+System.Runtime.CompilerServices
+System.Xml
+System.Xml.Utils
+System.Xml.Xsl.IlGen
+System.Xml.Xsl
+System.Xml.Xsl.Qil
+System.Xml.Xsl.Runtime
+System.Xml.Xsl.XPath
+System.Xml.Xsl.Xslt
+System.Xml.Xsl.XsltOld
+System.Xml.Xsl.XsltOld.Debugger
+Microsoft.Win32
+System
+System.Configuration
+MS.Internal.Xml.Cache
+System.Xml.XmlConfiguration
+System.Xml.Resolvers
+System.Xml.Schema
+System.Xml.Serialization
+System.Xml.Serialization.Advanced
+System.Xml.Serialization.Configuration
+MS.Internal.Xml.XPath
+System.Xml.XPath
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-7-5" name="sec-1-4-7-5"></a>Show all classes from an Assembly within a Namespace<br  /><div class="outline-text-5" id="text-1-4-7-5">
+<ul class="org-ul">
+<li><code>$ pget.exe asm --namespace [asmFile] --class [namespace]</code>
+</li>
+</ul>
+
+<p>
+or
+</p>
+
+<ul class="org-ul">
+<li><code>$ pget.exe asm --ns [asmFile] --cls [namespace]</code>
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe asm -ns /usr/lib/mono/4.5-api/System.Xml.dll -cls System.Xml
+
+System.Xml.XmlParserContext
+System.Xml.XmlReader
+System.Xml.XmlReaderSettings
+System.Xml.XmlTextReader
+System.Xml.XmlTextWriter
+System.Xml.XmlValidatingReader
+System.Xml.XmlWriter
+System.Xml.XmlWriterSettings
+System.Xml.XmlAttributeCollection
+System.Xml.XmlAttribute
+System.Xml.XmlCDataSection
+System.Xml.XmlCharacterData
+...
+System.Xml.XmlQualifiedName
+System.Xml.XmlResolver
+System.Xml.XmlSecureResolver
+System.Xml.XmlUrlResolver
+System.Xml.XmlXapResolver
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-7-6" name="sec-1-4-7-6"></a>Show class public non-static methods<br  /><div class="outline-text-5" id="text-1-4-7-6">
+<ul class="org-ul">
+<li><code>$ bin/pget.exe asm --class [asmFile] --public [className]</code>
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe asm --class /usr/lib/mono/4.5-api/System.Xml.dll --public System.Xml.XmlDocument
+
+System.Xml.XmlNode CloneNode(Boolean)
+
+System.Xml.XmlNodeType get_NodeType()
+
+System.Xml.XmlNode get_ParentNode()
+
+System.Xml.XmlDocumentType get_DocumentType()
+
+System.Xml.XmlImplementation get_Implementation()
+
+ ...  ...  ...
+
+Void add_NodeChanged(System.Xml.XmlNodeChangedEventHandler)
+
+Void remove_NodeChanged(System.Xml.XmlNodeChangedEventHandler)
+
+System.Xml.Schema.IXmlSchemaInfo get_SchemaInfo()
+
+System.String get_BaseURI()
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-4-7-7" name="sec-1-4-7-7"></a>Show class public static methods<br  /><div class="outline-text-5" id="text-1-4-7-7">
+<ul class="org-ul">
+<li><code>$ pget.exe --clss [asmFile] --static [className]</code>
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe asm --class packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.dll --static OxyPlot.Arrays
+
+T[] CopyOfRange[T](T[], Int32, Int32)
+
+T[] CopyOf[T](T[], Int32)
+
+Void Fill[T](T[], Int32, Int32, T)
+</pre>
+</div>
+</div>
+</li>
+<li><a id="sec-1-4-7-8" name="sec-1-4-7-8"></a>Show all class methods<br  /><div class="outline-text-5" id="text-1-4-7-8">
+<ul class="org-ul">
+<li><code>$ pget.exe asm --class [asmFile] --methods [className]</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe asm --class /usr/lib/mono/4.5-api/System.Windows.Forms.dll --methods System.Windows.Forms.Form
+
+
+Public Methods
+--------------------------------------
+
+System.Windows.Forms.IButtonControl get_AcceptButton()
+
+Void set_AcceptButton(System.Windows.Forms.IButtonControl)
+
+Boolean get_AllowTransparency()
+
+Void set_AllowTransparency(Boolean)
+
+Boolean get_AutoScale()
+
+Void set_AutoScale(Boolean)
+
+System.Drawing.Size get_AutoScaleBaseSize()
+
+Void set_AutoScaleBaseSize(System.Drawing.Size)
+
+Boolean get_AutoScroll()
+
+Void set_AutoScroll(Boolean)
+
+Boolean get_AutoSize()
+
+Void set_AutoSize(Boolean)
+
+System.Windows.Forms.AutoSizeMode get_AutoSizeMode()
+
+Void set_AutoSizeMode(System.Windows.Forms.AutoSizeMode)
+
+System.Windows.Forms.AutoValidate get_AutoValidate()
+
+... ...  ...
+
+
+Public Static Methods
+--------------------------------------
+
+System.Windows.Forms.Form get_ActiveForm()
+
+System.Drawing.SizeF GetAutoScaleSize(System.Drawing.Font)
+
+Private Static Methods
+-------------------------
+</pre>
+</div>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-1-4-8" class="outline-4">
+<h4 id="sec-1-4-8"><span class="section-number-4">1.4.8</span> Generate GUID</h4>
+<div class="outline-text-4" id="text-1-4-8">
+<ul class="org-ul">
+<li><code>$ pget.exe --guid</code>
+</li>
+</ul>
+
+<p>
+Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ bin/pget.exe --guid
+c4969f50-7a17-4f8f-ac9d-d783a9a8f8d4
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Pget.dll</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Pget.dll is a F# library that provides a high level interface and
+functional wrappers to NuGet.Core API.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Caio Rodrigues</p>
+<p class="date">Created: 2016-12-27 ter 13:59</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
