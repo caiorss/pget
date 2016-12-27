@@ -263,6 +263,7 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         | ["repo"; path ; "--ref"; framework ; pack ]       ->  showRepoPackageRef framework path pack
         | ["repo"; "--ref"; framework ; pack ]              ->  showRepoPackageRef framework projectRepo pack
 
+        | ["fsproj"; "--ref"; framework ]                   ->  fsprojGenerateRefs framework projectRepo
        
         // ============================ NuGet Repository (Remote) ========================== 
 
