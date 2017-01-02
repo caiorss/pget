@@ -251,7 +251,7 @@ module AsmDisplay =
         | None    -> def
         | Some x  -> x
 
-    let optIter2 errorFn actionFn opt  =
+    let optIter2 errorFn actionFn opt: unit  =
         match opt with
         | None    -> errorFn ()
         | Some x  -> actionFn x
