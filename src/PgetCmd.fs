@@ -300,10 +300,19 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
 
         | ["asm" ; "--namespace"; asmFile]                  -> AsmDisplay.showNamespaces asmFile 
         | ["asm" ; "-ns"; asmFile]                          -> AsmDisplay.showNamespaces asmFile 
-
+        
         | ["asm" ; "--namespace"; asmFile ; "--class"; ns]  -> AsmDisplay.showClassesInNamespace asmFile ns
         | ["asm" ; "-ns"; asmFile ; "-cls"; ns]             -> AsmDisplay.showClassesInNamespace asmFile ns   
 
+        // Show all exported classes by an assembly 
+        | ["asm";  "--class" ; asmFile]                     -> AsmDisplay.showClasses asmFile
+
+        // Show all exported interfaces by an assembly
+        | ["asm"; "--interface"; asmFile]                   -> AsmDisplay.showIntefaces asmFile
+
+        // Show a type information in an assembly
+        | ["asm";  "--tinfo" ; asmFile ; atype]             -> AsmDisplay.showType asmFile atype
+        
         | ["asm" ; "--class" ; asmFile; "--public"; cls]    -> AsmDisplay.showPublicMethods asmFile cls
         | ["asm" ; "--class" ; asmFile; "--static"; cls]    -> AsmDisplay.showPublicStaticMethods asmFile cls
         | ["asm" ; "--class" ; asmFile; "--methods"; cls]   -> AsmDisplay.showAllMethods asmFile cls
