@@ -108,12 +108,20 @@ Predicates
                           t.BaseType,
                           t.IsAbstract
                           );
+
          Console.WriteLine("\nFields");
          Console.WriteLine("----------------"); 
          t.GetFields()     |> Seq.iter (printfn "\t%A\n");
+
          Console.WriteLine("\nProperties");
          Console.WriteLine("----------------"); 
          t.GetProperties() |> Seq.iter (printfn "\t%A\n");
+
+         Console.WriteLine("\nConstructors");
+         Console.WriteLine("----------------"); 
+         t |> getConstructors
+           |> Seq.iter (printfn "\t%A\n");           
+
          Console.WriteLine("\nMethods");
          Console.WriteLine("----------------"); 
          t |> getMethodsNonProp
