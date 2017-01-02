@@ -282,6 +282,9 @@ module AsmDisplay =
         |> Seq.filter predicate
         |> Seq.iter  Console.WriteLine
 
+    /// Print all types exported by an assembly file      
+    let showTypes (asmFile: string) =
+       showTypeSelector asmFile (fun t -> true)
 
     /// Print all classes exported by an assembly file.
     let showClasses (asmFile: string) =
