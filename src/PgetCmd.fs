@@ -172,6 +172,14 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     asm --resources  [file]                              Show resources from an assembly file.
     asm --namespace|-ns [file]                           Display all assembly namespaces.
     asm --namespace|-ns [file] --classes|-cls [ns]       Show all classes from namespace [ns] in assembly [file]
+
+    asm --type [file]                                    Show all types exported by assembly [file]
+    asm --type [file] [type]                             Show information about [type] exported by assembly [file].
+    asm --interface [file]                               Show all interfaces exported by assembly [file]. 
+    asm --abstract  [file]                               Show all abstract classes exported by assembly [file].
+   
+    asm --class  [file]                                  Show all classes exported by assembly [file].
+    asm --classn [file]                                  Show all non-abstract classes exported by assembly [file]
     asm --class [file] --public  [class]                 Show all public non-static methods of a [class] in a assembly [file]
     asm --class [file] --static  [class]                 Show all static methods of a [class] in a assembly [file]
     asm --class [file] --methods [class]                 Show all methods of a [class] in a assembly [file].
@@ -294,19 +302,38 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         | ["nupkg"; "--files"; fname]                       ->  Pget.Nupkg.showFiles fname
 
         // ==========  Commands to Handle .NET assembly ============== //
-        | ["asm" ; "--info" ;  asmFile]                     -> AsmAttr.showFile asmFile
-        | ["asm" ; "--refs" ; asmFile ]                     -> AsmAttr.showAsmReferences asmFile         
-        | ["asm" ; "--resources"; asmFile ]                 -> AsmAttr.showResurces asmFile
+        | ["asm" ; "--info" ;  asmFile]                     -> AsmDisplay.showFile asmFile
+        | ["asm" ; "--refs" ; asmFile ]                     -> AsmDisplay.showAsmReferences asmFile         
+        | ["asm" ; "--resources"; asmFile ]                 -> AsmDisplay.showResurces asmFile
 
-        | ["asm" ; "--namespace"; asmFile]                  -> AsmAttr.showNamespaces asmFile 
-        | ["asm" ; "-ns"; asmFile]                          -> AsmAttr.showNamespaces asmFile 
+        | ["asm" ; "--namespace"; asmFile]                  -> AsmDisplay.showNamespaces asmFile 
+        | ["asm" ; "-ns"; asmFile]                          -> AsmDisplay.showNamespaces asmFile 
+        
+        | ["asm" ; "--namespace"; asmFile ; "--class"; ns]  -> AsmDisplay.showClassesInNamespace asmFile ns
+        | ["asm" ; "-ns"; asmFile ; "-cls"; ns]             -> AsmDisplay.showClassesInNamespace asmFile ns   
 
-        | ["asm" ; "--namespace"; asmFile ; "--class"; ns]  -> AsmAttr.showClassesInNamespace asmFile ns
-        | ["asm" ; "-ns"; asmFile ; "-cls"; ns]             -> AsmAttr.showClassesInNamespace asmFile ns
+        // Show all exported types 
+        | ["asm";  "--type" ; asmFile]                     -> AsmDisplay.showTypes asmFile
 
-        | ["asm" ; "--class" ; asmFile; "--public"; cls]    -> AsmAttr.showPublicMethods asmFile cls
-        | ["asm" ; "--class" ; asmFile; "--static"; cls]    -> AsmAttr.showPublicStaticMethods asmFile cls
-        | ["asm" ; "--class" ; asmFile; "--methods"; cls]  -> AsmAttr.showAllMethods asmFile cls
+        // Show information about type exported by an assembly
+        | ["asm";  "--type" ; asmFile ; atype]             -> AsmDisplay.showType asmFile atype
+
+        // Show all exported classes  
+        | ["asm";  "--class" ; asmFile]                     -> AsmDisplay.showClasses asmFile
+
+        // Show all exported non-abstract class 
+        | ["asm";  "--classn" ; asmFile]                    -> AsmDisplay.showClassesNonAbstract asmFile
+        
+        // Show all exported interfaces 
+        | ["asm"; "--interface"; asmFile]                   -> AsmDisplay.showIntefaces asmFile
+
+        // Show all abstract classes 
+        | ["asm"; "--abstract" ; asmFile]                   -> AsmDisplay.showAbstractClasses asmFile 
+
+        
+        | ["asm" ; "--class" ; asmFile; "--public"; cls]    -> AsmDisplay.showPublicMethods asmFile cls
+        | ["asm" ; "--class" ; asmFile; "--static"; cls]    -> AsmDisplay.showPublicStaticMethods asmFile cls
+        | ["asm" ; "--class" ; asmFile; "--methods"; cls]   -> AsmDisplay.showAllMethods asmFile cls
 
         | ["--guid" ]                                       -> Console.WriteLine(Guid.NewGuid().ToString() : string)
 

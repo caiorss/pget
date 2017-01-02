@@ -1,23 +1,185 @@
 namespace Pget
 
+/// Get information about type 
+module TInfo =
+    open System 
+    open System.Reflection
+
+    type T = Type 
+
+    /// Get name of a type
+    let getName (t: T) = t.Name
+
+    /// Get full name of a type
+    let fullName (t: T) = t.FullName 
+
+    /// Get the namespace of a type 
+    let getNamespace (t: T) = t.Namespace 
+
+    let getModule (t: T) = t.Module
+
+    let isPublic (t: T) = t.IsPublic
+
+    let isNotPublic (t: T) = t.IsNotPublic 
+
+    let isPrimitive (t: T) = t.IsPrimitive
+
+    let isClass (t: T) = t.IsClass
+
+    let isClassNonAbstract (t: T) = t.IsClass && not t.IsAbstract
+
+    /// Check if type is Abstract Class
+    let isAbstract (t: T) = t.IsAbstract
+
+    let isArray (t: T) = t.IsArray
+
+    let isEnum (t: T) = t.IsEnum
+
+    let isInterface (t: T) = t.IsInterface
+
+    let isVisible (t: T) = t.IsVisible
+
+    /// Test if type is a public class     
+    let isPublicClass (atype: T) =
+        atype.IsClass && atype.IsPublic
+
+    let getBaseType (t: T) = t.BaseType
+        
+    /// Get all fields of a type
+    let getFields (t: T) = t.GetFields()
+
+    /// Get all constructors of a type (class)
+    let getConstructors (t: T) = t.GetConstructors()
+
+    /// Get all methods of a type ignoring properties
+    /// (methods which name starts with get_ or set_)
+    ///
+    let getMethodsNonProp(t: T) =
+        t.GetMethods()
+        |> Seq.filter(fun minfo ->
+                      not (   minfo.Name.StartsWith("set_")
+                            || minfo.Name.StartsWith("get_")
+                            || minfo.IsSpecialName
+                           ))
+
+    /// Get all public methods
+    let getMethods (t: T) = t.GetMethods()
+
+    /// Get public properties of a type
+    let getProperties (t: T) = t.GetProperties()
+
+    /// Get Methods with flags
+    let getMethodsFlags flags (t: T) = t.GetMethods(flags)
+
+    /// Displays only public information about type. 
+    let show (t: T) =
+        Console.WriteLine("""
+Type Info:
+
+  Name:           {0}
+  Full Name:      {1}
+  Namespace:      {2}
+  Module:         {3}
+  Base Type:      {11}
+
+Predicates
+
+  Class:          {4}
+  Abstract Class: {12}
+  Primitive       {5}
+  Array:          {6}
+  Interface       {7}   
+  Enum            {8}
+  Public          {9}
+  Visible         {10}
+  
+                        """,
+                          t.Name,
+                          t.FullName,
+                          t.Namespace,
+                          t.Module,
+                          t.IsClass,
+                          t.IsPrimitive,
+                          t.IsArray,
+                          t.IsInterface,
+                          t.IsEnum,
+                          t.IsPublic,
+                          t.IsVisible,
+                          t.BaseType,
+                          t.IsAbstract
+                          );
+
+         Console.WriteLine("\nFields");
+         Console.WriteLine("----------------"); 
+         t.GetFields()     |> Seq.iter (printfn "\t%A\n");
+
+         Console.WriteLine("\nProperties");
+         Console.WriteLine("----------------"); 
+         t.GetProperties() |> Seq.iter (printfn "\t%A\n");
+
+         Console.WriteLine("\nConstructors");
+         Console.WriteLine("----------------"); 
+         t |> getConstructors
+           |> Seq.iter (printfn "\t%A\n");           
+
+         Console.WriteLine("\nMethods");
+         Console.WriteLine("----------------"); 
+         t |> getMethodsNonProp
+           |> Seq.iter (printfn "\t%A\n");
+ 
 /// Assembly attributes wrapper
 module AsmAttr =
 
     open System.Reflection
     open System
 
-    let optDefault def opt =
-        match opt with
-        | None    -> def
-        | Some x  -> x
-
     /// Load Assembly File
     let loadFrom (assemblyFile: string) =
         Assembly.LoadFrom assemblyFile
 
+    /// Load Assembly from file returning None if it doesn't exist.
+    let loadFromOpt (assemblyFile: string) =
+        if System.IO.File.Exists(assemblyFile)
+        then Some (Assembly.LoadFrom assemblyFile)
+        else None
+
     /// Get types from an assembly
     let getTypes (asm: Assembly) =
         asm.GetTypes()
+        |> Seq.ofArray
+
+    let getExportedTypes (asm: Assembly) =
+        asm.GetExportedTypes()
+        |> Seq.ofArray
+
+        
+    /// Get type from assembly      
+    let getType (atype: string) (asm: Assembly) =
+        match asm.GetType(atype) with
+        | null -> None
+        | t    -> Some t 
+
+
+    /// Get types with at least one field. 
+    let getTypesWithFields (asm: Assembly) = 
+        asm |>  getExportedTypes
+            |>  Seq.filter (fun (atype: Type) ->
+                            not <| Array.isEmpty (atype.GetFields()))
+        
+
+
+    let getPublicTypesInNamespace  (asmFile: string) selector (ns: string) =
+        let asm = loadFrom asmFile 
+        asm.GetTypes()
+        |> Seq.filter (fun (atype: Type) ->
+                       atype.Namespace = ns
+                       && atype.IsPublic
+                       && selector atype
+                       )   
+
+/// Assembly metadata information 
+module AsmInfo =
+    open System.Reflection 
 
     /// Return assembly name
     let getName (asm: Assembly) =
@@ -98,60 +260,107 @@ module AsmAttr =
                                   ; ("FullName",    a.FullName)
                                   ; ("CultureInfo", a.CultureInfo.Name)
                                   ; ("Version",     a.Version.ToString())
-                               ]
-                     )
-        
-    /// Display resources from an .NET assembly file 
-    let showResurces (asmFile: string) =
-        let asm = loadFrom asmFile
-        asm.GetManifestResourceNames() |> Seq.iter Console.WriteLine
+                               ] )
+      
 
-    let showAsmReferences (asmFile: string) =
-        let asm = loadFrom asmFile
-        asm.GetReferencedAssemblies ()
-        |> Seq.iter (fun an -> Console.WriteLine("Name = {0}\t\tVersion = {1}\t\tCulture = {2}",
-                                                 an.Name,
-                                                 an.Version,
-                                                 an.CultureInfo.Name
-                                                 ))
+module AsmDisplay =
+    open System
+    open System.Reflection 
 
+    let optDefault def opt =
+        match opt with
+        | None    -> def
+        | Some x  -> x
+
+    let optIter2 errorFn actionFn opt: unit  =
+        match opt with
+        | None    -> errorFn ()
+        | Some x  -> actionFn x
+
+    let showType (asmFile: string) (typeName: string) =
+        let errorHandler1 () = Console.WriteLine "Error: Assembly file doesn't exist"
+        let errorHandler2 () = Console.WriteLine "Error: Type not found in assembly."
+        asmFile
+        |> AsmAttr.loadFromOpt
+        |> optIter2 errorHandler1 ( AsmAttr.getType typeName
+                                    >> (optIter2 errorHandler2 TInfo.show)
+                                  )
+
+    let showTypeSelector (asmFile: string) predicate =
+        asmFile
+        |> AsmAttr.loadFrom
+        |> AsmAttr.getExportedTypes
+        |> Seq.filter predicate
+        |> Seq.iter  Console.WriteLine
+
+    /// Print all types exported by an assembly file      
+    let showTypes (asmFile: string) =
+       showTypeSelector asmFile (fun t -> true)
+
+    /// Print all classes exported by an assembly file.
+    let showClasses (asmFile: string) =
+        showTypeSelector asmFile TInfo.isClass
+
+    /// Print all interfaces exported by an assembly file.
+    let showIntefaces (asmFile: string) =
+        showTypeSelector asmFile TInfo.isInterface
+
+    /// Print all non-abstract classes
+    let showClassesNonAbstract (asmFile: string) =
+        showTypeSelector asmFile TInfo.isClassNonAbstract
+
+    /// Print only abstract classes
+    let showAbstractClasses (asmFile: string) =
+        showTypeSelector asmFile TInfo.isAbstract
+
+    /// Print assembly file attributes
+    ///
+    let showFile (asmFile: string) =
+        let asm = AsmAttr.loadFrom asmFile
+        printfn "Assembly Attributes"
+        printfn "-------------------------------------------"
+        printfn "Name         %s" (AsmInfo.getName asm)
+        // printfn "Full Name    $s" (getFullName asm)
+        printfn "Version      %s" <| (AsmInfo.getVersion asm).ToString()
+        printfn "CLR Version  %s" <| AsmInfo.getRuntimeVersion asm
+        printfn "Product      %s" (optDefault ""  <| AsmInfo.getProduct asm)
+        printfn "Culture      %s" (optDefault ""  <| AsmInfo.getCulture asm)
+        printfn "Company      %s" (optDefault ""  <| AsmInfo.getCompany asm)
+        printfn "Description  %s" (optDefault ""  <| AsmInfo.getDescription asm)
+        printfn "Copyright    %s" (optDefault ""  <| AsmInfo.getCopyright asm)
+        printfn "GUID         %s" (optDefault ""  <| AsmInfo.getGuid asm)
+        printfn "Com Visible  %s" (optDefault ""  <| (AsmInfo.getComVisible asm
+                                                      |> Option.map (fun e -> e.ToString())))
+        printfn "Codebase     %s" asm.CodeBase
+    
     /// Print all namespaces from an assembly (.exe or .dll)
     let showNamespaces (asmFile: string) =
-        let asm = loadFrom asmFile 
+        let asm = AsmAttr.loadFrom asmFile 
         asm.GetTypes() |> Seq.distinctBy (fun t -> t.Namespace)
                        |> Seq.iter (fun t -> Console.WriteLine(t.Namespace))        
 
-    let getPublicTypesInNamespace  (asmFile: string) selector (ns: string) =
-        let asm = loadFrom asmFile 
-        asm.GetTypes()
-        |> Seq.filter (fun (atype: Type) ->
-                       atype.Namespace = ns
-                       && atype.IsPublic
-                       && selector atype
-                       )
-
-     
-
     let showClassesInNamespace (asmFile: string) ns =
-        getPublicTypesInNamespace asmFile (fun atype -> atype.IsClass) ns 
+        AsmAttr.getPublicTypesInNamespace asmFile (fun atype -> atype.IsClass) ns 
         |> Seq.iter Console.WriteLine
 
 
     let showMethods bindingFlags (asmFile: string) (className: string) =
-        loadFrom asmFile
-        |> getTypes
-        |> Seq.tryFind(fun atype -> atype.FullName = className)
-        |> Option.map(fun atype -> atype.GetMethods(bindingFlags))
+        AsmAttr.loadFrom asmFile
+        |> AsmAttr.getType className
+        |> Option.map(TInfo.getMethodsFlags bindingFlags)
         |> Option.iter (Seq.iter (fun m -> Console.WriteLine("")
-                                           Console.WriteLine m)
-                        )
+                                           Console.WriteLine m))
 
     let showPublicMethods  (asmFile: string) (className: string) =
-        let flags = BindingFlags.Public |||  BindingFlags.Instance ||| BindingFlags.DeclaredOnly
+        let flags = BindingFlags.Public
+                    ||| BindingFlags.Instance
+                    ||| BindingFlags.DeclaredOnly                    
         showMethods flags asmFile className
 
     let showPublicStaticMethods  (asmFile: string) (className: string) =
-        let flags = BindingFlags.Public |||  BindingFlags.Static ||| BindingFlags.DeclaredOnly
+        let flags = BindingFlags.Public
+                    ||| BindingFlags.Static
+                    ||| BindingFlags.DeclaredOnly                    
         showMethods flags asmFile className
 
     let showPrivateMethods  (asmFile: string) (className: string) =
@@ -173,22 +382,18 @@ module AsmAttr =
         Console.WriteLine "--------------------------------------"
         showPrivateStaticMethods asmFile className
 
-    /// Print assembly file attributes
-    ///
-    let showFile (asmFile: string) =
-        let asm = loadFrom asmFile
-        printfn "Assembly Attributes"
-        printfn "-------------------------------------------"
-        printfn "Name         %s" (getName asm)
-        // printfn "Full Name    $s" (getFullName asm)
-        printfn "Version      %s" <| (getVersion asm).ToString()
-        printfn "CLR Version  %s" <| getRuntimeVersion asm
-        printfn "Product      %s" (optDefault ""  <| getProduct asm)
-        printfn "Culture      %s" (optDefault ""  <| getCulture asm)
-        printfn "Company      %s" (optDefault ""  <| getCompany asm)
-        printfn "Description  %s" (optDefault ""  <| getDescription asm)
-        printfn "Copyright    %s" (optDefault ""  <| getCopyright asm)
-        printfn "GUID         %s" (optDefault ""  <| getGuid asm)
-        printfn "Com Visible  %s" (optDefault ""  <| (getComVisible asm
-                                                      |> Option.map (fun e -> e.ToString())))
-        printfn "Codebase     %s" asm.CodeBase
+        
+    /// Display resources from an .NET assembly file 
+    let showResurces (asmFile: string) =
+        let asm = AsmAttr.loadFrom asmFile
+        asm.GetManifestResourceNames() |> Seq.iter Console.WriteLine
+
+    let showAsmReferences (asmFile: string) =
+        let asm = AsmAttr.loadFrom asmFile
+        asm.GetReferencedAssemblies ()
+        |> Seq.iter (fun an ->
+                     Console.WriteLine("Name = {0}\t\tVersion = {1}\t\tCulture = {2}",
+                                        an.Name,
+                                        an.Version,
+                                        an.CultureInfo.Name
+                                       ))
