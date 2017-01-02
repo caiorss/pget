@@ -48,6 +48,9 @@ module TInfo =
     /// Get all fields of a type
     let getFields (t: T) = t.GetFields()
 
+    /// Get all constructors of a type (class)
+    let getConstructors (t: T) = t.GetConstructors()
+
     /// Get all methods of a type ignoring properties
     /// (methods which name starts with get_ or set_)
     ///
