@@ -294,19 +294,19 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         | ["nupkg"; "--files"; fname]                       ->  Pget.Nupkg.showFiles fname
 
         // ==========  Commands to Handle .NET assembly ============== //
-        | ["asm" ; "--info" ;  asmFile]                     -> AsmAttr.showFile asmFile
-        | ["asm" ; "--refs" ; asmFile ]                     -> AsmAttr.showAsmReferences asmFile         
-        | ["asm" ; "--resources"; asmFile ]                 -> AsmAttr.showResurces asmFile
+        | ["asm" ; "--info" ;  asmFile]                     -> AsmDisplay.showFile asmFile
+        | ["asm" ; "--refs" ; asmFile ]                     -> AsmDisplay.showAsmReferences asmFile         
+        | ["asm" ; "--resources"; asmFile ]                 -> AsmDisplay.showResurces asmFile
 
-        | ["asm" ; "--namespace"; asmFile]                  -> AsmAttr.showNamespaces asmFile 
-        | ["asm" ; "-ns"; asmFile]                          -> AsmAttr.showNamespaces asmFile 
+        | ["asm" ; "--namespace"; asmFile]                  -> AsmDisplay.showNamespaces asmFile 
+        | ["asm" ; "-ns"; asmFile]                          -> AsmDisplay.showNamespaces asmFile 
 
-        | ["asm" ; "--namespace"; asmFile ; "--class"; ns]  -> AsmAttr.showClassesInNamespace asmFile ns
-        | ["asm" ; "-ns"; asmFile ; "-cls"; ns]             -> AsmAttr.showClassesInNamespace asmFile ns
+        | ["asm" ; "--namespace"; asmFile ; "--class"; ns]  -> AsmDisplay.showClassesInNamespace asmFile ns
+        | ["asm" ; "-ns"; asmFile ; "-cls"; ns]             -> AsmDisplay.showClassesInNamespace asmFile ns   
 
-        | ["asm" ; "--class" ; asmFile; "--public"; cls]    -> AsmAttr.showPublicMethods asmFile cls
-        | ["asm" ; "--class" ; asmFile; "--static"; cls]    -> AsmAttr.showPublicStaticMethods asmFile cls
-        | ["asm" ; "--class" ; asmFile; "--methods"; cls]  -> AsmAttr.showAllMethods asmFile cls
+        | ["asm" ; "--class" ; asmFile; "--public"; cls]    -> AsmDisplay.showPublicMethods asmFile cls
+        | ["asm" ; "--class" ; asmFile; "--static"; cls]    -> AsmDisplay.showPublicStaticMethods asmFile cls
+        | ["asm" ; "--class" ; asmFile; "--methods"; cls]   -> AsmDisplay.showAllMethods asmFile cls
 
         | ["--guid" ]                                       -> Console.WriteLine(Guid.NewGuid().ToString() : string)
 
