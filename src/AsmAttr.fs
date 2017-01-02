@@ -26,6 +26,9 @@ module TInfo =
 
     let isClass (t: T) = t.IsClass
 
+    /// Check if type is Abstract Class
+    let isAbstract (t: T) = t.IsAbstract
+
     let isArray (t: T) = t.IsArray
 
     let isEnum (t: T) = t.IsEnum
