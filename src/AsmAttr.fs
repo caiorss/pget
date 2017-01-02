@@ -40,6 +40,8 @@ module TInfo =
     /// Test if type is a public class     
     let isPublicClass (atype: T) =
         atype.IsClass && atype.IsPublic
+
+    let getBaseType (t: T) = t.BaseType
         
     /// Get all fields of a type
     let getFields (t: T) = t.GetFields()
