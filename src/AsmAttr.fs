@@ -269,13 +269,14 @@ module AsmDisplay =
                                   )
 
 
-    /// Show all classes exported by an assembly file.
+    /// Print all classes exported by an assembly file.
     let showClasses (asmFile: string) =
         asmFile
         |> AsmAttr.loadFrom
         |> AsmAttr.getExportedTypes
         |> Seq.filter TInfo.isPublicClass
-        |> Seq.iter  Console.WriteLine    
+        |> Seq.iter  Console.WriteLine
+
     /// Print all interfaces exported by an assembly file.
     let showIntefaces (asmFile: string) =
         asmFile
