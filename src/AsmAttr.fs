@@ -6,9 +6,11 @@ module TInfo =
     open System.Reflection
 
     type T = Type 
-    
+
+    /// Get name of a type
     let getName (t: T) = t.Name
 
+    /// Get full name of a type
     let fullName (t: T) = t.FullName 
 
     /// Get the namespace of a type 
@@ -36,9 +38,8 @@ module TInfo =
     let isPublicClass (atype: T) =
         atype.IsClass && atype.IsPublic
         
+    /// Get all fields of a type
     let getFields (t: T) = t.GetFields()
-
-    let getMethods (t: T) = t.GetMethods()
 
     /// Get all methods of a type ignoring properties
     /// (methods which name starts with get_ or set_)
@@ -51,8 +52,13 @@ module TInfo =
                             || minfo.IsSpecialName
                            ))
 
+    /// Get all public methods
+    let getMethods (t: T) = t.GetMethods()
+
+    /// Get public properties of a type
     let getProperties (t: T) = t.GetProperties()
 
+    /// Get Methods with flags
     let getMethodsFlags flags (t: T) = t.GetMethods(flags)
 
     /// Displays only public information about type. 
