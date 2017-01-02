@@ -103,7 +103,8 @@ Predicates
          t.GetProperties() |> Seq.iter (printfn " %A");
          Console.WriteLine("\nMethods");
          Console.WriteLine("----------------"); 
-         t.GetMethods() |> Seq.iter (printfn " %A");
+         t |> getMethodsNonProp
+           |> Seq.iter (printfn " %A");
  
 /// Assembly attributes wrapper
 module AsmAttr =
