@@ -116,6 +116,12 @@ module AsmAttr =
     let loadFrom (assemblyFile: string) =
         Assembly.LoadFrom assemblyFile
 
+    /// Load Assembly from file returning None if it doesn't exist.
+    let loadFromOpt (assemblyFile: string) =
+        if System.IO.File.Exists(assemblyFile)
+        then Some (Assembly.LoadFrom assemblyFile)
+        else None
+
     /// Get types from an assembly
     let getTypes (asm: Assembly) =
         asm.GetTypes()
