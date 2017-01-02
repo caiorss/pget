@@ -1094,6 +1094,325 @@ Example:
   NuGet.Authoring.nuspec.xsd
 #+END_SRC
 
+**** Show all exported types 
+
+ - =$ pget.exe asm --type [asmFile]= 
+
+Example: 
+
+#+BEGIN_SRC sh
+$ bin/pget.exe repo --files NuGet.Core
+packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll
+
+$ bin/pget.exe asm --type packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll
+NuGet.IPackageRule
+NuGet.PackageIssue
+NuGet.DefaultPackageRuleSet
+NuGet.PackageIssueLevel
+NuGet.AssemblyMetadata
+NuGet.AssemblyMetadataExtractor
+NuGet.IFrameworkTargetable
+NuGet.IPackageFile
+
+...
+
+NuGet.IPackageAssemblyReference
+NuGet.PhysicalPackageAssemblyReference
+NuGet.ConfigurationDefaults
+NuGet.ICredentialProvider
+NuGet.SettingsCredentialProvider
+NuGet.ISettings
+NuGet.NullSettings
+NuGet.Settings
+NuGet.SettingValue
+
+...
+
+NuGet.Resources.NuGetResources
+NuGet.ProjectSystemExtensions
+NuGet.PathUtility
+NuGet.CryptoHashProvider
+NuGet.StreamExtensions
+NuGet.PackageHelper
+NuGet.XmlUtility
+NuGet.IProjectSystem
+NuGet.PackageSaveModes
+NuGet.Constants
+NuGet.PackageDependency
+NuGet.VersionUtility
+NuGet.XElementExtensions
+#+END_SRC
+
+**** Show type information 
+
+ - =$ pget.exe asm --type [asmFile] [TypeName]=
+
+#+BEGIN_SRC 
+$ bin/pget.exe repo --files NuGet.Core
+packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll
+
+$ bin/pget.exe asm --type packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll NuGet.ZipPackage
+
+Type Info:
+
+  Name:           ZipPackage
+  Full Name:      NuGet.ZipPackage
+  Namespace:      NuGet
+  Module:         NuGet.Core.dll
+  Base Type:      NuGet.LocalPackage
+
+Predicates
+
+  Class:          True
+  Abstract Class: False
+  Primitive       False
+  Array:          False
+  Interface       False   
+  Enum            False
+  Public          True
+  Visible         True
+  
+                        
+
+Fields
+----------------
+
+Properties
+----------------
+	System.String Id
+
+	NuGet.SemanticVersion Version
+
+	System.String Title
+
+	System.Collections.Generic.IEnumerable`1[System.String] Authors
+
+	System.Collections.Generic.IEnumerable`1[System.String] Owners
+
+	System.Uri IconUrl
+
+	System.Uri LicenseUrl
+
+	System.Uri ProjectUrl
+
+	System.Uri ReportAbuseUrl
+
+	Int32 DownloadCount
+
+	Boolean RequireLicenseAcceptance
+
+	Boolean DevelopmentDependency
+
+	System.String Description
+
+	System.String Summary
+
+	System.String ReleaseNotes
+
+	System.String Language
+
+	System.String Tags
+
+	System.Version MinClientVersion
+
+	Boolean IsAbsoluteLatestVersion
+
+	Boolean IsLatestVersion
+
+	Boolean Listed
+
+	System.Nullable`1[System.DateTimeOffset] Published
+
+	System.String Copyright
+
+	System.Collections.Generic.IEnumerable`1[NuGet.PackageDependencySet] DependencySets
+
+	System.Collections.Generic.IEnumerable`1[NuGet.FrameworkAssemblyReference] FrameworkAssemblies
+
+	System.Collections.Generic.IEnumerable`1[NuGet.IPackageAssemblyReference] AssemblyReferences
+
+	System.Collections.Generic.ICollection`1[NuGet.PackageReferenceSet] PackageAssemblyReferences
+
+
+Constructors
+----------------
+	Void .ctor(String)
+
+	Void .ctor(Func`1, Func`1)
+
+	Void .ctor(Stream)
+
+
+Methods
+----------------
+	System.IO.Stream GetStream()
+
+	Void ExtractContents(NuGet.IFileSystem, System.String)
+
+	System.String GetPackageIdentifier(System.IO.Packaging.Package)
+
+	System.Collections.Generic.IEnumerable`1[System.Runtime.Versioning.FrameworkName] GetSupportedFrameworks()
+
+	System.Collections.Generic.IEnumerable`1[NuGet.IPackageFile] GetFiles()
+
+	System.String ToString()
+
+	Boolean Equals(System.Object)
+
+	Int32 GetHashCode()
+
+	System.Type GetType()
+#+END_SRC 
+
+**** Show all exported classes 
+
+ - =$ pget.exe --class [asmFile]=
+
+Example:
+
+#+BEGIN_SRC 
+$ bin/pget.exe repo --files OxyPlot.Core | grep ".dll"
+packages/OxyPlot.Core.1.0.0/lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1+Xamarin.iOS10/OxyPlot.dll
+packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.dll
+packages/OxyPlot.Core.1.0.0/lib/net40-client/OxyPlot.dll
+packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll
+packages/OxyPlot.Core.1.0.0/lib/sl5/OxyPlot.dll
+
+$ bin/pget.exe asm --class packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.dll
+OxyPlot.DelegateViewCommand`1[T]
+OxyPlot.ElementCollectionChangedEventArgs`1[T]
+OxyPlot.ManipulatorBase`1[T]
+OxyPlot.DelegatePlotCommand`1[T]
+OxyPlot.Element
+OxyPlot.ElementCollection`1[T]
+OxyPlot.Model
+OxyPlot.TouchTrackerManipulator
+OxyPlot.OxySizeExtensions
+
+... ...
+
+OxyPlot.Axes.AngleAxis
+OxyPlot.Axes.Axis
+OxyPlot.Axes.AxisChangedEventArgs
+OxyPlot.Axes.CategoryAxis
+OxyPlot.Axes.CategoryColorAxis
+OxyPlot.Axes.ColorAxisExtensions
+OxyPlot.Axes.LinearColorAxis
+OxyPlot.Axes.DateTimeAxis
+OxyPlot.Axes.LinearAxis
+OxyPlot.Axes.MagnitudeAxis
+
+... ...
+
+OxyPlot.Annotations.Annotation
+OxyPlot.Annotations.ArrowAnnotation
+OxyPlot.Annotations.EllipseAnnotation
+OxyPlot.Annotations.FunctionAnnotation
+OxyPlot.Annotations.ImageAnnotation
+OxyPlot.Annotations.PathAnnotation
+OxyPlot.Annotations.PolylineAnnotation
+OxyPlot.Conrec+RendererDelegate
+OxyPlot.Reporting.TableOfContents+ContentItem
+#+END_SRC
+
+**** Show all exported non-abstract classes 
+
+ - =$ pget.exe --classn [asmFile]=
+
+Example:
+
+#+BEGIN_SRC 
+$ bin/pget.exe asm --classn packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.dll
+OxyPlot.DelegateViewCommand`1[T]
+OxyPlot.ElementCollectionChangedEventArgs`1[T]
+OxyPlot.DelegatePlotCommand`1[T]
+OxyPlot.ElementCollection`1[T]
+...
+OxyPlot.CodeGenerationAttribute
+OxyPlot.CodeGenerator
+OxyPlot.OxyPalette
+OxyPlot.Decimator
+OxyPlot.CohenSutherlandClipping
+OxyPlot.OxyPen
+OxyPlot.XkcdRenderingDecorator
+OxyPlot.OxyKeyGesture
+OxyPlot.OxyMouseDownGesture
+OxyPlot.OxyMouseWheelGesture
+...
+OxyPlot.Annotations.EllipseAnnotation
+OxyPlot.Annotations.FunctionAnnotation
+OxyPlot.Annotations.ImageAnnotation
+OxyPlot.Annotations.PolylineAnnotation
+OxyPlot.Conrec+RendererDelegate
+OxyPlot.Reporting.TableOfContents+ContentItem
+#+END_SRC
+
+**** Show all exported abstract classes 
+
+ - =$ pget.exe --abstract [asmFile]=
+
+Example:
+
+#+BEGIN_SRC 
+$ bin/pget.exe asm --abstract packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.dll
+OxyPlot.ManipulatorBase`1[T]
+OxyPlot.Element
+OxyPlot.Model
+OxyPlot.IController
+OxyPlot.IViewCommand
+OxyPlot.IViewCommand`1[T]
+OxyPlot.IView
+OxyPlot.IPlotController
+OxyPlot.IPlotElement
+OxyPlot.IPlotModel
+OxyPlot.OxySizeExtensions
+OxyPlot.OxyInputEventArgs
+...
+OxyPlot.HashCodeBuilder
+OxyPlot.XmlWriterBase
+OxyPlot.BinaryReaderExtensions
+OxyPlot.StreamExtensions
+OxyPlot.StringHelper
+OxyPlot.FractionHelper
+...
+OxyPlot.Axes.IColorAxis
+OxyPlot.Axes.ColorAxisExtensions
+OxyPlot.Axes.AxisRendererBase
+OxyPlot.Annotations.ShapeAnnotation
+OxyPlot.Annotations.TextualAnnotation
+OxyPlot.Annotations.Annotation
+OxyPlot.Annotations.PathAnnotation
+
+#+END_SRC
+
+**** Show all exported interfaces 
+
+ - =$ pget.exe --interface [asmFile]=
+
+Example:
+
+#+BEGIN_SRC 
+$ bin/pget.exe asm --interface packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.dll
+OxyPlot.IController
+OxyPlot.IViewCommand
+OxyPlot.IViewCommand`1[T]
+OxyPlot.IView
+OxyPlot.IPlotController
+OxyPlot.IPlotElement
+OxyPlot.IPlotModel
+OxyPlot.ICodeGenerating
+OxyPlot.IDataPointProvider
+OxyPlot.IRenderContext
+OxyPlot.IExporter
+OxyPlot.IImageDecoder
+OxyPlot.IImageEncoder
+OxyPlot.IPlotView
+OxyPlot.Series.IScatterPointProvider
+OxyPlot.Series.IStackableSeries
+OxyPlot.Reporting.IReportWriter
+OxyPlot.Axes.IColorAxis
+#+END_SRC
+
 **** Show all Namespaces of an Assembly
 
  - =pget.exe asm --namespace [asmFile]=
