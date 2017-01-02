@@ -71,21 +71,22 @@ module TInfo =
         Console.WriteLine("""
 Type Info:
 
-  Name:      {0}
-  Full Name: {1}
-  Namespace: {2}
-  Module:    {3}
-  
+  Name:           {0}
+  Full Name:      {1}
+  Namespace:      {2}
+  Module:         {3}
+  Base Type:      {11}
 
 Predicates
 
-  Class:     {4}
-  Primitive  {5}
-  Array:     {6}
-  Interface  {7}   
-  Enum       {8}
-  Public     {9}
-  Visible    {10}
+  Class:          {4}
+  Abstract Class: {12}
+  Primitive       {5}
+  Array:          {6}
+  Interface       {7}   
+  Enum            {8}
+  Public          {9}
+  Visible         {10}
   
                         """,
                           t.Name,
@@ -98,7 +99,9 @@ Predicates
                           t.IsInterface,
                           t.IsEnum,
                           t.IsPublic,
-                          t.IsVisible                         
+                          t.IsVisible,
+                          t.BaseType,
+                          t.IsAbstract
                           );
          Console.WriteLine("\nFields");
          Console.WriteLine("----------------"); 
