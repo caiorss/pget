@@ -247,6 +247,11 @@ module AsmDisplay =
         | None    -> def
         | Some x  -> x
 
+    let optIter2 errorFn actionFn opt  =
+        match opt with
+        | None    -> errorFn ()
+        | Some x  -> actionFn x
+
     /// Show all classes exported by an assembly file.
     let showClasses (asmFile: string) =
         loadFrom asmFile
