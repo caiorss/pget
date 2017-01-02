@@ -275,22 +275,29 @@ module AsmDisplay =
                                     >> (optIter2 errorHandler2 TInfo.show)
                                   )
 
+    let showTypeSelector (asmFile: string) predicate =
+        asmFile
+        |> AsmAttr.loadFrom
+        |> AsmAttr.getExportedTypes
+        |> Seq.filter predicate
+        |> Seq.iter  Console.WriteLine
+
 
     /// Print all classes exported by an assembly file.
     let showClasses (asmFile: string) =
-        asmFile
-        |> AsmAttr.loadFrom
-        |> AsmAttr.getExportedTypes
-        |> Seq.filter TInfo.isPublicClass
-        |> Seq.iter  Console.WriteLine
+        showTypeSelector asmFile TInfo.isClass
 
     /// Print all interfaces exported by an assembly file.
     let showIntefaces (asmFile: string) =
-        asmFile
-        |> AsmAttr.loadFrom
-        |> AsmAttr.getExportedTypes
-        |> Seq.filter TInfo.isInterface
-        |> Seq.iter Console.WriteLine
+        showTypeSelector asmFile TInfo.isInterface
+
+    /// Print all non-abstract classes
+    let showClassesNonAbstract (asmFile: string) =
+        showTypeSelector asmFile TInfo.isClassNonAbstract
+
+    /// Print only abstract classes
+    let showAbstractClasses (asmFile: string) =
+        showTypeSelector asmFile TInfo.isAbstract
 
     /// Print assembly file attributes
     ///
