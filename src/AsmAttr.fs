@@ -26,6 +26,8 @@ module TInfo =
 
     let isClass (t: T) = t.IsClass
 
+    let isClassNonAbstract (t: T) = t.IsClass && not t.IsAbstract
+
     /// Check if type is Abstract Class
     let isAbstract (t: T) = t.IsAbstract
 
