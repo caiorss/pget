@@ -97,14 +97,14 @@ Predicates
                           );
          Console.WriteLine("\nFields");
          Console.WriteLine("----------------"); 
-         t.GetFields()     |> Seq.iter (printfn " %A");
+         t.GetFields()     |> Seq.iter (printfn "\t%A\n");
          Console.WriteLine("\nProperties");
          Console.WriteLine("----------------"); 
-         t.GetProperties() |> Seq.iter (printfn " %A");
+         t.GetProperties() |> Seq.iter (printfn "\t%A\n");
          Console.WriteLine("\nMethods");
          Console.WriteLine("----------------"); 
          t |> getMethodsNonProp
-           |> Seq.iter (printfn " %A");
+           |> Seq.iter (printfn "\t%A\n");
  
 /// Assembly attributes wrapper
 module AsmAttr =
