@@ -172,6 +172,14 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     asm --resources  [file]                              Show resources from an assembly file.
     asm --namespace|-ns [file]                           Display all assembly namespaces.
     asm --namespace|-ns [file] --classes|-cls [ns]       Show all classes from namespace [ns] in assembly [file]
+
+    asm --type [file]                                    Show all types exported by assembly [file]
+    asm --type [file] [type]                             Show information about [type] exported by assembly [file].
+    asm --interface [file]                               Show all interfaces exported by assembly [file]. 
+    asm --abstract  [file]                               Show all abstract classes exported by assembly [file].
+   
+    asm --class  [file]                                  Show all classes exported by assembly [file].
+    asm --classn [file]                                  Show all non-abstract classes exported by assembly [file]
     asm --class [file] --public  [class]                 Show all public non-static methods of a [class] in a assembly [file]
     asm --class [file] --static  [class]                 Show all static methods of a [class] in a assembly [file]
     asm --class [file] --methods [class]                 Show all methods of a [class] in a assembly [file].
