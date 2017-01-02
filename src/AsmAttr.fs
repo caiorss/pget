@@ -237,8 +237,6 @@ module AsmInfo =
       
 
 module AsmDisplay =
-    open AsmInfo
-    open AsmAttr
     open System
     open System.Reflection 
 
@@ -262,8 +260,9 @@ module AsmDisplay =
 
     /// Show all classes exported by an assembly file.
     let showClasses (asmFile: string) =
-        loadFrom asmFile
-        |> getExportedTypes
+        asmFile
+        |> AsmAttr.loadFrom
+        |> AsmAttr.getExportedTypes
         |> Seq.filter TInfo.isPublicClass
         |> Seq.iter  Console.WriteLine    
 
@@ -273,33 +272,33 @@ module AsmDisplay =
         let asm = AsmAttr.loadFrom asmFile
         printfn "Assembly Attributes"
         printfn "-------------------------------------------"
-        printfn "Name         %s" (getName asm)
+        printfn "Name         %s" (AsmInfo.getName asm)
         // printfn "Full Name    $s" (getFullName asm)
-        printfn "Version      %s" <| (getVersion asm).ToString()
-        printfn "CLR Version  %s" <| getRuntimeVersion asm
-        printfn "Product      %s" (optDefault ""  <| getProduct asm)
-        printfn "Culture      %s" (optDefault ""  <| getCulture asm)
-        printfn "Company      %s" (optDefault ""  <| getCompany asm)
-        printfn "Description  %s" (optDefault ""  <| getDescription asm)
-        printfn "Copyright    %s" (optDefault ""  <| getCopyright asm)
-        printfn "GUID         %s" (optDefault ""  <| getGuid asm)
-        printfn "Com Visible  %s" (optDefault ""  <| (getComVisible asm
+        printfn "Version      %s" <| (AsmInfo.getVersion asm).ToString()
+        printfn "CLR Version  %s" <| AsmInfo.getRuntimeVersion asm
+        printfn "Product      %s" (optDefault ""  <| AsmInfo.getProduct asm)
+        printfn "Culture      %s" (optDefault ""  <| AsmInfo.getCulture asm)
+        printfn "Company      %s" (optDefault ""  <| AsmInfo.getCompany asm)
+        printfn "Description  %s" (optDefault ""  <| AsmInfo.getDescription asm)
+        printfn "Copyright    %s" (optDefault ""  <| AsmInfo.getCopyright asm)
+        printfn "GUID         %s" (optDefault ""  <| AsmInfo.getGuid asm)
+        printfn "Com Visible  %s" (optDefault ""  <| (AsmInfo.getComVisible asm
                                                       |> Option.map (fun e -> e.ToString())))
         printfn "Codebase     %s" asm.CodeBase
     
     /// Print all namespaces from an assembly (.exe or .dll)
     let showNamespaces (asmFile: string) =
-        let asm = loadFrom asmFile 
+        let asm = AsmAttr.loadFrom asmFile 
         asm.GetTypes() |> Seq.distinctBy (fun t -> t.Namespace)
                        |> Seq.iter (fun t -> Console.WriteLine(t.Namespace))        
 
     let showClassesInNamespace (asmFile: string) ns =
-        getPublicTypesInNamespace asmFile (fun atype -> atype.IsClass) ns 
+        AsmAttr.getPublicTypesInNamespace asmFile (fun atype -> atype.IsClass) ns 
         |> Seq.iter Console.WriteLine
 
 
     let showMethods bindingFlags (asmFile: string) (className: string) =
-        loadFrom asmFile
+        AsmAttr.loadFrom asmFile
         |> AsmAttr.getType className
         |> Option.map(TInfo.getMethodsFlags bindingFlags)
         |> Option.iter (Seq.iter (fun m -> Console.WriteLine("")
@@ -339,14 +338,15 @@ module AsmDisplay =
         
     /// Display resources from an .NET assembly file 
     let showResurces (asmFile: string) =
-        let asm = loadFrom asmFile
+        let asm = AsmAttr.loadFrom asmFile
         asm.GetManifestResourceNames() |> Seq.iter Console.WriteLine
 
     let showAsmReferences (asmFile: string) =
-        let asm = loadFrom asmFile
+        let asm = AsmAttr.loadFrom asmFile
         asm.GetReferencedAssemblies ()
         |> Seq.iter (fun an ->
-                     Console.WriteLine("Name = {0}\t\tVersion = {1}\t\tCulture = {2}",                                      an.Name,
+                     Console.WriteLine("Name = {0}\t\tVersion = {1}\t\tCulture = {2}",
+                                        an.Name,
                                         an.Version,
                                         an.CultureInfo.Name
                                        ))
