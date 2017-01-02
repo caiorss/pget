@@ -276,6 +276,13 @@ module AsmDisplay =
         |> AsmAttr.getExportedTypes
         |> Seq.filter TInfo.isPublicClass
         |> Seq.iter  Console.WriteLine    
+    /// Print all interfaces exported by an assembly file.
+    let showIntefaces (asmFile: string) =
+        asmFile
+        |> AsmAttr.loadFrom
+        |> AsmAttr.getExportedTypes
+        |> Seq.filter TInfo.isInterface
+        |> Seq.iter Console.WriteLine
 
     /// Print assembly file attributes
     ///
