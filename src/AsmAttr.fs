@@ -257,11 +257,13 @@ module AsmDisplay =
         | Some x  -> actionFn x
 
     let showType (asmFile: string) (typeName: string) =
-        let errorHandler () = Console.WriteLine "Error: Type not found in assembly."
+        let errorHandler1 () = Console.WriteLine "Error: Assembly file doesn't exist"
+        let errorHandler2 () = Console.WriteLine "Error: Type not found in assembly."
         asmFile
-        |> AsmAttr.loadFrom
-        |> AsmAttr.getType typeName
-        |> optIter2 errorHandler TInfo.show
+        |> AsmAttr.loadFromOpt
+        |> optIter2 errorHandler1 ( AsmAttr.getType typeName
+                                    >> (optIter2 errorHandler2 TInfo.show)
+                                  )
 
 
     /// Show all classes exported by an assembly file.
