@@ -40,6 +40,17 @@ module TInfo =
 
     let getMethods (t: T) = t.GetMethods()
 
+    /// Get all methods of a type ignoring properties
+    /// (methods which name starts with get_ or set_)
+    ///
+    let getMethodsNonProp(t: T) =
+        t.GetMethods()
+        |> Seq.filter(fun minfo ->
+                      not (   minfo.Name.StartsWith("set_")
+                            || minfo.Name.StartsWith("get_")
+                            || minfo.IsSpecialName
+                           ))
+
     let getProperties (t: T) = t.GetProperties()
 
     let getMethodsFlags flags (t: T) = t.GetMethods(flags)
