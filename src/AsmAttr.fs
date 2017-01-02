@@ -1,7 +1,7 @@
 namespace Pget
 
 /// Get information about type 
-module TypeInfo =
+module TInfo =
     open System 
     open System.Reflection
 
@@ -233,7 +233,7 @@ module AsmDisplay =
     let showClasses (asmFile: string) =
         loadFrom asmFile
         |> getExportedTypes
-        |> Seq.filter TypeInfo.isPublicClass
+        |> Seq.filter TInfo.isPublicClass
         |> Seq.iter  Console.WriteLine    
 
     /// Print assembly file attributes
@@ -270,7 +270,7 @@ module AsmDisplay =
     let showMethods bindingFlags (asmFile: string) (className: string) =
         loadFrom asmFile
         |> AsmAttr.getType className
-        |> Option.map(TypeInfo.getMethodsFlags bindingFlags)
+        |> Option.map(TInfo.getMethodsFlags bindingFlags)
         |> Option.iter (Seq.iter (fun m -> Console.WriteLine("")
                                            Console.WriteLine m))
 
