@@ -176,8 +176,8 @@ Example:
 
 Example:
 
-#+BEGIN_SRC
-  $ bin/pget.exe
+#+BEGIN_SRC text 
+  $ bin/pget.exe 
 
   Pget - Package Get - Enhanced command line interface to NuGet.Core
 
@@ -201,8 +201,8 @@ Example:
 
     Show package files 
 
-      repo --show-files [pack]                    Show content files of package [pack] in ./packages
-      repo [path] --show-files [pack]             Show content files of package [pack] in [repo]
+      repo --files [pack]                    Show content files of package [pack] in ./packages
+      repo [path] --files [pack]             Show content files of package [pack] in [repo]
 
     Install package to repository  
 
@@ -236,11 +236,16 @@ Example:
       repo --ref  --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
       repo [path] --ref [frm]                     Show all assembly references from current [repo] directory.
       repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory
+
+    Fsproj - Helpers for fsproj files.
+
+      fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
                               
     Nuget commands:
 
       nuget --search [package]                    Search a package by name.  
       nuget --show   [package]                    Show package information (metadata).
+      nuget --open                                Open NuGet web site - https://www.nuget.org
 
     Nupkg Files:
 
@@ -249,9 +254,22 @@ Example:
 
     Assembly files: *.exe or *.dll
 
-      asm --info [file]                           Show all assembly attributes from an assembly file.
-      asm --refs [file]                           Show all assembly references from an assembly file.
-      asm --resources [file]                      Show resources from an assembly file.
+      asm --info [file]                                    Show all assembly attributes from an assembly [file].
+      asm --refs [file]                                    Show all assembly references from an assembly [file].
+      asm --resources  [file]                              Show resources from an assembly file.
+      asm --namespace|-ns [file]                           Display all assembly namespaces.
+      asm --namespace|-ns [file] --classes|-cls [ns]       Show all classes from namespace [ns] in assembly [file]
+
+      asm --type [file]                                    Show all types exported by assembly [file]
+      asm --type [file] [type]                             Show information about [type] exported by assembly [file].
+      asm --interface [file]                               Show all interfaces exported by assembly [file]. 
+      asm --abstract  [file]                               Show all abstract classes exported by assembly [file].
+     
+      asm --class  [file]                                  Show all classes exported by assembly [file].
+      asm --classn [file]                                  Show all non-abstract classes exported by assembly [file]
+      asm --class [file] --public  [class]                 Show all public non-static methods of a [class] in a assembly [file]
+      asm --class [file] --static  [class]                 Show all static methods of a [class] in a assembly [file]
+      asm --class [file] --methods [class]                 Show all methods of a [class] in a assembly [file].
 
     Generate Guid - Globally Unique Identifier 
 
@@ -272,7 +290,7 @@ Example:
       --show               -sh
            
 
-   Pget - Package Get - Version 1.3.1 
+   Pget - Package Get - Version 1.5.0.0 
    2016 Public Domain Software
    Repository - https://github.com/caiorss/pget
 
