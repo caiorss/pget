@@ -77,7 +77,44 @@ module Main =
     /// Open NuGet web site - https://www.nuget.org/
     let openNugetWebsite () =
         ignore <| System.Diagnostics.Process.Start ("https://www.nuget.org/")
-        
+
+    /// Show system information. Useful for debugging.
+    let showSystemInfo () =
+        let systemVersion = System.Runtime
+                                  .InteropServices
+                                  .RuntimeEnvironment
+                                  .GetSystemVersion()
+
+        let runtimeDir = System.Runtime
+                                .InteropServices
+                                .RuntimeEnvironment
+                                .GetRuntimeDirectory()
+
+
+        let sysConfFile = System.Runtime
+                                .InteropServices
+                                .RuntimeEnvironment
+                                .SystemConfigurationFile
+
+        let localAppData  = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
+        let appData       = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
+        let commonAppData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
+
+        Console.WriteLine("System Information\n")
+        Console.WriteLine("  System Version            {0}", systemVersion)
+        Console.WriteLine("  System Directory          {0}", System.Environment.SystemDirectory)
+        Console.WriteLine("  Runtime Directory         {0}", runtimeDir)
+        Console.WriteLine("  System Configuration File {0}", sysConfFile)
+        Console.WriteLine("  OS Version                {0}", System.Environment.OSVersion)
+        Console.WriteLine("  Machine Name              {0}", System.Environment.MachineName)
+        Console.WriteLine("  64-bit Operating system   {0}", System.Environment.Is64BitOperatingSystem)
+        Console.WriteLine("  Number of processors      {0}", System.Environment.ProcessorCount)
+
+        Console.WriteLine("\nSpecial Directories")
+        Console.WriteLine("\n  System.Environment.SpecialFolder.CommonApplicationData \n  {0}", commonAppData)
+        Console.WriteLine("\n  System.Environment.SpecialFolder.ApplicationData       \n  {0}", appData)
+        Console.WriteLine("\n  System.Environment.SpecialFolder.LocalApplicationData  \n  {0}", localAppData)
+
         
     let showVersion () =
         let version = System.Reflection.Assembly
