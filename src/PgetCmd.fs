@@ -374,6 +374,8 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
 
         | ["--guid" ]                                       -> Console.WriteLine(Guid.NewGuid().ToString() : string)
 
+        | ["--system"]                                      -> showSystemInfo ()
+
         | []                                                ->  showHelp ()
         | _                                                 ->  Console.WriteLine "Error: Invalid option."
 
