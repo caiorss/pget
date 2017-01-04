@@ -127,13 +127,9 @@ module Main =
  Repository - https://github.com/caiorss/pget
         """, version)
 
-    let showHelp () =
+
+    let showRepoHelp () =
         Console.WriteLine """
-Pget - Package Get - Enhanced command line interface to NuGet.Core
-
-  Commands                                      Description
-  -----------------------------                -----------------------------------------------
-
   List Repository
 
     repo --list                                 List all packages in current repository ./package
@@ -185,23 +181,31 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     repo --ref [frm]                            Show all assembly references from current ./packages.
     repo --ref  --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
     repo [path] --ref [frm]                     Show all assembly references from current [repo] directory.
-    repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory
+    repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory        
+        """
 
-  Fsproj - Helpers for fsproj files.
 
-    fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
-                            
+    let showNupkgHelp () =
+        Console.WriteLine """
+  Nupkg Files:
+
+    nupkg --show  [file]                        Show metadata of a *.nupkg file
+    nupkg --files [file]                        Show files in nupkg [file]        
+        """
+
+
+    let showNugetHelp () =
+        Console.WriteLine """
   Nuget commands:
 
     nuget --search [package]                    Search a package by name.  
     nuget --show   [package]                    Show package information (metadata).
-    nuget --open                                Open NuGet web site - https://www.nuget.org
+    nuget --open                                Open NuGet web site - https://www.nuget.org       
+        """    
 
-  Nupkg Files:
 
-    nupkg --show  [file]                        Show metadata of a *.nupkg file
-    nupkg --files [file]                        Show files in nupkg [file]
-
+    let showAsmHelp () =
+        Console.WriteLine """
   Assembly files: *.exe or *.dll
 
     asm --info [file]                                    Show all assembly attributes from an assembly [file].
@@ -219,7 +223,26 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     asm --classn [file]                                  Show all non-abstract classes exported by assembly [file]
     asm --class [file] --public  [class]                 Show all public non-static methods of a [class] in a assembly [file]
     asm --class [file] --static  [class]                 Show all static methods of a [class] in a assembly [file]
-    asm --class [file] --methods [class]                 Show all methods of a [class] in a assembly [file].
+    asm --class [file] --methods [class]                 Show all methods of a [class] in a assembly [file].        
+        """
+
+    let showHelp () =
+        Console.WriteLine("Pget - Package Get - Enhanced command line interface to NuGet.Core")
+        Console.WriteLine("""
+  pget.exe repo                                Show help for repo commands
+  pget.exe nuget                               Show help for nuget related commands                           
+  pget.exe asm                                 Show help for assembly related commands.
+  pget.exe nupkg                               Show help for Nuget packages related commands.                          
+                          """)
+        showRepoHelp()        
+        showNugetHelp()
+        showNupkgHelp()
+        showAsmHelp()
+        Console.WriteLine """
+  Fsproj - Helpers for fsproj files.
+
+    fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
+                            
 
   Show system information
 
@@ -242,9 +265,8 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     --list               -l
     --search             -s
     --show               -sh
-         """
+         """        
         showVersion()
-
 
 
     let parseCommands cmdargs =
@@ -257,6 +279,8 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
 
         // ================================= Repository related commands ==================
         //
+        | ["repo"]                                          ->  showRepoHelp ()
+        
         | ["repo"; path; "--list"]                          ->  Pget.RepoLocal.showPackageList path
         | ["repo"; "--list"]                                ->  Pget.RepoLocal.showPackageList projectRepo
         | ["repo"; path; "-l"]                              ->  Pget.RepoLocal.showPackageList path
@@ -322,7 +346,8 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         | ["fsproj"; "--ref"; framework ]                   ->  fsprojGenerateRefs framework projectRepo
        
         // ============================ NuGet Repository (Remote) ========================== 
-
+        | [ "nuget" ]                                       -> showNugetHelp ()
+        
         // search package 
         | ["nuget"; "--search" ; pack  ]                    ->  searchPackageById pack
         | ["nuget"; "-s" ; pack  ]                          ->  searchPackageById pack
@@ -338,10 +363,14 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         
 
         // ======  Commands to Handle NuGet package Archives ============== //
+        | [ "nupkg" ]                                       ->  showNupkgHelp ()
+           
         | ["nupkg"; "--show"; fname]                        ->  Pget.Nupkg.show fname
         | ["nupkg"; "--files"; fname]                       ->  Pget.Nupkg.showFiles fname
 
         // ==========  Commands to Handle .NET assembly ============== //
+        | ["asm" ]                                          -> showAsmHelp ()
+           
         | ["asm" ; "--info" ;  asmFile]                     -> AsmDisplay.showFile asmFile
         | ["asm" ; "--refs" ; asmFile ]                     -> AsmDisplay.showAsmReferences asmFile         
         | ["asm" ; "--resources"; asmFile ]                 -> AsmDisplay.showResurces asmFile
