@@ -221,6 +221,10 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     asm --class [file] --static  [class]                 Show all static methods of a [class] in a assembly [file]
     asm --class [file] --methods [class]                 Show all methods of a [class] in a assembly [file].
 
+  Show system information
+
+    --system 
+
   Generate Guid - Globally Unique Identifier 
 
     --guid 
@@ -239,7 +243,6 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     --search             -s
     --show               -sh
          """
-
         showVersion()
 
 
