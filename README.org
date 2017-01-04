@@ -1600,6 +1600,43 @@ Example:
   Private Static Methods
   -------------------------
 #+END_SRC
+*** Show System Information 
+
+ - =$ pget.exe --system=
+
+Windows:
+
+#+BEGIN_SRC text 
+  e:/projects/pget.fsharp $ bin/pget.exe --system
+  System Information
+
+    System Version            v4.0.30319
+    System Directory          C:\Windows\system32
+    Runtime Directory         C:\Windows\Microsoft.NET\Framework64\v4.0.30319\
+    System Configuration File C:\Windows\Microsoft.NET\Framework64\v4.0.30319\config\machine.config
+    OS Version                Microsoft Windows NT 6.2.9200.0
+    Machine Name              DESKTOP-FDD38CU
+    64-bit Operating system   True
+    Number of processors      4
+
+  Special Directories
+
+    System.Environment.SpecialFolder.CommonApplicationData 
+    C:\ProgramData
+
+    System.Environment.SpecialFolder.ApplicationData       
+    C:\Users\arch\AppData\Roaming
+
+    System.Environment.SpecialFolder.LocalApplicationData  
+    C:\Users\arch\AppData\Local
+
+#+END_SRC
+
+Linux: 
+
+#+BEGIN_SRC text 
+
+#+END_SRC
 *** Generate GUID
 
  - =$ pget.exe --guid=
