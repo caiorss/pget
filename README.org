@@ -176,13 +176,15 @@ Example:
 
 Example:
 
-#+BEGIN_SRC text 
+#+BEGIN_SRC text
   $ bin/pget.exe 
-
   Pget - Package Get - Enhanced command line interface to NuGet.Core
 
-    Commands                                      Description
-    -----------------------------                -----------------------------------------------
+    pget.exe repo                                Show help for repo commands
+    pget.exe nuget                               Show help for nuget related commands                           
+    pget.exe asm                                 Show help for assembly related commands.
+    pget.exe nupkg                               Show help for Nuget packages related commands.                          
+                            
 
     List Repository
 
@@ -235,30 +237,29 @@ Example:
       repo --ref [frm]                            Show all assembly references from current ./packages.
       repo --ref  --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
       repo [path] --ref [frm]                     Show all assembly references from current [repo] directory.
-      repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory
+      repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory        
+          
 
-    Fsproj - Helpers for fsproj files.
-
-      fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
-                              
     Nuget commands:
 
       nuget --search [package]                    Search a package by name.  
       nuget --show   [package]                    Show package information (metadata).
-      nuget --open                                Open NuGet web site - https://www.nuget.org
+      nuget --open                                Open NuGet web site - https://www.nuget.org       
+          
 
     Nupkg Files:
 
       nupkg --show  [file]                        Show metadata of a *.nupkg file
-      nupkg --files [file]                        Show files in nupkg [file]
+      nupkg --files [file]                        Show files in nupkg [file]        
+          
 
     Assembly files: *.exe or *.dll
 
       asm --info [file]                                    Show all assembly attributes from an assembly [file].
       asm --refs [file]                                    Show all assembly references from an assembly [file].
       asm --resources  [file]                              Show resources from an assembly file.
-      asm --namespace|-ns [file]                           Display all assembly namespaces.
-      asm --namespace|-ns [file] --classes|-cls [ns]       Show all classes from namespace [ns] in assembly [file]
+      asm --namespace|-ns [file]                           Show all exported namespaces.
+      asm --namespace|-ns [file] [nspace]                  Show all types within an exported namespace from an assembly [file].
 
       asm --type [file]                                    Show all types exported by assembly [file]
       asm --type [file] [type]                             Show information about [type] exported by assembly [file].
@@ -267,9 +268,16 @@ Example:
      
       asm --class  [file]                                  Show all classes exported by assembly [file].
       asm --classn [file]                                  Show all non-abstract classes exported by assembly [file]
-      asm --class [file] --public  [class]                 Show all public non-static methods of a [class] in a assembly [file]
-      asm --class [file] --static  [class]                 Show all static methods of a [class] in a assembly [file]
-      asm --class [file] --methods [class]                 Show all methods of a [class] in a assembly [file].
+          
+
+    Fsproj - Helpers for fsproj files.
+
+      fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
+                              
+
+    Show system information
+
+      --system 
 
     Generate Guid - Globally Unique Identifier 
 
@@ -293,7 +301,6 @@ Example:
    Pget - Package Get - Version 1.5.0.0 
    2016 Public Domain Software
    Repository - https://github.com/caiorss/pget
-
 #+END_SRC
 
 *** Local Repository
@@ -1165,7 +1172,7 @@ NuGet.XElementExtensions
 
  - =$ pget.exe asm --type [asmFile] [TypeName]=
 
-#+BEGIN_SRC 
+#+BEGIN_SRC text
 $ bin/pget.exe repo --files NuGet.Core
 packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll
 
@@ -1288,7 +1295,7 @@ Methods
 
 Example:
 
-#+BEGIN_SRC 
+#+BEGIN_SRC text 
 $ bin/pget.exe repo --files OxyPlot.Core | grep ".dll"
 packages/OxyPlot.Core.1.0.0/lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1+Xamarin.iOS10/OxyPlot.dll
 packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.dll
@@ -1339,7 +1346,7 @@ OxyPlot.Reporting.TableOfContents+ContentItem
 
 Example:
 
-#+BEGIN_SRC 
+#+BEGIN_SRC text 
 $ bin/pget.exe asm --classn packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.dll
 OxyPlot.DelegateViewCommand`1[T]
 OxyPlot.ElementCollectionChangedEventArgs`1[T]
@@ -1431,7 +1438,7 @@ OxyPlot.Reporting.IReportWriter
 OxyPlot.Axes.IColorAxis
 #+END_SRC
 
-**** Show all Namespaces of an Assembly
+**** Show all exported namespaces 
 
  - =pget.exe asm --namespace [asmFile]=
 
@@ -1441,165 +1448,119 @@ or
 
 Example:
 
-#+BEGIN_SRC sh
-  $ bin/pget.exe asm  -ns /usr/lib/mono/4.5-api/System.Xml.dll
-
-  System.Runtime.CompilerServices
-  System.Xml
-  System.Xml.Utils
-  System.Xml.Xsl.IlGen
-  System.Xml.Xsl
-  System.Xml.Xsl.Qil
+#+BEGIN_SRC text 
+  $ bin/pget.exe asm  --namespace /usr/lib/mono/4.5-api/System.Xml.dll
   System.Xml.Xsl.Runtime
-  System.Xml.Xsl.XPath
-  System.Xml.Xsl.Xslt
-  System.Xml.Xsl.XsltOld
-  System.Xml.Xsl.XsltOld.Debugger
-  Microsoft.Win32
-  System
-  System.Configuration
-  MS.Internal.Xml.Cache
+  System.Xml
   System.Xml.XmlConfiguration
   System.Xml.Resolvers
   System.Xml.Schema
   System.Xml.Serialization
   System.Xml.Serialization.Advanced
   System.Xml.Serialization.Configuration
-  MS.Internal.Xml.XPath
   System.Xml.XPath
-#+END_SRC
+  System.Xml.Xsl
 
-**** Show all classes from an Assembly within a Namespace
 
- - =$ pget.exe asm --namespace [asmFile] --class [namespace]=
-
-or
-
- - =$ pget.exe asm --ns [asmFile] --cls [namespace]=
-
-#+BEGIN_SRC sh
-$ bin/pget.exe asm -ns /usr/lib/mono/4.5-api/System.Xml.dll -cls System.Xml
-
-System.Xml.XmlParserContext
-System.Xml.XmlReader
-System.Xml.XmlReaderSettings
-System.Xml.XmlTextReader
-System.Xml.XmlTextWriter
-System.Xml.XmlValidatingReader
-System.Xml.XmlWriter
-System.Xml.XmlWriterSettings
-System.Xml.XmlAttributeCollection
-System.Xml.XmlAttribute
-System.Xml.XmlCDataSection
-System.Xml.XmlCharacterData
-...
-System.Xml.XmlQualifiedName
-System.Xml.XmlResolver
-System.Xml.XmlSecureResolver
-System.Xml.XmlUrlResolver
-System.Xml.XmlXapResolver
+  $ bin/pget.exe asm  -ns /usr/lib/mono/4.5-api/System.Xml.dll
+  System.Xml.Xsl.Runtime
+  System.Xml
+  System.Xml.XmlConfiguration
+  System.Xml.Resolvers
+  System.Xml.Schema
+  System.Xml.Serialization
+  System.Xml.Serialization.Advanced
+  System.Xml.Serialization.Configuration
+  System.Xml.XPath
+  System.Xml.Xsl
 
 #+END_SRC
 
-**** Show class public non-static methods
+**** Show all types within an exported namespace
 
- - =$ bin/pget.exe asm --class [asmFile] --public [className]=
+#+BEGIN_SRC text 
+  $ bin/pget.exe asm  --namespace /usr/lib/mono/4.5-api/System.Xml.dll
+  System.Xml.Xsl.Runtime
+  System.Xml
+  System.Xml.XmlConfiguration
+  System.Xml.Resolvers
+  System.Xml.Schema
+  System.Xml.Serialization
+  System.Xml.Serialization.Advanced
+  System.Xml.Serialization.Configuration
+  System.Xml.XPath
+  System.Xml.Xsl
 
-#+BEGIN_SRC sh
-$ bin/pget.exe asm --class /usr/lib/mono/4.5-api/System.Xml.dll --public System.Xml.XmlDocument
+  $ bin/pget.exe asm  --namespace /usr/lib/mono/4.5-api/System.Xml.dll System.Xml
+  System.Xml.ConformanceLevel
+  System.Xml.DtdProcessing
+  System.Xml.EntityHandling
+  System.Xml.NamespaceHandling
+  System.Xml.NewLineHandling
+  System.Xml.ReadState
+  System.Xml.ValidationType
+  System.Xml.WhitespaceHandling
+  ...
+  System.Xml.XmlNodeType
+  System.Xml.XmlQualifiedName
+  System.Xml.XmlResolver
+  System.Xml.XmlSecureResolver
+  System.Xml.XmlUrlResolver
+  System.Xml.XmlXapResolve
 
-System.Xml.XmlNode CloneNode(Boolean)
 
-System.Xml.XmlNodeType get_NodeType()
+  $ bin/pget.exe asm  --type /usr/lib/mono/4.5-api/System.Xml.dll System.Xml.XmlNode
 
-System.Xml.XmlNode get_ParentNode()
+  Type Info:
 
-System.Xml.XmlDocumentType get_DocumentType()
+    Name:           XmlNode
+    Full Name:      System.Xml.XmlNode
+    Namespace:      System.Xml
+    Module:         System.Xml.dll
+    Base Type:      System.Object
 
-System.Xml.XmlImplementation get_Implementation()
+  Predicates
 
- ...  ...  ...
+    Class:          True
+    Abstract Class: True
+    Primitive       False
+    Array:          False
+    Interface       False   
+    Enum            False
+    Public          True
+    Visible         True
+    
+                          
 
-Void add_NodeChanged(System.Xml.XmlNodeChangedEventHandler)
+  Fields
+  ----------------
 
-Void remove_NodeChanged(System.Xml.XmlNodeChangedEventHandler)
+  Properties
+  ----------------
+      System.String Name
 
-System.Xml.Schema.IXmlSchemaInfo get_SchemaInfo()
+      System.String Value
 
-System.String get_BaseURI()
+      System.Xml.XmlNodeType NodeType
 
+      System.Xml.XmlNode ParentNode
+
+  ...
+
+  Constructors
+  ----------------
+
+  Methods
+  ----------------
+      System.Xml.XPath.XPathNavigator CreateNavigator()
+
+      System.Xml.XmlNode SelectSingleNode(System.String)
+
+      System.Xml.XmlNode SelectSingleNode(System.String, System.Xml.XmlNamespaceManager)
+
+  ...
 #+END_SRC
 
-**** Show class public static methods
-
- - =$ pget.exe --clss [asmFile] --static [className]=
-
-#+BEGIN_SRC sh
-$ bin/pget.exe asm --class packages/OxyPlot.Core.1.0.0/lib/net45/OxyPlot.dll --static OxyPlot.Arrays
-
-T[] CopyOfRange[T](T[], Int32, Int32)
-
-T[] CopyOf[T](T[], Int32)
-
-Void Fill[T](T[], Int32, Int32, T)
-
-#+END_SRC
-**** Show all class methods 
-
- - =$ pget.exe asm --class [asmFile] --methods [className]=
-
-Example:
-
-#+BEGIN_SRC sh
-  $ bin/pget.exe asm --class /usr/lib/mono/4.5-api/System.Windows.Forms.dll --methods System.Windows.Forms.Form
-
-
-  Public Methods
-  --------------------------------------
-
-  System.Windows.Forms.IButtonControl get_AcceptButton()
-
-  Void set_AcceptButton(System.Windows.Forms.IButtonControl)
-
-  Boolean get_AllowTransparency()
-
-  Void set_AllowTransparency(Boolean)
-
-  Boolean get_AutoScale()
-
-  Void set_AutoScale(Boolean)
-
-  System.Drawing.Size get_AutoScaleBaseSize()
-
-  Void set_AutoScaleBaseSize(System.Drawing.Size)
-
-  Boolean get_AutoScroll()
-
-  Void set_AutoScroll(Boolean)
-
-  Boolean get_AutoSize()
-
-  Void set_AutoSize(Boolean)
-
-  System.Windows.Forms.AutoSizeMode get_AutoSizeMode()
-
-  Void set_AutoSizeMode(System.Windows.Forms.AutoSizeMode)
-
-  System.Windows.Forms.AutoValidate get_AutoValidate()
-
-  ... ...  ...
-
-
-  Public Static Methods
-  --------------------------------------
-
-  System.Windows.Forms.Form get_ActiveForm()
-
-  System.Drawing.SizeF GetAutoScaleSize(System.Drawing.Font)
-
-  Private Static Methods
-  -------------------------
-#+END_SRC
 *** Show System Information 
 
  - =$ pget.exe --system=
