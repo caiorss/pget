@@ -397,12 +397,7 @@ module Main =
         | ["asm"; "--interface"; asmFile]                   -> AsmDisplay.showIntefaces asmFile
 
         // Show all abstract classes 
-        | ["asm"; "--abstract" ; asmFile]                   -> AsmDisplay.showAbstractClasses asmFile 
-
-        
-        | ["asm" ; "--class" ; asmFile; "--public"; cls]    -> AsmDisplay.showPublicMethods asmFile cls
-        | ["asm" ; "--class" ; asmFile; "--static"; cls]    -> AsmDisplay.showPublicStaticMethods asmFile cls
-        | ["asm" ; "--class" ; asmFile; "--methods"; cls]   -> AsmDisplay.showAllMethods asmFile cls
+        | ["asm"; "--abstract" ; asmFile]                   -> AsmDisplay.showAbstractClasses asmFile
 
         | ["--guid" ]                                       -> Console.WriteLine(Guid.NewGuid().ToString() : string)
 
