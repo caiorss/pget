@@ -129,6 +129,10 @@ Predicates
          Console.WriteLine("----------------"); 
          t |> getMethodsNonProp
            |> Seq.iter (printfn "\t%A\n");
+
+    /// Show information about object type
+    let showObj obj = show (obj.GetType())
+
  
 /// Assembly attributes wrapper
 module AsmAttr =
