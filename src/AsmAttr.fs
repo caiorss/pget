@@ -144,6 +144,9 @@ module AsmAttr =
     let loadFrom (assemblyFile: string) =
         Assembly.LoadFrom assemblyFile
 
+    let reflectionOnlyLoad (asmFile: string) =
+        Assembly.ReflectionOnlyLoad asmFile
+
     /// Load Assembly from file returning None if it doesn't exist.
     let loadFromOpt (assemblyFile: string) =
         if System.IO.File.Exists(assemblyFile)
