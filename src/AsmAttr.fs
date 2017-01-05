@@ -356,6 +356,13 @@ module AsmDisplay =
                                                       |> Option.map (fun e -> e.ToString())))
         printfn "Codebase     %s" asm.CodeBase
     
+
+    /// Print all exported namespaces
+    let showExportedNS (asmFile: string) =
+        asmFile |> AsmAttr.loadFrom
+                |> AsmAttr.getExportedNS
+                |> Seq.iter Console.WriteLine
+
     /// Print all namespaces from an assembly (.exe or .dll)
     let showNamespaces (asmFile: string) =
         let asm = AsmAttr.loadFrom asmFile 
