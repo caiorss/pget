@@ -361,6 +361,10 @@ module AsmDisplay =
     let showExportedNS (asmFile: string) =
         asmFile |> AsmAttr.loadFrom
                 |> AsmAttr.getExportedNS
+
+    let showTypesWithinNS asmFile nspace =
+        asmFile |> AsmAttr.loadFrom
+                |> AsmAttr.getTypesWithinExportedNS nspace (fun t -> true)
                 |> Seq.iter Console.WriteLine
 
     /// Print all namespaces from an assembly (.exe or .dll)
