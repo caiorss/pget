@@ -7,6 +7,9 @@ module TInfo =
 
     type T = Type 
 
+    /// Get type information about object
+    let typeOf obj = obj.GetType()
+
     /// Get name of a type
     let getName (t: T) = t.Name
 
