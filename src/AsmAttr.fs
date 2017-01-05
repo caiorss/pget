@@ -179,6 +179,12 @@ module AsmAttr =
             |>  Seq.filter (fun (atype: Type) ->
                             not <| Array.isEmpty (atype.GetFields()))
         
+    /// Get all exported namespaces from an assembly object.
+    let getExportedNS (asm: Assembly) =
+        asm.GetExportedTypes ()
+        |> Seq.map (fun (t: Type) -> t.Namespace)
+        |> Seq.distinctBy id
+
 
 
     let getPublicTypesInNamespace  (asmFile: string) selector (ns: string) =
