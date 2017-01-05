@@ -153,6 +153,9 @@ module AsmAttr =
         then Some (Assembly.LoadFrom assemblyFile)
         else None
 
+    let getCallingAssembly () =
+        Assembly.GetCallingAssembly()
+
     /// Get types from an assembly
     let getTypes (asm: Assembly) =
         asm.GetTypes()
