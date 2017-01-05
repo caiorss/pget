@@ -127,13 +127,9 @@ module Main =
  Repository - https://github.com/caiorss/pget
         """, version)
 
-    let showHelp () =
+
+    let showRepoHelp () =
         Console.WriteLine """
-Pget - Package Get - Enhanced command line interface to NuGet.Core
-
-  Commands                                      Description
-  -----------------------------                -----------------------------------------------
-
   List Repository
 
     repo --list                                 List all packages in current repository ./package
@@ -185,30 +181,38 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     repo --ref [frm]                            Show all assembly references from current ./packages.
     repo --ref  --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
     repo [path] --ref [frm]                     Show all assembly references from current [repo] directory.
-    repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory
+    repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory        
+        """
 
-  Fsproj - Helpers for fsproj files.
 
-    fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
-                            
+    let showNupkgHelp () =
+        Console.WriteLine """
+  Nupkg Files:
+
+    nupkg --show  [file]                        Show metadata of a *.nupkg file
+    nupkg --files [file]                        Show files in nupkg [file]        
+        """
+
+
+    let showNugetHelp () =
+        Console.WriteLine """
   Nuget commands:
 
     nuget --search [package]                    Search a package by name.  
     nuget --show   [package]                    Show package information (metadata).
-    nuget --open                                Open NuGet web site - https://www.nuget.org
+    nuget --open                                Open NuGet web site - https://www.nuget.org       
+        """    
 
-  Nupkg Files:
 
-    nupkg --show  [file]                        Show metadata of a *.nupkg file
-    nupkg --files [file]                        Show files in nupkg [file]
-
+    let showAsmHelp () =
+        Console.WriteLine """
   Assembly files: *.exe or *.dll
 
     asm --info [file]                                    Show all assembly attributes from an assembly [file].
     asm --refs [file]                                    Show all assembly references from an assembly [file].
     asm --resources  [file]                              Show resources from an assembly file.
-    asm --namespace|-ns [file]                           Display all assembly namespaces.
-    asm --namespace|-ns [file] --classes|-cls [ns]       Show all classes from namespace [ns] in assembly [file]
+    asm --namespace|-ns [file]                           Show all exported namespaces.
+    asm --namespace|-ns [file] [nspace]                  Show all types within an exported namespace from an assembly [file].
 
     asm --type [file]                                    Show all types exported by assembly [file]
     asm --type [file] [type]                             Show information about [type] exported by assembly [file].
@@ -217,9 +221,25 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
    
     asm --class  [file]                                  Show all classes exported by assembly [file].
     asm --classn [file]                                  Show all non-abstract classes exported by assembly [file]
-    asm --class [file] --public  [class]                 Show all public non-static methods of a [class] in a assembly [file]
-    asm --class [file] --static  [class]                 Show all static methods of a [class] in a assembly [file]
-    asm --class [file] --methods [class]                 Show all methods of a [class] in a assembly [file].
+        """
+
+    let showHelp () =
+        Console.WriteLine("Pget - Package Get - Enhanced command line interface to NuGet.Core")
+        Console.WriteLine("""
+  pget.exe repo                                Show help for repo commands
+  pget.exe nuget                               Show help for nuget related commands                           
+  pget.exe asm                                 Show help for assembly related commands.
+  pget.exe nupkg                               Show help for Nuget packages related commands.                          
+                          """)
+        showRepoHelp()        
+        showNugetHelp()
+        showNupkgHelp()
+        showAsmHelp()
+        Console.WriteLine """
+  Fsproj - Helpers for fsproj files.
+
+    fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
+                            
 
   Show system information
 
@@ -242,9 +262,8 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     --list               -l
     --search             -s
     --show               -sh
-         """
+         """        
         showVersion()
-
 
 
     let parseCommands cmdargs =
@@ -257,6 +276,8 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
 
         // ================================= Repository related commands ==================
         //
+        | ["repo"]                                          ->  showRepoHelp ()
+        
         | ["repo"; path; "--list"]                          ->  Pget.RepoLocal.showPackageList path
         | ["repo"; "--list"]                                ->  Pget.RepoLocal.showPackageList projectRepo
         | ["repo"; path; "-l"]                              ->  Pget.RepoLocal.showPackageList path
@@ -322,7 +343,8 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         | ["fsproj"; "--ref"; framework ]                   ->  fsprojGenerateRefs framework projectRepo
        
         // ============================ NuGet Repository (Remote) ========================== 
-
+        | [ "nuget" ]                                       -> showNugetHelp ()
+        
         // search package 
         | ["nuget"; "--search" ; pack  ]                    ->  searchPackageById pack
         | ["nuget"; "-s" ; pack  ]                          ->  searchPackageById pack
@@ -338,19 +360,26 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         
 
         // ======  Commands to Handle NuGet package Archives ============== //
+        | [ "nupkg" ]                                       ->  showNupkgHelp ()
+           
         | ["nupkg"; "--show"; fname]                        ->  Pget.Nupkg.show fname
         | ["nupkg"; "--files"; fname]                       ->  Pget.Nupkg.showFiles fname
 
         // ==========  Commands to Handle .NET assembly ============== //
+        | ["asm" ]                                          -> showAsmHelp ()
+           
         | ["asm" ; "--info" ;  asmFile]                     -> AsmDisplay.showFile asmFile
         | ["asm" ; "--refs" ; asmFile ]                     -> AsmDisplay.showAsmReferences asmFile         
         | ["asm" ; "--resources"; asmFile ]                 -> AsmDisplay.showResurces asmFile
 
-        | ["asm" ; "--namespace"; asmFile]                  -> AsmDisplay.showNamespaces asmFile 
-        | ["asm" ; "-ns"; asmFile]                          -> AsmDisplay.showNamespaces asmFile 
-        
-        | ["asm" ; "--namespace"; asmFile ; "--class"; ns]  -> AsmDisplay.showClassesInNamespace asmFile ns
-        | ["asm" ; "-ns"; asmFile ; "-cls"; ns]             -> AsmDisplay.showClassesInNamespace asmFile ns   
+        // Show Exported namespaces
+        | ["asm" ; "--namespace"; asmFile]                  -> AsmDisplay.showExportedNS asmFile
+        | ["asm" ; "-ns"; asmFile]                          -> AsmDisplay.showExportedNS asmFile
+
+        // Show types within an exported namespace
+        | ["asm" ; "--namespace"; asmFile ; nspace]         -> AsmDisplay.showTypesWithinNS asmFile nspace
+        | ["asm" ; "-ns"; asmFile ; nspace]                 -> AsmDisplay.showTypesWithinNS asmFile nspace
+
 
         // Show all exported types 
         | ["asm";  "--type" ; asmFile]                     -> AsmDisplay.showTypes asmFile
@@ -368,12 +397,7 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
         | ["asm"; "--interface"; asmFile]                   -> AsmDisplay.showIntefaces asmFile
 
         // Show all abstract classes 
-        | ["asm"; "--abstract" ; asmFile]                   -> AsmDisplay.showAbstractClasses asmFile 
-
-        
-        | ["asm" ; "--class" ; asmFile; "--public"; cls]    -> AsmDisplay.showPublicMethods asmFile cls
-        | ["asm" ; "--class" ; asmFile; "--static"; cls]    -> AsmDisplay.showPublicStaticMethods asmFile cls
-        | ["asm" ; "--class" ; asmFile; "--methods"; cls]   -> AsmDisplay.showAllMethods asmFile cls
+        | ["asm"; "--abstract" ; asmFile]                   -> AsmDisplay.showAbstractClasses asmFile
 
         | ["--guid" ]                                       -> Console.WriteLine(Guid.NewGuid().ToString() : string)
 

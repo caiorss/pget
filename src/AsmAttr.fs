@@ -7,6 +7,9 @@ module TInfo =
 
     type T = Type 
 
+    /// Get type information about object
+    let typeOf obj = obj.GetType()
+
     /// Get name of a type
     let getName (t: T) = t.Name
 
@@ -126,6 +129,10 @@ Predicates
          Console.WriteLine("----------------"); 
          t |> getMethodsNonProp
            |> Seq.iter (printfn "\t%A\n");
+
+    /// Show information about object type
+    let showObj obj = show (obj.GetType())
+
  
 /// Assembly attributes wrapper
 module AsmAttr =
@@ -137,11 +144,17 @@ module AsmAttr =
     let loadFrom (assemblyFile: string) =
         Assembly.LoadFrom assemblyFile
 
+    let reflectionOnlyLoad (asmFile: string) =
+        Assembly.ReflectionOnlyLoad asmFile
+
     /// Load Assembly from file returning None if it doesn't exist.
     let loadFromOpt (assemblyFile: string) =
         if System.IO.File.Exists(assemblyFile)
         then Some (Assembly.LoadFrom assemblyFile)
         else None
+
+    let getCallingAssembly () =
+        Assembly.GetCallingAssembly()
 
     /// Get types from an assembly
     let getTypes (asm: Assembly) =
@@ -166,6 +179,16 @@ module AsmAttr =
             |>  Seq.filter (fun (atype: Type) ->
                             not <| Array.isEmpty (atype.GetFields()))
         
+    /// Get all exported namespaces from an assembly object.
+    let getExportedNS (asm: Assembly) =
+        asm.GetExportedTypes ()
+        |> Seq.map (fun (t: Type) -> t.Namespace)
+        |> Seq.distinctBy id
+
+    /// Get all types within a exported namespace from an assembly object.
+    let getTypesWithinExportedNS nspace predicate (asm: Assembly) =
+        asm.GetExportedTypes ()
+        |> Seq.filter (fun (t: Type) -> t.Namespace = nspace && predicate t)
 
 
     let getPublicTypesInNamespace  (asmFile: string) selector (ns: string) =
@@ -333,6 +356,18 @@ module AsmDisplay =
                                                       |> Option.map (fun e -> e.ToString())))
         printfn "Codebase     %s" asm.CodeBase
     
+
+    /// Print all exported namespaces
+    let showExportedNS (asmFile: string) =
+        asmFile |> AsmAttr.loadFrom
+                |> AsmAttr.getExportedNS
+                |> Seq.iter Console.WriteLine
+
+    let showTypesWithinNS asmFile nspace =
+        asmFile |> AsmAttr.loadFrom
+                |> AsmAttr.getTypesWithinExportedNS nspace (fun t -> true)
+                |> Seq.iter Console.WriteLine
+
     /// Print all namespaces from an assembly (.exe or .dll)
     let showNamespaces (asmFile: string) =
         let asm = AsmAttr.loadFrom asmFile 
