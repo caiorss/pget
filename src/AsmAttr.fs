@@ -361,6 +361,7 @@ module AsmDisplay =
     let showExportedNS (asmFile: string) =
         asmFile |> AsmAttr.loadFrom
                 |> AsmAttr.getExportedNS
+                |> Seq.iter Console.WriteLine
 
     let showTypesWithinNS asmFile nspace =
         asmFile |> AsmAttr.loadFrom
