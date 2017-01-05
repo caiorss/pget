@@ -185,6 +185,10 @@ module AsmAttr =
         |> Seq.map (fun (t: Type) -> t.Namespace)
         |> Seq.distinctBy id
 
+    /// Get all types within a exported namespace from an assembly object.
+    let getTypesWithinExportedNS nspace predicate (asm: Assembly) =
+        asm.GetExportedTypes ()
+        |> Seq.filter (fun (t: Type) -> t.Namespace = nspace && predicate t)
 
 
     let getPublicTypesInNamespace  (asmFile: string) selector (ns: string) =
