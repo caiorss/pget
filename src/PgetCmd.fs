@@ -375,11 +375,14 @@ module Main =
         | ["asm" ; "--refs" ; asmFile ]                     -> AsmDisplay.showAsmReferences asmFile         
         | ["asm" ; "--resources"; asmFile ]                 -> AsmDisplay.showResurces asmFile
 
-        | ["asm" ; "--namespace"; asmFile]                  -> AsmDisplay.showNamespaces asmFile 
-        | ["asm" ; "-ns"; asmFile]                          -> AsmDisplay.showNamespaces asmFile 
-        
-        | ["asm" ; "--namespace"; asmFile ; "--class"; ns]  -> AsmDisplay.showClassesInNamespace asmFile ns
-        | ["asm" ; "-ns"; asmFile ; "-cls"; ns]             -> AsmDisplay.showClassesInNamespace asmFile ns   
+        // Show Exported namespaces
+        | ["asm" ; "--namespace"; asmFile]                  -> AsmDisplay.showExportedNS asmFile
+        | ["asm" ; "-ns"; asmFile]                          -> AsmDisplay.showExportedNS asmFile
+
+        // Show types within an exported namespace
+        | ["asm" ; "--namespace"; asmFile ; nspace]         -> AsmDisplay.showTypesWithinNS asmFile nspace
+        | ["asm" ; "-ns"; asmFile ; nspace]                 -> AsmDisplay.showTypesWithinNS asmFile nspace
+
 
         // Show all exported types 
         | ["asm";  "--type" ; asmFile]                     -> AsmDisplay.showTypes asmFile
