@@ -5,7 +5,6 @@ open System.Linq
 open NuGet
 
 module Main =
-
     
     /// 
     /// Default repository ./packages or the top level 'packages'
@@ -398,6 +397,10 @@ module Main =
 
         // Show all abstract classes 
         | ["asm"; "--abstract" ; asmFile]                   -> AsmDisplay.showAbstractClasses asmFile
+
+        // Print a report with all types categorized by namespace. 
+        | ["asm"; "--report" ; asmFile]                     -> AsmDisplay.showExportedTypesReport asmFile
+        | ["asm"; "--report" ; asmFile ; reportFile]        -> AsmDisplay.genExportedTypesReport asmFile reportFile
 
         | ["--guid" ]                                       -> Console.WriteLine(Guid.NewGuid().ToString() : string)
 
