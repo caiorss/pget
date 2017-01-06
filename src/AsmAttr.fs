@@ -384,6 +384,7 @@ module AsmDisplay =
                 |> AsmAttr.getExportedNS
                 |> Seq.iter Console.WriteLine
 
+    /// Show all types within a exported namespace
     let showTypesWithinNS asmFile nspace =
         asmFile |> AsmAttr.loadFrom
                 |> AsmAttr.getTypesWithinExportedNS nspace (fun t -> true)
