@@ -1611,13 +1611,17 @@ Example:
 ** TODO Todolist 
 
  - [ ] - Improve display of F# types.
+ - [ ] - Improve command line argument handling.
  - [ ] - Improve error handling
  - [ ] - Query types and XML documentation.
  - [ ] - Add more commands to manipulate and query fsproj files.
  - [ ] - Create an Emacs client for pget.exe. 
- - [ ] - MAYBE: Add support to a cached nuget repository.
- - [ ] - MAYBE: Add interactive shell.
- - [ ] - MAYBE: Add Windows Forms display.
+ - [ ] - MAYBE: support to a cached nuget repository.
+ - [ ] - MAYBE: interactive shell.
+ - [ ] - MAYBE: Windows Forms display.
+ - [ ] - MAYBE: generate html file with all exported types information.
+ - [ ] - MAYBE: generate org-mode file with all exported types information.
+ - [ ] - Add better html layout for documentation. 
 
 * Pget.dll
 
