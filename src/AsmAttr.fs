@@ -290,6 +290,27 @@ module AsmDisplay =
     open System
     open System.Reflection 
 
+    /// Redirect stdout print to a file.
+    let withStdoutFile (file: string) fn  =
+        let stdout = Console.Out
+        let sw = new System.IO.StreamWriter(file)
+        Console.SetOut(sw)
+        fn ()
+        sw.Close()
+        Console.SetOut(sw)
+
+    /// Return stdout output as string.
+    let withStdout fn =
+        let stdout = Console.Out
+        let sw = new System.IO.StringWriter ()
+        Console.SetOut(sw)
+        fn ()
+        let out = sw.ToString()
+        sw.Close()
+        Console.SetOut(sw)
+        out
+
+
     let optDefault def opt =
         match opt with
         | None    -> def
