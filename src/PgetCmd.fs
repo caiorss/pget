@@ -77,6 +77,10 @@ module Main =
     let openNugetWebsite () =
         ignore <| System.Diagnostics.Process.Start ("https://www.nuget.org/")
 
+    /// Go to pget online documentation 
+    let openOlineDoc () =
+        ignore <| System.Diagnostics.Process.Start ("https://www.caiorss.github.io/pget")        
+
     /// Show system information. Useful for debugging.
     let showSystemInfo () =
         let systemVersion = System.Runtime
@@ -402,9 +406,14 @@ module Main =
         | ["asm"; "--report" ; asmFile]                     -> AsmDisplay.showExportedTypesReport asmFile
         | ["asm"; "--report" ; asmFile ; reportFile]        -> AsmDisplay.genExportedTypesReport asmFile reportFile
 
+        // Generate Global Unique Identifier - Used to register com servers, fsproj and etc. 
         | ["--guid" ]                                       -> Console.WriteLine(Guid.NewGuid().ToString() : string)
 
+        // Show system debugging information 
         | ["--system"]                                      -> showSystemInfo ()
+
+        // Got to online documentation - open pget website.
+        | ["--doc"]                                         -> openOlineDoc ()
 
         | []                                                ->  showHelp ()
         | _                                                 ->  Console.WriteLine "Error: Invalid option."
