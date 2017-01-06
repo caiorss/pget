@@ -79,7 +79,7 @@ module Main =
 
     /// Go to pget online documentation 
     let openOlineDoc () =
-        ignore <| System.Diagnostics.Process.Start ("https://www.caiorss.github.io/pget")        
+        ignore <| System.Diagnostics.Process.Start ("https://caiorss.github.io/pget/")        
 
     /// Show system information. Useful for debugging.
     let showSystemInfo () =
