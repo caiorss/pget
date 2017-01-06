@@ -229,10 +229,16 @@ module Main =
     let showHelp () =
         Console.WriteLine("Pget - Package Get - Enhanced command line interface to NuGet.Core")
         Console.WriteLine("""
-  pget.exe repo                                Show help for repo commands
+  pget.exe repo                                Show help for repo commands.
   pget.exe nuget                               Show help for nuget related commands                           
   pget.exe asm                                 Show help for assembly related commands.
-  pget.exe nupkg                               Show help for Nuget packages related commands.                          
+  pget.exe nupkg                               Show help for Nuget packages related commands.
+
+
+  --version | -v                               Show version
+  --help    | -h                               Show help
+  --doc                                        Open online documentation.                          
+                          
                           """)
         showRepoHelp()        
         showNugetHelp()
