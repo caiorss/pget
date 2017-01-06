@@ -396,6 +396,23 @@ module AsmDisplay =
         asm.GetTypes() |> Seq.distinctBy (fun t -> t.Namespace)
                        |> Seq.iter (fun t -> Console.WriteLine(t.Namespace))        
 
+    /// Show all detailed exported types grouped by namespace
+    let showExportedTypesReport asmFile =
+        let asm = asmFile |> AsmAttr.loadFrom
+        asm   |> AsmAttr.getExportedNS
+              |> Seq.iter (fun ns ->
+                           Console.WriteLine ("** {0}", ns);
+
+                           AsmAttr.getTypesWithinExportedNS ns (fun t -> true) asm
+                           |> Seq.iter (fun t ->
+                                        Console.WriteLine("*** {0}", t.Name)
+                                        TInfo.show t;
+                                        )
+                           )
+
+    let genExportedTypesReport asmFile outputFile =
+        withStdoutFile outputFile  (fun () ->  showExportedTypesReport asmFile)
+
     let showClassesInNamespace (asmFile: string) ns =
         AsmAttr.getPublicTypesInNamespace asmFile (fun atype -> atype.IsClass) ns 
         |> Seq.iter Console.WriteLine
