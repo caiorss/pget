@@ -82,18 +82,18 @@ module Node =
              |> Seq.map (fun node -> List.map (fun attr -> attrv2 attr node) attrlist)
 
     /// Find a child node that satisfies a predicate
-    let findChildNode fn (node: T) =
+    let findNode fn (node: T) =
         node |> cnodes
              |> Seq.tryFind fn
 
     /// Filter child nodes of a node that satisfies a predicate
-    let filterChildNodes fn (node: T) =
+    let filterNodes fn (node: T) =
         node |> cnodes
              |> Seq.filter fn 
 
     /// Find child node that has a given tag
     let findChildNodeTag tag (node: T) =
-        findChildNode (fun node -> node.Name = tag) node
+        findNode (fun node -> node.Name = tag) node
 
     let findChildNodeTagText tag (node: T) =
         node |> cnodes
