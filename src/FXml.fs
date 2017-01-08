@@ -35,6 +35,11 @@ module Node =
         | null ->  Seq.empty
         | attrs -> seq { for n in attrs  do yield (n.Name, n.Value) }
 
+    /// Get all attribute names from a xml node
+    let attrNames (node: T) =
+        match node.Attributes with
+        | null ->  Seq.empty
+        | attrs -> seq { for n in attrs  do yield n.Name }
 
     /// Get child nodes from a xml node
     let cnodes (node: T) =
