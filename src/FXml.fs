@@ -7,97 +7,99 @@ open System.Xml
 /// Functional wrapper around XmlNode object 
 module Node =
 
+    type T = XmlNode 
+
     /// Get XML node value 
-    let value (node: XmlNode) =
+    let value (node: T) =
         node.Value
 
     /// Get XML node tag name. 
-    let name (node: XmlNode) =
+    let name (node: T) =
         node.Name 
 
     /// Get attribute value from xml node. This function returns
     /// an option None value if the attribute doesn't exist. 
-    let attrv (attr: string) (node: XmlNode) =
+    let attrv (attr: string) (node: T) =
         match node.Attributes.[attr] with
         | null -> None
         | n    -> Some n.Value
 
     /// Get attribute value from xml node. This function is not
     /// safe and it is susceptible to null exceptions.
-    let attrv2 (attr: string) (node: XmlNode) =
+    let attrv2 (attr: string) (node: T) =
         node.Attributes.[attr].Value
 
     /// Get all attributes from a xml node     
-    let attributes (node: XmlNode) =
+    let attributes (node: T) =
         match node.Attributes with
         | null ->  Seq.empty
         | attrs -> seq { for n in attrs  do yield (n.Name, n.Value) }
 
 
-    /// Get child nodes from a XmlNode
-    let childNodes (node: XmlNode) =
+    /// Get child nodes from a T
+    let childNodes (node: T) =
         seq {for n in node.ChildNodes do yield n }
 
-    let findChildNode fn (node: XmlNode) =
+    let findChildNode fn (node: T) =
         node |> childNodes
              |> Seq.tryFind fn
 
-    let filterChildNodes fn (node: XmlNode) =
+    let filterChildNodes fn (node: T) =
         node |> childNodes
              |> Seq.filter fn 
 
-    let findChildNodeTag tag (node: XmlNode) =
+    let findChildNodeTag tag (node: T) =
         findChildNode (fun node -> node.Name = tag) node
 
-    let findChildNodeTagText tag (node: XmlNode) =
+    let findChildNodeTagText tag (node: T) =
         node |> childNodes
              |> Seq.tryFind (fun node -> node.Name = tag)
              |> Option.map (fun node -> node.InnerText)
 
     //// Get Xml inner text     
-    let innerText (node: XmlNode) =
+    let innerText (node: T) =
         node.InnerText       
 
-    let showAttributes (node: XmlNode) =
+    let showAttributes (node: T) =
         node |> attributes
              |> Seq.iter (printfn "%O")
 
-    let selectNode xpath (node: XmlNode) =
+    let selectNode xpath (node: T) =
         Option.ofObj (node.SelectSingleNode xpath)
 
-    let selectValue xpath (node: XmlNode) =
+    let selectValue xpath (node: T) =
         let child = node.SelectSingleNode(xpath)
         match child with
         | null -> None
         | n    -> Some (n.Value)
 
-    let selectValueCdata xpath (doc: XmlNode) =
+    let selectValueCdata xpath (doc: T) =
         let node = doc.SelectSingleNode xpath
         match node with
         | null -> None
         | n    -> Some <| (node.ChildNodes.[0] :?> XmlCDataSection).Data
 
-    let iterValue xpath fn (doc: XmlNode) =
+    let iterValue xpath fn (doc: T) =
         doc |> selectValue xpath
             |> Option.iter fn 
 
-    let iterValueCdata xpath fn (doc: XmlNode) =
+    let iterValueCdata xpath fn (doc: T) =
         selectValueCdata xpath doc |> Option.iter fn 
 
-    let show (node: XmlNode) =
+    let show (node: T) =
         let writer = new XmlTextWriter(Console.Out)
         writer.Formatting <- Formatting.Indented
         node.WriteContentTo(writer)
 
-    let showTop (node: XmlNode) =
+    let showTop (node: T) =
         printfn "Tag: %s" node.Name;
         printfn "Attributes"
         node |> attributes
              |> Seq.iter (printfn "  %O")
 
     /// Show only XML tags          
-    let showStruct (node: XmlNode) =
-        let rec aux spaces (node: XmlNode)  =
+    let showStruct (node: T) =
+        let rec aux spaces (node: T)  =
             let childs = node.ChildNodes   
             for ch in childs do
                 printfn "%s" (spaces + ch.Name)
