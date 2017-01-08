@@ -267,8 +267,23 @@ module Doc =
     let getNodesByTagName tag (doc: T) =
         xmlNodeListToSeq <| doc.GetElementsByTagName(tag)
 
+    /// Get all namespaces from a Xml document     
     let getNamespaces (doc: T) =
         Node.getNamespaces doc.DocumentElement
+
+    /// Creates a new Xml document object by removing all namespaces
+    /// from a Xml document
+    let removeNamespaces (doc: XmlDocument) =
+        let xmlnsPattern = "\\s+xmlns\\s*(:\\w)?\\s*=\\s*\\\"(?<url>[^\\\"]*)\\\""
+        let outerXml     = ref doc.OuterXml
+        let matches      = System.Text.RegularExpressions.Regex.Matches(!outerXml, xmlnsPattern)
+
+        for m in matches  do
+            outerXml := (!outerXml).Replace(m.ToString(), "")
+
+        let result = new XmlDocument()
+        result.LoadXml(!outerXml)
+        result 
 
     /// Display XML in a human readable format.  
     let show (doc: T) =
