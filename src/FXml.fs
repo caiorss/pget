@@ -342,7 +342,8 @@ module File =
     /// Display Xml structure             
     let showStruct xmlFile =
         xmlFile |> Doc.loadFile
-                |> Doc.showStruct
+                |> Doc.root
+                |> Node.showStruct
 
     let showStructAttr xmlFile =
         xmlFile |> Doc.loadFile
