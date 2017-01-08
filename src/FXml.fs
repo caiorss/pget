@@ -108,6 +108,20 @@ module Node =
         | null -> false
         | _    -> true
 
+    /// Check if node attribute is equal to a given value
+    let nodeAttrEqual (attr: string) (value: string) (node: T) =
+        let check = node.Attributes.[attr]
+        match check with
+        | null -> false
+        | n    -> n.Value = value
+
+    /// Check if node attribute contains a value
+    let nodeAttrContains (attr: string) (value: string) (node: T) =
+        let check = node.Attributes.[attr]
+        match check with
+        | null -> false
+        | n    -> n.Value.Contains(value)
+
     let nodeChildHasTag tag (node: T) =
         node |> cnodes
              |> Seq.exists (fun n -> n.Name = tag)
