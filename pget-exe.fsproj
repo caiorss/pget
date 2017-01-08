@@ -69,8 +69,9 @@
   
   <ItemGroup>   
     <Compile Include="src/Pget.fs"/>   
-    <Compile Include="src/AssemblyInfo.fs"/>
     <Compile Include="src/AsmAttr.fs"/>
+    <Compile Include="src/FXml.fs"/>    
+    <Compile Include="src/AssemblyInfo.fs"/>    
     <Compile Include="src/PgetCmd.fs"/>    
   </ItemGroup>
 
