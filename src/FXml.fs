@@ -437,6 +437,12 @@ module File =
                 |> FXPath.xpathSelectInnerText xpath
                 |> Seq.iter (printfn "%O\n")                
 
+    let showXPathInnerTextNoNS xmlFile xpath =
+        xmlFile |> Doc.loadFile
+                |> Doc.removeNamespaces
+                |> FXPath.xpathSelectInnerText xpath
+                |> Seq.iter (printfn "%O\n")                
+
     let showXPathInnerTextNs xmlFile (prefix, uri) xpath =
         xmlFile |> Doc.loadFile
                 |> FXPath.xpathSelectInnerTextNs (prefix, uri) xpath
@@ -452,7 +458,23 @@ module File =
                 |> FXPath.xpathSelectAttr xpath attribute
                 |> Seq.iter (printfn "%O\n")
 
+    let showXpathAttrNoNS xmlFile xpath attribute  =
+        xmlFile |> Doc.loadFile
+                |> Doc.removeNamespaces
+                |> FXPath.xpathSelectAttr xpath attribute
+                |> Seq.iter (printfn "%O\n")
+
     let showXpathAttrNS xmlFile (prefix, uri) xpath attribute  =
         xmlFile |> Doc.loadFile
                 |> FXPath.xpathSelectAttrNs (prefix, uri) xpath attribute
                 |> Seq.iter (printfn "%O\n")
+
+
+    let showXPathNodesNoNS xmlFile xpath =
+        xmlFile |> Doc.loadFile
+                |> Doc.removeNamespaces
+                |> FXPath.selectNodes xpath
+                |> Seq.iter (fun node -> Node.show2 node;
+                                         Console.WriteLine "-------------------\n"
+                            )
+        
