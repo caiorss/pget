@@ -526,7 +526,7 @@ module AsmDisplay =
 
 
     let genExportedTypesReport asmFile outputFile =
-        withStdoutFile outputFile  (fun () ->  showExportedTypesReport asmFile)
+        withStdoutFile outputFile  (fun () ->  showExportedTypesReport2 asmFile)
 
     let showClassesInNamespace (asmFile: string) ns =
         AsmAttr.getPublicTypesInNamespace asmFile (fun atype -> atype.IsClass) ns 
