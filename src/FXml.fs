@@ -100,38 +100,43 @@ module Node =
              |> Seq.tryFind (fun node -> node.Name = tag)
              |> Option.map (fun node -> node.InnerText)
 
+    /// Check if node has a given tag(name)
     let nodeHasTag tag (node: T) =
         node.Name = tag 
 
+    /// Check if node has a given attribute     
     let nodeHasAttr (attr: string) (node: T) =
         match node.Attributes.[attr] with
         | null -> false
         | _    -> true
 
-    /// Check if node attribute is equal to a given value
+    /// Check if node attribute is equal to a given value    
     let nodeAttrEqual (attr: string) (value: string) (node: T) =
         let check = node.Attributes.[attr]
         match check with
         | null -> false
         | n    -> n.Value = value
 
-    /// Check if node attribute contains a value
+    /// Check if node attribute contains a value     
     let nodeAttrContains (attr: string) (value: string) (node: T) =
         let check = node.Attributes.[attr]
         match check with
         | null -> false
-        | n    -> n.Value.Contains(value)
-
+        | n    -> n.Value.Contains(value)        
+        
+    /// Check if at least one child node has tag or name
+    /// <tag attr1="v1" attr2="v2" ...>
     let nodeChildHasTag tag (node: T) =
         node |> cnodes
              |> Seq.exists (fun n -> n.Name = tag)
 
+    /// Check if node type is not comment node 
     let isNotComment (node: T) =
         node.NodeType <> XmlNodeType.Comment
 
+    /// Check if node type is element     
     let isElement (node: T) =
-        node.NodeType = XmlNodeType.Element
-             
+        node.NodeType = XmlNodeType.Element            
 
     //// Get Xml inner text     
     let innerText (node: T) =
@@ -164,6 +169,7 @@ module Node =
     let iterValueCdata xpath fn (doc: T) =
         selectValueCdata xpath doc |> Option.iter fn 
 
+    /// Display node as xml 
     let show (node: T) =
         let writer = new XmlTextWriter(Console.Out)
         writer.Formatting <- Formatting.Indented
@@ -173,7 +179,7 @@ module Node =
         printfn "Tag: %s" node.Name;
         printfn "Attributes"
         node |> attributes
-             |> Seq.iter (printfn "  %O")
+             |> Seq.iter (printfn "  %O\n\n")
 
     /// Show xml node structure with tags of each node          
     let showStruct (node: T) =        
@@ -228,6 +234,7 @@ module Doc =
         doc.Load(uri)
         doc
 
+    /// Get root node (.DocumentElement) from xml document.
     let root (doc: T) =
         doc.DocumentElement
 
