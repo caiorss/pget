@@ -124,6 +124,10 @@ module Node =
         match check with
         | null -> false
         | n    -> n.Value.Contains(value)        
+
+    /// Check if node attribute with given tag contains a value
+    let nodeAttrTagContains tag (attr: string) (value: string) (node: T) =
+        node.Name = tag && nodeAttrContains attr value node
         
     /// Check if at least one child node has tag or name
     /// <tag attr1="v1" attr2="v2" ...>
