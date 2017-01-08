@@ -5,7 +5,6 @@ open System.Linq
 open NuGet
 
 module Main =
-
     
     /// 
     /// Default repository ./packages or the top level 'packages'
@@ -77,6 +76,10 @@ module Main =
     /// Open NuGet web site - https://www.nuget.org/
     let openNugetWebsite () =
         ignore <| System.Diagnostics.Process.Start ("https://www.nuget.org/")
+
+    /// Go to pget online documentation 
+    let openOlineDoc () =
+        ignore <| System.Diagnostics.Process.Start ("https://caiorss.github.io/pget/")        
 
     /// Show system information. Useful for debugging.
     let showSystemInfo () =
@@ -226,10 +229,16 @@ module Main =
     let showHelp () =
         Console.WriteLine("Pget - Package Get - Enhanced command line interface to NuGet.Core")
         Console.WriteLine("""
-  pget.exe repo                                Show help for repo commands
+  pget.exe repo                                Show help for repo commands.
   pget.exe nuget                               Show help for nuget related commands                           
   pget.exe asm                                 Show help for assembly related commands.
-  pget.exe nupkg                               Show help for Nuget packages related commands.                          
+  pget.exe nupkg                               Show help for Nuget packages related commands.
+
+
+  --version | -v                               Show version
+  --help    | -h                               Show help
+  --doc                                        Open online documentation.                          
+                          
                           """)
         showRepoHelp()        
         showNugetHelp()
@@ -399,9 +408,57 @@ module Main =
         // Show all abstract classes 
         | ["asm"; "--abstract" ; asmFile]                   -> AsmDisplay.showAbstractClasses asmFile
 
+        // Print a report with all types categorized by namespace. 
+        | ["asm"; "--docgen" ; asmFile]                     -> AsmDisplay.showExportedTypesReport2 asmFile
+        | ["asm"; "--docgen" ; asmFile ; reportFile]        -> AsmDisplay.genExportedTypesReport asmFile reportFile
+
+        // ===================  XML tools ==========================
+
+        // Pretty print XML 
+        | ["xml"; "--show" ; xmlUri ]                       -> FXml.File.show xmlUri
+        | ["xml"; "--show" ; xmlUri ; xmlFile]              -> FXml.File.save xmlUri xmlFile
+
+                      
+        // Show XML nodes structure 
+        | ["xml"; "--struct" ;  xmlUri]                     -> FXml.File.showStruct xmlUri
+        // Show XML nodes structure 
+        | ["xml"; "--struct" ; "attr" ; xmlUri]              -> FXml.File.showStructAttr xmlUri
+        // Show XML nodes structure 
+        | ["xml"; "--struct" ; "ns";  xmlUri]                -> FXml.File.showStructNs xmlUri
+
+        // Show XML Namespaces
+        | ["xml"; "-ns"; xmlUri]                             -> FXml.File.showNamespaces xmlUri
+        | ["xml"; "--namespace"; xmlUri]                     -> FXml.File.showNamespaces xmlUri 
+        
+        // Select multiple nodes by xpath and show its values
+        | ["xml"; "--xvalue" ; xpath ; xmluri]                        -> FXml.File.showXPathValue xmluri xpath
+
+        // Select multiple modes by xpath and show its inner texts
+        | ["xml"; "--xtext" ; xpath ; xmluri]                            -> FXml.File.showXPathInnerText xmluri xpath
+        | ["xml"; "--xtext" ; "--nons"; xpath ; xmluri]                 -> FXml.File.showXPathInnerTextNoNS xmluri xpath
+
+        | ["xml"; "-ns" ; prefix ; uri ; "--xtext" ; xpath ; xmluri]     -> FXml.File.showXPathInnerTextNs xmluri (prefix, uri) xpath 
+
+        // Select multiple nodes by xpath and show its attributes 
+        | ["xml"; "--xattr"; xpath ; attr; xmluri]                       -> FXml.File.showXpathAttr xmluri xpath attr 
+        | ["xml"; "--xattr"; "--nons"; xpath ; attr; xmluri]            -> FXml.File.showXpathAttrNoNS xmluri xpath attr
+        
+        | ["xml"; "-ns"; prefix; uri ; "--xattr"; xpath; attr; xmluri]   -> FXml.File.showXpathAttrNS xmluri (prefix, uri) xpath attr 
+
+
+        // Select nodes by xpath and show them
+        | ["xml"; "--xnode"; "--nons"; xpath; xmluri]                           -> FXml.File.showXPathNodesNoNS xmluri xpath 
+        
+        // =================== Miscellaneous =======================
+
+        // Generate Global Unique Identifier - Used to register com servers, fsproj and etc. 
         | ["--guid" ]                                       -> Console.WriteLine(Guid.NewGuid().ToString() : string)
 
+        // Show system debugging information 
         | ["--system"]                                      -> showSystemInfo ()
+
+        // Got to online documentation - open pget website.
+        | ["--doc"]                                         -> openOlineDoc ()
 
         | []                                                ->  showHelp ()
         | _                                                 ->  Console.WriteLine "Error: Invalid option."

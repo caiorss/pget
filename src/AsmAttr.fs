@@ -4,6 +4,7 @@ namespace Pget
 module TInfo =
     open System 
     open System.Reflection
+    open System.Xml
 
     type T = Type 
 
@@ -73,6 +74,98 @@ module TInfo =
 
     /// Get Methods with flags
     let getMethodsFlags flags (t: T) = t.GetMethods(flags)
+
+    let queryXmlComment (query: string) (doc: XmlDocument): XmlNode option =
+        doc |> FXml.Doc.root
+            |> FXml.Node.nth 1
+            |> FXml.Node.findNode (FXml.Node.nodeAttrTagContains "member" "name" query)
+
+    let queryXmlSummary (query: string) (doc: XmlDocument): string option =
+        doc  |> FXml.Doc.root
+             |> FXml.Node.nth 1
+             |> FXml.Node.findNode (FXml.Node.nodeAttrTagContains "member" "name" query)
+             |> Option.bind (FXml.Node.findTextFromNodeTag "summary")
+             |> Option.map (fun text -> text.Trim())
+
+
+    /// Displays only public information about type.
+    let show2 (doc: XmlDocument option) (t: T) =
+        Console.WriteLine("""
+**** Type Info
+
+ - Name:           {0}
+ - Full Name:      {1}
+ - Namespace:      {2}
+ - Module:         {3}
+ - Base Type:      {11}
+
+*Predicates*
+
+ - Class:          {4}
+ - Abstract Class: {12}
+ - Primitive       {5}
+ - Array:          {6}
+ - Interface       {7}
+ - Enum            {8}
+ - Public          {9}
+ - Visible         {10}
+
+                        """,
+                          t.Name,
+                          t.FullName,
+                          t.Namespace,
+                          t.Module,
+                          t.IsClass,
+                          t.IsPrimitive,
+                          t.IsArray,
+                          t.IsInterface,
+                          t.IsEnum,
+                          t.IsPublic,
+                          t.IsVisible,
+                          t.BaseType,
+                          t.IsAbstract
+                          );
+
+         Console.WriteLine("\n**** Fields");
+         // Console.WriteLine("----------------");
+
+         t.GetFields()
+         // |> Seq.iter (printfn "\t%A\n");
+         |> Seq.iter (fun fi ->
+                      let query = "F:" + fi.DeclaringType.FullName + "." + fi.Name
+                      let summary = doc |> Option.bind (queryXmlSummary query)
+                      printfn " - %A\n" fi
+                      Option.iter (printfn "%s\n")  summary
+                      );
+
+         Console.WriteLine("\n**** Properties");
+         // Console.WriteLine("----------------");
+
+         t.GetProperties()
+         // |> Seq.iter (printfn "\t%A\n");
+         |> Seq.iter (fun pi ->
+                      let query = "P:" + pi.DeclaringType.FullName + "." + pi.Name
+                      let summary = doc |> Option.bind (queryXmlSummary query)
+                      printfn " - %A\n" pi
+                      Option.iter (printfn "%s\n")  summary
+                      );
+
+
+         Console.WriteLine("\n**** Constructors");
+         // Console.WriteLine("----------------");
+         t |> getConstructors
+           |> Seq.iter (printfn "\t%A\n");
+
+         Console.WriteLine("\n**** Methods");
+
+         t |> getMethodsNonProp
+           |> Seq.iter (fun mi ->
+                        let query = "M:" + mi.DeclaringType.FullName + "." + mi.Name
+                        let summary = doc |> Option.bind (queryXmlSummary query)
+                        printfn " - %A\n" mi
+                        Option.iter (printfn "%s\n")  summary
+                        );
+
 
     /// Displays only public information about type. 
     let show (t: T) =
@@ -290,6 +383,27 @@ module AsmDisplay =
     open System
     open System.Reflection 
 
+    /// Redirect stdout print to a file.
+    let withStdoutFile (file: string) fn  =
+        let stdout = Console.Out
+        let sw = new System.IO.StreamWriter(file)
+        Console.SetOut(sw)
+        fn ()
+        sw.Close()
+        Console.SetOut(sw)
+
+    /// Return stdout output as string.
+    let withStdout fn =
+        let stdout = Console.Out
+        let sw = new System.IO.StringWriter ()
+        Console.SetOut(sw)
+        fn ()
+        let out = sw.ToString()
+        sw.Close()
+        Console.SetOut(sw)
+        out
+
+
     let optDefault def opt =
         match opt with
         | None    -> def
@@ -363,6 +477,7 @@ module AsmDisplay =
                 |> AsmAttr.getExportedNS
                 |> Seq.iter Console.WriteLine
 
+    /// Show all types within a exported namespace
     let showTypesWithinNS asmFile nspace =
         asmFile |> AsmAttr.loadFrom
                 |> AsmAttr.getTypesWithinExportedNS nspace (fun t -> true)
@@ -373,6 +488,45 @@ module AsmDisplay =
         let asm = AsmAttr.loadFrom asmFile 
         asm.GetTypes() |> Seq.distinctBy (fun t -> t.Namespace)
                        |> Seq.iter (fun t -> Console.WriteLine(t.Namespace))        
+
+    /// Show all detailed exported types grouped by namespace
+    let showExportedTypesReport asmFile =
+        let asm = asmFile |> AsmAttr.loadFrom
+        asm   |> AsmAttr.getExportedNS
+              |> Seq.iter (fun ns ->
+                           Console.WriteLine ("** {0}", ns);
+
+                           AsmAttr.getTypesWithinExportedNS ns (fun t -> true) asm
+                           |> Seq.iter (fun t ->
+                                        Console.WriteLine("*** {0}", t.Name)
+                                        TInfo.show t;
+                                        )
+                           )
+
+    /// Show all detailed exported types grouped by namespace
+    let showExportedTypesReport2 asmFile =
+        let asm = asmFile |> AsmAttr.loadFrom
+
+        let xmlFile = System.IO.Path.ChangeExtension(asmFile, "xml")
+        let doc = if System.IO.File.Exists xmlFile
+                  then Some (FXml.Doc.loadFile xmlFile)
+                  else None
+
+        asm   |> AsmAttr.getExportedNS
+              |> Seq.iter (fun ns ->
+                           Console.WriteLine ("** {0}", ns);
+
+                           AsmAttr.getTypesWithinExportedNS ns (fun t -> true) asm
+                           |> Seq.iter (fun t ->
+                                        Console.WriteLine("*** {0}", t.FullName)
+                                        TInfo.show2 doc t;
+                                        )
+                           )
+
+
+
+    let genExportedTypesReport asmFile outputFile =
+        withStdoutFile outputFile  (fun () ->  showExportedTypesReport2 asmFile)
 
     let showClassesInNamespace (asmFile: string) ns =
         AsmAttr.getPublicTypesInNamespace asmFile (fun atype -> atype.IsClass) ns 

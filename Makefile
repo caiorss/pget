@@ -27,7 +27,7 @@ NUGET := nuget.exe
 # ================ S O U R C E =========================== #
 
 # Source code of Pget.exe application.
-exe-src := src/Pget.fs src/AssemblyInfo.fs src/AsmAttr.fs  src/PgetCmd.fs
+exe-src := src/Pget.fs src/FXml.fs  src/AsmAttr.fs src/AssemblyInfo.fs src/PgetCmd.fs
 
 
 # .NET References 
