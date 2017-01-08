@@ -107,28 +107,30 @@ module Node =
         aux "" node        
 
 /// Functional Wrapper around XmlDocument class 
-module Doc = 
+module Doc =
+
+    type T = XmlDocument
 
     /// Load XML string 
     let load (xmlString: string) =
-        let doc = new XmlDocument ()
+        let doc = new T ()
         doc.LoadXml(xmlString)
         doc
 
     /// Load XML from file or URL.
     let loadFile (uri: string) =
-        let doc = new XmlDocument ()
+        let doc = new T ()
         doc.Load(uri)
         doc
 
-    let childNodes (doc: XmlDocument) =
+    let childNodes (doc: T) =
         doc.ChildNodes
 
-    let root (doc: XmlDocument) =
+    let root (doc: T) =
         doc.DocumentElement
 
     /// Format XML to human readable indented format    
-    let toString (doc: XmlDocument) =
+    let toString (doc: T) =
         let builder = new System.Text.StringBuilder()
         let writer  = new XmlTextWriter (new System.IO.StringWriter(builder))
         writer.Formatting <- Formatting.Indented
@@ -137,36 +139,36 @@ module Doc =
         builder.ToString()
 
     /// Create a namespacemanager object    
-    let makeNs prefix uri (doc: XmlDocument) =
+    let makeNs prefix uri (doc: T) =
         let ns = new XmlNamespaceManager(doc.NameTable)
         ns.AddNamespace(prefix, uri)
         ns 
 
     /// Select single node using xpath. Returns None if node is not found.
-    let selectNode xpath (doc: XmlDocument) =
+    let selectNode xpath (doc: T) =
         Option.ofObj (doc.SelectSingleNode xpath)
 
     /// Select nodes with a xpath expression
-    let selectNodes xpath (doc: XmlDocument) =
+    let selectNodes xpath (doc: T) =
         seq {for n in doc.SelectNodes(xpath) do yield n}
 
     /// Select nodes with a xpath expression within a XML namespace denoted by ns    
-    let selectNodesNs ns xpath (doc: XmlDocument) =
+    let selectNodesNs ns xpath (doc: T) =
         seq {for n in doc.SelectNodes(xpath, ns) do yield n}
 
     /// Select nodes with a xpath expression within a XML namespace denoted by ns   
-    let selectNodesNs2 (prefix, uri) xpath (doc: XmlDocument): XmlNode  seq =
+    let selectNodesNs2 (prefix, uri) xpath (doc: T): XmlNode  seq =
         let ns = new XmlNamespaceManager(doc.NameTable)
         ns.AddNamespace(prefix, uri)
         seq {for n in doc.SelectNodes(xpath, ns) do yield n }
 
-    let selectNodeCdata xpath (doc: XmlDocument) =
+    let selectNodeCdata xpath (doc: T) =
         let node = doc.SelectSingleNode xpath
         match node with
         | null -> None
         | n    -> Some <| (node.ChildNodes.[0] :?> XmlCDataSection)
 
-    let selectValueCdata xpath (doc: XmlDocument) =
+    let selectValueCdata xpath (doc: T) =
         let node = doc.SelectSingleNode xpath
         match node with
         | null -> None
@@ -206,11 +208,11 @@ module Doc =
       Map.ofList <| List.map (fun attr -> attr, Seq.map (Node.attrv2 attr) nodes) attributes
 
     /// Display XML in a human readable format.  
-    let show (doc: XmlDocument) =
+    let show (doc: T) =
         doc |> toString
             |> Console.Write
 
-    let showStruct (doc: XmlDocument) =
+    let showStruct (doc: T) =
         Node.showStruct doc.DocumentElement  
 
 module File = 
