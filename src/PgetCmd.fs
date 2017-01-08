@@ -409,8 +409,8 @@ module Main =
         | ["asm"; "--abstract" ; asmFile]                   -> AsmDisplay.showAbstractClasses asmFile
 
         // Print a report with all types categorized by namespace. 
-        | ["asm"; "--report" ; asmFile]                     -> AsmDisplay.showExportedTypesReport asmFile
-        | ["asm"; "--report" ; asmFile ; reportFile]        -> AsmDisplay.genExportedTypesReport asmFile reportFile
+        | ["asm"; "--docgen" ; asmFile]                     -> AsmDisplay.showExportedTypesReport2 asmFile
+        | ["asm"; "--docgen" ; asmFile ; reportFile]        -> AsmDisplay.genExportedTypesReport asmFile reportFile
 
         // ===================  XML tools ==========================
 
