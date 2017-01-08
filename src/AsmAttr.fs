@@ -4,6 +4,7 @@ namespace Pget
 module TInfo =
     open System 
     open System.Reflection
+    open System.Xml
 
     type T = Type 
 
@@ -85,6 +86,85 @@ module TInfo =
              |> FXml.Node.findNode (FXml.Node.nodeAttrTagContains "member" "name" query)
              |> Option.bind (FXml.Node.findTextFromNodeTag "summary")
              |> Option.map (fun text -> text.Trim())
+
+
+    /// Displays only public information about type.
+    let show2 (doc: XmlDocument option) (t: T) =
+        Console.WriteLine("""
+**** Type Info
+
+ - Name:           {0}
+ - Full Name:      {1}
+ - Namespace:      {2}
+ - Module:         {3}
+ - Base Type:      {11}
+
+*Predicates*
+
+ - Class:          {4}
+ - Abstract Class: {12}
+ - Primitive       {5}
+ - Array:          {6}
+ - Interface       {7}
+ - Enum            {8}
+ - Public          {9}
+ - Visible         {10}
+
+                        """,
+                          t.Name,
+                          t.FullName,
+                          t.Namespace,
+                          t.Module,
+                          t.IsClass,
+                          t.IsPrimitive,
+                          t.IsArray,
+                          t.IsInterface,
+                          t.IsEnum,
+                          t.IsPublic,
+                          t.IsVisible,
+                          t.BaseType,
+                          t.IsAbstract
+                          );
+
+         Console.WriteLine("\n**** Fields");
+         // Console.WriteLine("----------------");
+
+         t.GetFields()
+         // |> Seq.iter (printfn "\t%A\n");
+         |> Seq.iter (fun fi ->
+                      let query = "F:" + fi.DeclaringType.FullName + "." + fi.Name
+                      let summary = doc |> Option.bind (queryXmlSummary query)
+                      printfn " - %A\n" fi
+                      Option.iter (printfn "%s\n")  summary
+                      );
+
+         Console.WriteLine("\n**** Properties");
+         // Console.WriteLine("----------------");
+
+         t.GetProperties()
+         // |> Seq.iter (printfn "\t%A\n");
+         |> Seq.iter (fun pi ->
+                      let query = "P:" + pi.DeclaringType.FullName + "." + pi.Name
+                      let summary = doc |> Option.bind (queryXmlSummary query)
+                      printfn " - %A\n" pi
+                      Option.iter (printfn "%s\n")  summary
+                      );
+
+
+         Console.WriteLine("\n**** Constructors");
+         // Console.WriteLine("----------------");
+         t |> getConstructors
+           |> Seq.iter (printfn "\t%A\n");
+
+         Console.WriteLine("\n**** Methods");
+
+         t |> getMethodsNonProp
+           |> Seq.iter (fun mi ->
+                        let query = "M:" + mi.DeclaringType.FullName + "." + mi.Name
+                        let summary = doc |> Option.bind (queryXmlSummary query)
+                        printfn " - %A\n" mi
+                        Option.iter (printfn "%s\n")  summary
+                        );
 
 
     /// Displays only public information about type. 
