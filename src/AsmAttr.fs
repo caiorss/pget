@@ -74,6 +74,19 @@ module TInfo =
     /// Get Methods with flags
     let getMethodsFlags flags (t: T) = t.GetMethods(flags)
 
+    let queryXmlComment (query: string) (doc: XmlDocument): XmlNode option =
+        doc |> FXml.Doc.root
+            |> FXml.Node.nth 1
+            |> FXml.Node.findNode (FXml.Node.nodeAttrTagContains "member" "name" query)
+
+    let queryXmlSummary (query: string) (doc: XmlDocument): string option =
+        doc  |> FXml.Doc.root
+             |> FXml.Node.nth 1
+             |> FXml.Node.findNode (FXml.Node.nodeAttrTagContains "member" "name" query)
+             |> Option.bind (FXml.Node.findTexFromNodeTag "summary")
+             |> Option.map (fun text -> text.Trim())
+
+
     /// Displays only public information about type. 
     let show (t: T) =
         Console.WriteLine("""
