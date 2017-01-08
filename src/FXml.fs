@@ -36,8 +36,8 @@ module Node =
         | attrs -> seq { for n in attrs  do yield (n.Name, n.Value) }
 
 
-    /// Get child nodes from a T
-    let childNodes (node: T) =
+    /// Get child nodes from a xml node
+    let cnodes (node: T) =
         seq {for n in node.ChildNodes do yield n }
 
     /// Get nth child node from a xml node
@@ -55,19 +55,23 @@ module Node =
     let nodesAttrs attrlist (node: T) =
         node |> cnodes
              |> Seq.map (fun node -> List.map (fun attr -> attrv2 attr node) attrlist)
+
+    /// Find a child node that satisfies a predicate
     let findChildNode fn (node: T) =
-        node |> childNodes
+        node |> cnodes
              |> Seq.tryFind fn
 
+    /// Filter child nodes of a node that satisfies a predicate
     let filterChildNodes fn (node: T) =
-        node |> childNodes
+        node |> cnodes
              |> Seq.filter fn 
 
+    /// Find child node that has a given tag
     let findChildNodeTag tag (node: T) =
         findChildNode (fun node -> node.Name = tag) node
 
     let findChildNodeTagText tag (node: T) =
-        node |> childNodes
+        node |> cnodes
              |> Seq.tryFind (fun node -> node.Name = tag)
              |> Option.map (fun node -> node.InnerText)
 
