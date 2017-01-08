@@ -79,6 +79,7 @@ module Node =
     let innerText (node: T) =
         node.InnerText       
 
+    /// Show all attributes of a xml node
     let showAttributes (node: T) =
         node |> attributes
              |> Seq.iter (printfn "%O")
