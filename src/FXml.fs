@@ -40,6 +40,21 @@ module Node =
     let childNodes (node: T) =
         seq {for n in node.ChildNodes do yield n }
 
+    /// Get nth child node from a xml node
+    let nth (n: int) (node: T)  =
+        node.ChildNodes.[n]
+
+    let first (node: T) =
+        node.ChildNodes.[0]
+
+    /// Get all attributes from a group of similar child nodes
+    let nodesAttr attr (node: T): string seq =
+        node |> cnodes
+             |> Seq.map (attrv2 attr)
+
+    let nodesAttrs attrlist (node: T) =
+        node |> cnodes
+             |> Seq.map (fun node -> List.map (fun attr -> attrv2 attr node) attrlist)
     let findChildNode fn (node: T) =
         node |> childNodes
              |> Seq.tryFind fn
