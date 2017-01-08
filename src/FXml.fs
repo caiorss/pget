@@ -74,11 +74,11 @@ module Node =
 
     /// Get all attributes from a group of similar child nodes
     let nodesAttr attr (node: T): string seq =
-        node |> cnodes
+        node |> cnodesNoComment
              |> Seq.map (attrv2 attr)
 
     let nodesAttrs attrlist (node: T) =
-        node |> cnodes
+        node |> cnodesNoComment
              |> Seq.map (fun node -> List.map (fun attr -> attrv2 attr node) attrlist)
 
     /// Find a child node that satisfies a predicate
