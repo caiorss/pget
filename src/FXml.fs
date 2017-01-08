@@ -250,6 +250,8 @@ module Doc =
         writer.Close()
         builder.ToString()
 
+    let getNodesByTagName tag (doc: T) =
+        xmlNodeListToSeq <| doc.GetElementsByTagName(tag)
 
     /// Display XML in a human readable format.  
     let show (doc: T) =
