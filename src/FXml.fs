@@ -222,6 +222,9 @@ module Doc =
 
     type T = XmlDocument
 
+    let xmlNodeListToSeq (xs: XmlNodeList) =
+        seq {for n in xs do yield n}
+
     /// Load XML string 
     let load (xmlString: string) =
         let doc = new T ()
