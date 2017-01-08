@@ -3,6 +3,20 @@ module FXml
 open System
 open System.Xml 
 
+/// Predicate combinators
+module Pred =
+
+    let pAnd fa fb =
+        fun x -> fa x && fb x
+
+    let pOr fa fb =
+        fun x -> fa x || fb x
+
+    let pNot fa x = not (fa x)
+
+    module Operators =
+        let (<&&>) = pAnd
+        let (<||>) = pOr
 
 /// Functional wrapper around XmlNode object 
 module Node =
