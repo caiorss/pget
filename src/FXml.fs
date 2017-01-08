@@ -100,6 +100,25 @@ module Node =
              |> Seq.tryFind (fun node -> node.Name = tag)
              |> Option.map (fun node -> node.InnerText)
 
+    let nodeHasTag tag (node: T) =
+        node.Name = tag 
+
+    let nodeHasAttr (attr: string) (node: T) =
+        match node.Attributes.[attr] with
+        | null -> false
+        | _    -> true
+
+    let nodeChildHasTag tag (node: T) =
+        node |> cnodes
+             |> Seq.exists (fun n -> n.Name = tag)
+
+    let isNotComment (node: T) =
+        node.NodeType <> XmlNodeType.Comment
+
+    let isElement (node: T) =
+        node.NodeType = XmlNodeType.Element
+             
+
     //// Get Xml inner text     
     let innerText (node: T) =
         node.InnerText       
