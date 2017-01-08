@@ -155,6 +155,20 @@ module Doc =
         writer.Close()
         builder.ToString()
 
+
+    /// Display XML in a human readable format.  
+    let show (doc: T) =
+        doc |> toString
+            |> Console.Write
+
+    let showStruct (doc: T) =
+        Node.showStruct doc.DocumentElement  
+
+
+module FXPath =
+
+    type T = XmlDocument 
+    
     /// Create a namespacemanager object    
     let makeNs prefix uri (doc: T) =
         let ns = new XmlNamespaceManager(doc.NameTable)
@@ -224,13 +238,6 @@ module Doc =
       let nodes = selectNodesNs2 (prefix, uri) xpath doc
       Map.ofList <| List.map (fun attr -> attr, Seq.map (Node.attrv2 attr) nodes) attributes
 
-    /// Display XML in a human readable format.  
-    let show (doc: T) =
-        doc |> toString
-            |> Console.Write
-
-    let showStruct (doc: T) =
-        Node.showStruct doc.DocumentElement  
 
 module File = 
 
@@ -262,31 +269,30 @@ module File =
 
     let showXPathValue xmlFile xpath =
         xmlFile |> Doc.loadFile
-                |> Doc.xpathSelectValue xpath
+                |> FXPath.xpathSelectValue xpath
                 |> Seq.iter (printfn "%O\n")
 
     let showXPathInnerText xmlFile xpath =
         xmlFile |> Doc.loadFile
-                |> Doc.xpathSelectInnerText xpath
+                |> FXPath.xpathSelectInnerText xpath
                 |> Seq.iter (printfn "%O\n")                
 
     let showXPathInnerTextNs xmlFile (prefix, uri) xpath =
         xmlFile |> Doc.loadFile
-                |> Doc.xpathSelectInnerTextNs (prefix, uri) xpath
+                |> FXPath.xpathSelectInnerTextNs (prefix, uri) xpath
                 |> Seq.iter (printfn "%O\n")                
 
     let showXPathValueNs xmlFile (prefix, uri)  xpath =
         xmlFile |> Doc.loadFile
-                |> Doc.xpathSelectValueNs (prefix, uri) xpath
+                |> FXPath.xpathSelectValueNs (prefix, uri) xpath
                 |> Seq.iter (printfn "%O\n")
 
     let showXpathAttr xmlFile xpath attribute  =
         xmlFile |> Doc.loadFile
-                |> Doc.xpathSelectAttr xpath attribute
+                |> FXPath.xpathSelectAttr xpath attribute
                 |> Seq.iter (printfn "%O\n")
 
     let showXpathAttrNS xmlFile (prefix, uri) xpath attribute  =
         xmlFile |> Doc.loadFile
-                |> Doc.xpathSelectAttrNs (prefix, uri) xpath attribute
+                |> FXPath.xpathSelectAttrNs (prefix, uri) xpath attribute
                 |> Seq.iter (printfn "%O\n")
-
