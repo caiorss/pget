@@ -83,7 +83,7 @@ module TInfo =
         doc  |> FXml.Doc.root
              |> FXml.Node.nth 1
              |> FXml.Node.findNode (FXml.Node.nodeAttrTagContains "member" "name" query)
-             |> Option.bind (FXml.Node.findTexFromNodeTag "summary")
+             |> Option.bind (FXml.Node.findTextFromNodeTag "summary")
              |> Option.map (fun text -> text.Trim())
 
 
