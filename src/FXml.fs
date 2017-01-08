@@ -169,6 +169,19 @@ module Node =
     let iterValueCdata xpath fn (doc: T) =
         selectValueCdata xpath doc |> Option.iter fn 
 
+    let getNamespaces (node: XmlNode) =
+        let dict = new System.Collections.Generic.Dictionary<string, string>()    
+        let rec aux (node: XmlNode) =         
+            if node.NodeType = XmlNodeType.Element
+            then  dict.[node.Prefix] <- node.NamespaceURI
+
+            for ch in node.ChildNodes do            
+                aux ch                
+        aux node         
+        dict |> Seq.map (fun (KeyValue (k, v)) -> (k, v))
+             |> Seq.toList
+
+
     /// Display node as xml 
     let show (node: T) =
         let writer = new XmlTextWriter(Console.Out)
@@ -236,6 +249,7 @@ module Doc =
         let doc = new T ()
         doc.Load(uri)
         doc
+        
 
     /// Get root node (.DocumentElement) from xml document.
     let root (doc: T) =
@@ -252,6 +266,9 @@ module Doc =
 
     let getNodesByTagName tag (doc: T) =
         xmlNodeListToSeq <| doc.GetElementsByTagName(tag)
+
+    let getNamespaces (doc: T) =
+        Node.getNamespaces doc.DocumentElement
 
     /// Display XML in a human readable format.  
     let show (doc: T) =
@@ -360,6 +377,12 @@ module File =
                 |> Doc.root
                 |> Node.showStructNs
 
+    let showNamespaces xmlFile =
+        xmlFile |> Doc.loadFile
+                |> Doc.getNamespaces
+                |> Seq.iter (fun (k, v) -> printfn "Prefix = %s" k;
+                                           printfn "Uri    = %s\n" v
+                             )
 
     /// <summary>            
     /// format XML from file or URI to a new XML file.
