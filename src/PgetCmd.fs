@@ -426,13 +426,17 @@ module Main =
         // Show XML nodes structure 
         | ["xml"; "--struct" ; "ns";  xmlUri]                -> FXml.File.showStructNs xmlUri
 
-
+        // Show XML Namespaces
+        | ["xml"; "-ns"; xmlUri]                             -> FXml.File.showNamespaces xmlUri
+        | ["xml"; "--namespace"; xmlUri]                     -> FXml.File.showNamespaces xmlUri 
+        
         // Select multiple nodes by xpath and show its values
-        | ["xml"; "--xpath"; "value" ; xpath ; xmluri]     -> FXml.File.showXPathValue xmluri xpath
+        | ["xml"; "--xpath"; "value" ; xpath ; xmluri]                        -> FXml.File.showXPathValue xmluri xpath
 
         // Select multiple modes by xpath and show its inner texts
         | ["xml"; "--xpath-text" ; xpath ; xmluri]                            -> FXml.File.showXPathInnerText xmluri xpath
-        | ["xml"; "-ns" ; prefix ; uri ; "--xpath-text" ; xpath ; xmluri] -> FXml.File.showXPathInnerTextNs xmluri (prefix, uri) xpath 
+
+        | ["xml"; "-ns" ; prefix ; uri ; "--xpath-text" ; xpath ; xmluri]     -> FXml.File.showXPathInnerTextNs xmluri (prefix, uri) xpath 
 
         | ["xml"; "--xpath-attr"; xpath ; attr; xmluri]                       -> FXml.File.showXpathAttr xmluri xpath attr 
 
