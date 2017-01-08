@@ -193,6 +193,17 @@ module Node =
         writer.Formatting <- Formatting.Indented
         node.WriteContentTo(writer)
 
+    /// Display xml node as indented xml
+    let toString (node: T) =
+        let builder = new System.Text.StringBuilder()
+        let writer = new XmlTextWriter (new System.IO.StringWriter(builder))
+        writer.Formatting <- Formatting.Indented
+        node.WriteContentTo(writer)
+        writer.Close()
+        builder.ToString()
+
+    let show2 (node: T) =
+        Console.WriteLine (toString node)
     let showTop (node: T) =
         printfn "Tag: %s" node.Name;
         printfn "Attributes"
