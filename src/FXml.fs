@@ -59,10 +59,16 @@ module Node =
     let cnodes (node: T) =
         seq {for n in node.ChildNodes do yield n }
 
+    /// Get all child nodes ignoring comment nodes
+    let cnodesNoComment (node: T) =
+        seq {for n in node.ChildNodes do if n.NodeType <> XmlNodeType.Comment
+                                         then yield n }
+
     /// Get nth child node from a xml node
     let nth (n: int) (node: T)  =
         node.ChildNodes.[n]
 
+    /// Get first child node
     let first (node: T) =
         node.ChildNodes.[0]
 
