@@ -122,7 +122,7 @@ module Node =
         node |> attributes
              |> Seq.iter (printfn "  %O")
 
-    /// Show only XML tags          
+    /// Show xml node structure with tags of each node          
     let showStruct (node: T) =        
         let rec aux spaces (node: T) nestlevel  =
             let childs = node.ChildNodes
@@ -132,6 +132,31 @@ module Node =
                 level := !level + 1
                 aux (spaces + "\t") ch (nestlevel + 1)                
         aux "" node 0       
+
+    /// Show xml node structure with attributes of each node 
+    let showStructAttr (node: T) =        
+        let rec aux spaces (node: T) nestlevel  =
+            let childs = node.ChildNodes
+            let level = ref 0 
+            for ch in childs do
+                let attrs = attrNames ch |> Seq.toList 
+                printfn "%s(%d.%d) %s %O" spaces nestlevel !level ch.Name attrs 
+                level := !level + 1
+                aux (spaces + "\t") ch (nestlevel + 1)                
+        aux "" node 0       
+
+    /// Show xml node structure with namespace URI of each node 
+    let showStructNs (node: T) =        
+        let rec aux spaces (node: T) nestlevel  =
+            let childs = node.ChildNodes
+            let level = ref 0 
+            for ch in childs do
+                let attrs = attrNames ch |> Seq.toList 
+                printfn "%s(%d.%d) %s / %s" spaces nestlevel !level ch.Name ch.NamespaceURI
+                level := !level + 1
+                aux (spaces + "\t") ch (nestlevel + 1)                
+        aux "" node 0       
+
 
 /// Functional Wrapper around XmlDocument class 
 module Doc =
@@ -261,6 +286,17 @@ module File =
     let showStruct xmlFile =
         xmlFile |> Doc.loadFile
                 |> Doc.showStruct
+
+    let showStructAttr xmlFile =
+        xmlFile |> Doc.loadFile
+                |> Doc.root
+                |> Node.showStructAttr
+
+    let showStructNs xmlFile =
+        xmlFile |> Doc.loadFile
+                |> Doc.root
+                |> Node.showStructNs
+
 
     /// <summary>            
     /// format XML from file or URI to a new XML file.
