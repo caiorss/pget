@@ -412,6 +412,35 @@ module Main =
         | ["asm"; "--report" ; asmFile]                     -> AsmDisplay.showExportedTypesReport asmFile
         | ["asm"; "--report" ; asmFile ; reportFile]        -> AsmDisplay.genExportedTypesReport asmFile reportFile
 
+        // ===================  XML tools ==========================
+
+        // Pretty print XML 
+        | ["xml"; "--show" ; xmlUri ]                       -> FXml.File.show xmlUri
+        | ["xml"; "--show" ; xmlUri ; xmlFile]              -> FXml.File.save xmlUri xmlFile
+
+                      
+        // Show XML nodes structure 
+        | ["xml"; "--struct" ;  xmlUri]                     -> FXml.File.showStruct xmlUri
+        // Show XML nodes structure 
+        | ["xml"; "--struct" ; "attr" ; xmlUri]              -> FXml.File.showStructAttr xmlUri
+        // Show XML nodes structure 
+        | ["xml"; "--struct" ; "ns";  xmlUri]                -> FXml.File.showStructNs xmlUri
+
+
+        // Select multiple nodes by xpath and show its values
+        | ["xml"; "--xpath"; "value" ; xpath ; xmluri]     -> FXml.File.showXPathValue xmluri xpath
+
+        // Select multiple modes by xpath and show its inner texts
+        | ["xml"; "--xpath-text" ; xpath ; xmluri]                            -> FXml.File.showXPathInnerText xmluri xpath
+        | ["xml"; "-ns" ; prefix ; uri ; "--xpath-text" ; xpath ; xmluri] -> FXml.File.showXPathInnerTextNs xmluri (prefix, uri) xpath 
+
+        | ["xml"; "--xpath-attr"; xpath ; attr; xmluri]                       -> FXml.File.showXpathAttr xmluri xpath attr 
+
+        | ["xml"; "-ns"; prefix; uri ; "--xpath-attr"; xpath; attr; xmluri]   -> FXml.File.showXpathAttrNS xmluri (prefix, uri) xpath attr 
+
+        
+        // =================== Miscellaneous =======================
+
         // Generate Global Unique Identifier - Used to register com servers, fsproj and etc. 
         | ["--guid" ]                                       -> Console.WriteLine(Guid.NewGuid().ToString() : string)
 
