@@ -118,13 +118,15 @@ module Node =
              |> Seq.iter (printfn "  %O")
 
     /// Show only XML tags          
-    let showStruct (node: T) =
-        let rec aux spaces (node: T)  =
-            let childs = node.ChildNodes   
+    let showStruct (node: T) =        
+        let rec aux spaces (node: T) nestlevel  =
+            let childs = node.ChildNodes
+            let level = ref 0 
             for ch in childs do
-                printfn "%s" (spaces + ch.Name)
-                aux (spaces + "\t") ch            
-        aux "" node        
+                printfn "%s(%d.%d) %s" spaces nestlevel !level ch.Name 
+                level := !level + 1
+                aux (spaces + "\t") ch (nestlevel + 1)                
+        aux "" node 0       
 
 /// Functional Wrapper around XmlDocument class 
 module Doc =
