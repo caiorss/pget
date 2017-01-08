@@ -92,7 +92,7 @@ module Node =
              |> Seq.filter fn 
 
     /// Find child node that has a given tag
-    let findChildNodeTag tag (node: T) =
+    let findNodeTag tag (node: T) =
         findNode (fun node -> node.Name = tag) node
 
     let findChildNodeTagText tag (node: T) =
