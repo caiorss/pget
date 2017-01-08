@@ -142,9 +142,6 @@ module Doc =
         doc.Load(uri)
         doc
 
-    let childNodes (doc: T) =
-        doc.ChildNodes
-
     let root (doc: T) =
         doc.DocumentElement
 
