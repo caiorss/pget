@@ -253,9 +253,6 @@ module Doc =
         doc |> toString
             |> Console.Write
 
-    let showStruct (doc: T) =
-        Node.showStruct doc.DocumentElement  
-
 
 module FXPath =
 
