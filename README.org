@@ -49,18 +49,32 @@ display packages' metadata from local repository or project repository
 
 
  - Inspect .NET assemblies.
+
    - Show .NET assemblies metadata
+
    - Show .NET referenced assemblies
+
    - Show assembly resources
+
    - Show namespaces in assembly
+
    - Show classes in assembly
-   - Show class methods 
+
+   - Show class methods
+
+   - Show type information with xml comments like summary, methods,
+     fields, constructors and properties.
+
+   - Generate assembly documentation in org-mode markdown and extract
+     xml comments from library (*.dll) xml files.
 
  - Show NuGet packages *.nupkg file metadata.
 
-
  - Get packages' assembly references from local repository and project
    repository (./packages) for F# scripts.
+
+ - Query XML, show xml namespace, query xml using xpath, show xml tag
+   structure. 
 
 *Repository:*
 
@@ -2139,26 +2153,32 @@ $ emacs -Q  Eto-doc.org
 
 *Screenshots:*
 
-The picture below picture shows all namespaces defined in Eto.dll assembly of
-Eto-forms package.
+ - The picture below picture shows all namespaces defined in Eto.dll
+   assembly of Eto-forms package.
 
 #+CAPTION: Eto forms namespaces 
 [[file:images/42cf8c02-f803-4713-a7d1-0e557de60891.png%0A][file:images/42cf8c02-f803-4713-a7d1-0e557de60891.png
 ]]
-This picture shows all types within in the Eto.Forms namespace.
+
+ - This picture shows all types within in the Eto.Forms namespace.
+
 
 #+CAPTION: Browsing Eto.Forms namespace. 
 [[file:images/84aba9e2-5e75-4903-80af-eb293ab698f4.png%0A][file:images/84aba9e2-5e75-4903-80af-eb293ab698f4.png
 ]]
-This pictures below show the properties of type Eto.Forms.Form 
 
-#+CAPTION: Eto.Forms.Form type information / type predicates.
+ - This pictures below show the properties of type Eto.Forms.Form 
+
+
+#+CAPTION: Eto.Forms.Form type information - type predicates.
 [[file:images/e6701dd4-4ec6-4e26-a930-9b80299369b4.png%0A][file:images/e6701dd4-4ec6-4e26-a930-9b80299369b4.png
 ]]
-#+CAPTION: Eto.Forms.Form type information / properties
+
+#+CAPTION: Eto.Forms.Form type information - properties
 [[file:images/cce9388f-a5da-4cac-b9c7-b379c52b5494.png%0A][file:images/cce9388f-a5da-4cac-b9c7-b379c52b5494.png
 ]]
-#+CAPTION: Eto.Forms.Form type information / methods 
+
+#+CAPTION: Eto.Forms.Form type information - methods 
 [[file:images/ccf94d57-77cb-480a-a036-52855ff5c582.png%0A][file:images/ccf94d57-77cb-480a-a036-52855ff5c582.png
 ]]
 
