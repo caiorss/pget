@@ -224,6 +224,9 @@ module Main =
    
     asm --class  [file]                                  Show all classes exported by assembly [file].
     asm --classn [file]                                  Show all non-abstract classes exported by assembly [file]
+
+    asm --docgen [file]                                  Print all types documentation on screen
+    asm --docgen [file] [output-file]                    Export all types documentation to org-mode file.
         """
 
     let showXmlHelp () =
