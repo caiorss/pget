@@ -260,7 +260,7 @@ module Main =
   pget.exe nuget                               Show help for nuget related commands                           
   pget.exe asm                                 Show help for assembly related commands.
   pget.exe nupkg                               Show help for Nuget packages related commands.
-
+  pget.exe xml                                 Show help for xml related commands
 
   --version | -v                               Show version
   --help    | -h                               Show help
@@ -271,6 +271,7 @@ module Main =
         showNugetHelp()
         showNupkgHelp()
         showAsmHelp()
+        showXmlHelp()
         Console.WriteLine """
   Fsproj - Helpers for fsproj files.
 
