@@ -156,8 +156,18 @@ $ cd obj/Release && ./Pget.exe -v
  Repository - https://github.com/caiorss/pget
 #+END_SRC
 
+** Project Files 
+
+ - [[file:src/]] - Source code *.fs files
+
+ - [[file:xml/]] - Sample xml files to test pget.exe XML commands.
+
+ - [[file:pget-exe.fsproj]] - Fsproj file to build pget.exe utility.
+
+ - [[file:pget-lib.fsproj]] - Fsproj file to build pget.dll library.
+
 ** Commands
-*** Print Version
+*** Print Version                                                      :help:
 
  - =$ pget.exe --version= or =$ pget.exe -v=
 
@@ -166,25 +176,184 @@ Example:
 #+BEGIN_SRC sh
   $ bin/pget.exe -v
 
-   Pget - Package Get - Version 1.3.1 
+   Pget - Package Get - Version 2.0.0.0 
    2016 Public Domain Software
-   Repository - https://github.com/caiorss/pge
+   Repository - https://github.com/caiorss/pget
 #+END_SRC
-*** Print help
+*** Print help                                                         :help:
 
  - =$ pget.exe=
 
 Example:
 
-#+BEGIN_SRC text
-  $ bin/pget.exe 
-  Pget - Package Get - Enhanced command line interface to NuGet.Core
+#+BEGIN_SRC text 
+$ bin/pget.exe 
+Pget - Package Get - Enhanced command line interface to NuGet.Core
 
-    pget.exe repo                                Show help for repo commands
-    pget.exe nuget                               Show help for nuget related commands                           
-    pget.exe asm                                 Show help for assembly related commands.
-    pget.exe nupkg                               Show help for Nuget packages related commands.                          
+  pget.exe repo                                Show help for repo commands.
+  pget.exe nuget                               Show help for nuget related commands                           
+  pget.exe asm                                 Show help for assembly related commands.
+  pget.exe nupkg                               Show help for Nuget packages related commands.
+  pget.exe xml                                 Show help for xml related commands
+
+  --version | -v                               Show version
+  --help    | -h                               Show help
+  --doc                                        Open online documentation.                          
+                          
+                          
+
+  List Repository
+
+    repo --list                                 List all packages in current repository ./package
+    repo [path] --list                          List all package in [path] repository.
+
+  Show repository 
+ 
+    repo --show                                 Show all packages in current ./packages repository
+    repo [path] --show                          Show all packages in [path] repository.
+  
+  Show package metadata
+
+    repo --show  [pack]                         Show the package [pack] in ./packages directory
+    repo [path] --show [pack]                   Show the package [pack] in [repo] directory.
+
+  Show package files 
+
+    repo --files [pack]                    Show content files of package [pack] in ./packages
+    repo [path] --files [pack]             Show content files of package [pack] in [repo]
+
+  Install package to repository  
+
+    repo --install [pack]                       Install the latest version of package [pack] to ./packages
+    repo --install [pack] [ver]                 Install the version [ver] of package [pack]
+    repo [path] --install [pack]                Install the latest version of package [pack] to a repository [path] i.e: ~/nuget
+    repo [path] --install [pack] [ver]          Install the version [ver] of package [pack] to a repository [path]
+
+
+  Install a list of packages passed as argument
+    repo --install-list FParsec NuGet.Core-2.0.0               Install those packages to ./packages
+    repo /tmp/repo --install-list FParsec NuGet.Core-2.0.0     Install those packages to /tmp/repository
+
+  Install a list of packages listed in a file
+
+    repo --install-from-file                    Install all packages listed in the file ./packages.list to ./packages directory.
+    repo --install-from-file [file]             Install all packages listed in the file ./packages.list to ./packages directory.
+    repo [path] --install-from-file [file]      Install all packages listed in the file [file] to [path]
+
+
+  Open package project URL or Licence URL
+
+    repo --url [pack]                           Browse project URL of a package [pack] in ./packages.
+    repo --license [pack]                       Browse licence URL of a package [pack] in ./packages.
+    repo [path] --url [pack]                    Browse project URL of a package [pack] in [path]
+    repo [path] --license [pack]                Browse licence URL of a package [pack] in [path]
+
+  Show references for F# *.fsx scripts:        [frm]:  .NET Framework  net40 | net45   
+
+    repo --ref [frm]                            Show all assembly references from current ./packages.
+    repo --ref  --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
+    repo [path] --ref [frm]                     Show all assembly references from current [repo] directory.
+    repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory        
+        
+
+  Nuget commands:
+
+    nuget --search [package]                    Search a package by name.  
+    nuget --show   [package]                    Show package information (metadata).
+    nuget --open                                Open NuGet web site - https://www.nuget.org       
+        
+
+  Nupkg Files:
+
+    nupkg --show  [file]                        Show metadata of a *.nupkg file
+    nupkg --files [file]                        Show files in nupkg [file]        
+        
+
+  Assembly files: *.exe or *.dll
+
+    asm --info [file]                                    Show all assembly attributes from an assembly [file].
+    asm --refs [file]                                    Show all assembly references from an assembly [file].
+    asm --resources  [file]                              Show resources from an assembly file.
+    asm --namespace|-ns [file]                           Show all exported namespaces.
+    asm --namespace|-ns [file] [nspace]                  Show all types within an exported namespace from an assembly [file].
+
+    asm --type [file]                                    Show all types exported by assembly [file]
+    asm --type [file] [type]                             Show information about [type] exported by assembly [file].
+    asm --interface [file]                               Show all interfaces exported by assembly [file]. 
+    asm --abstract  [file]                               Show all abstract classes exported by assembly [file].
+   
+    asm --class  [file]                                  Show all classes exported by assembly [file].
+    asm --classn [file]                                  Show all non-abstract classes exported by assembly [file]
+
+    asm --docgen [file]                                  Print all types documentation on screen
+    asm --docgen [file] [output-file]                    Export all types documentation to org-mode file.
+        
+
+  XML query commands.
+
+    xml --show [xmluri]            Show formatted xml human-readable output from uri or file.
+    xml --show [xmluri] [file]     Export [xmluri] (file or url) to a xml human-readable file.
+
+    xml --struct [xmluri]          Show xml structure - tags hierarchy
+    xml --struct [xmluri] attr     Show xml structure tags hierarchy with attributes names.
+    xml --struct [xmluri] ns       Show xml structure tags hierarchy with namespaces
+
+
+    xml -ns                                  Show all XML namespaces 
+    xml --namespace                          Show all XML namespaces
+
+
+    xml --xvalue [xpath] [xmluri]                 Query xml nodes using xpath and show its values.
+    xml --xtext  [xpath] [xmluri]                 Query xml nodes using xpath and show its texts.
+    xml --xtext --nons [xpath] [xmluri]           Query xml nodes using xpath and show its texts ignoring namespaces.
+    xml --xattr  [xpath] [attr] [xmluri]          Query xml nodes using xpath and show the values of a node attribute.
+    xml --xattr  --nons [xpath] [attr] [xmluri]   Similar to command above but ignore namespaces.       
+        
+    
+
+  Fsproj - Helpers for fsproj files.
+
+    fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
                             
+
+  Show system information
+
+    --system 
+
+  Generate Guid - Globally Unique Identifier 
+
+    --guid 
+
+  --------------------------------------------
+
+  Command abbreviations:
+
+    --install            -i
+    --install-from-file  -if
+    --install-list       -il
+    --help               -h
+    --version            -v
+    --ver                -v
+    --list               -l
+    --search             -s
+    --show               -sh
+         
+
+ Pget - Package Get - Version 2.0.0.0 
+ 2016 Public Domain Software
+ Repository - https://github.com/caiorss/pget
+       
+#+END_SRC
+
+*** Local Repository
+**** Show repository commands help                                     :help:
+
+ - =$ pget.exe repo=
+
+*Example:*
+
+#+BEGIN_SRC text 
+  $ bin/pget.exe repo
 
     List Repository
 
@@ -238,72 +407,9 @@ Example:
       repo --ref  --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
       repo [path] --ref [frm]                     Show all assembly references from current [repo] directory.
       repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory        
-          
-
-    Nuget commands:
-
-      nuget --search [package]                    Search a package by name.  
-      nuget --show   [package]                    Show package information (metadata).
-      nuget --open                                Open NuGet web site - https://www.nuget.org       
-          
-
-    Nupkg Files:
-
-      nupkg --show  [file]                        Show metadata of a *.nupkg file
-      nupkg --files [file]                        Show files in nupkg [file]        
-          
-
-    Assembly files: *.exe or *.dll
-
-      asm --info [file]                                    Show all assembly attributes from an assembly [file].
-      asm --refs [file]                                    Show all assembly references from an assembly [file].
-      asm --resources  [file]                              Show resources from an assembly file.
-      asm --namespace|-ns [file]                           Show all exported namespaces.
-      asm --namespace|-ns [file] [nspace]                  Show all types within an exported namespace from an assembly [file].
-
-      asm --type [file]                                    Show all types exported by assembly [file]
-      asm --type [file] [type]                             Show information about [type] exported by assembly [file].
-      asm --interface [file]                               Show all interfaces exported by assembly [file]. 
-      asm --abstract  [file]                               Show all abstract classes exported by assembly [file].
-     
-      asm --class  [file]                                  Show all classes exported by assembly [file].
-      asm --classn [file]                                  Show all non-abstract classes exported by assembly [file]
-          
-
-    Fsproj - Helpers for fsproj files.
-
-      fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
-                              
-
-    Show system information
-
-      --system 
-
-    Generate Guid - Globally Unique Identifier 
-
-      --guid 
-
-    --------------------------------------------
-
-    Command abbreviations:
-
-      --install            -i
-      --install-from-file  -if
-      --install-list       -il
-      --help               -h
-      --version            -v
-      --ver                -v
-      --list               -l
-      --search             -s
-      --show               -sh
-           
-
-   Pget - Package Get - Version 1.5.0.0 
-   2016 Public Domain Software
-   Repository - https://github.com/caiorss/pget
+       
 #+END_SRC
 
-*** Local Repository
 **** List packages
 ***** List packages in project repository ./packages directory:
 
@@ -863,6 +969,23 @@ or
 
  - =$ pget.exe repo -if [package-list-file]=
 *** NuGet Repository 
+**** Show nuget commands help                                          :help:
+
+ - =$ pget.exe nuget=
+
+*Example:*
+
+#+BEGIN_SRC text
+$ bin/pget.exe nuget
+
+  Nuget commands:
+
+    nuget --search [package]                    Search a package by name.  
+    nuget --show   [package]                    Show package information (metadata).
+    nuget --open                                Open NuGet web site - https://www.nuget.org       
+        
+#+END_SRC
+
 **** Search a package
 
  - =$ pget.exe nuget --search [keyword]= or - =$ pget.exe nuget -s [keywork]=
@@ -942,6 +1065,21 @@ Example:
 #+END_SRC
 
 *** NuGet package files nupkg files
+**** Show nupkg help                                                   :help:
+
+ - =$ pget.exe nupkg= 
+
+*Example:*
+
+#+BEGIN_SRC text 
+$ bin/pget.exe nupkg
+
+  Nupkg Files:
+
+    nupkg --show  [file]                        Show metadata of a *.nupkg file
+    nupkg --files [file]                        Show files in nupkg [file]               
+#+END_SRC
+
 **** Show package file metadata
 
 Show a NuGet package metadata
@@ -988,45 +1126,39 @@ Example:
   lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll
   lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.XML
 #+END_SRC
+*** Assembly metadata
+**** Show Assembly commands help                                       :help:
 
-*** Fsproj Helpers
+ - =$ pget.exe asm=
 
-Generate include tags for all packages in project repository (./packages)
+*Example:*
 
-- =$ pget.exe fsproj --ref [framework]=
+#+BEGIN_SRC text 
+$ bin/pget.exe asm
 
-Where framework can be
+  Assembly files: *.exe or *.dll
 
- - net40 for .NET 4.0
- - net45 for .NET 4.5
+    asm --info [file]                                    Show all assembly attributes from an assembly [file].
+    asm --refs [file]                                    Show all assembly references from an assembly [file].
+    asm --resources  [file]                              Show resources from an assembly file.
+    asm --namespace|-ns [file]                           Show all exported namespaces.
+    asm --namespace|-ns [file] [nspace]                  Show all types within an exported namespace from an assembly [file].
 
-#+BEGIN_SRC sh
-  $ bin/pget.exe fsproj --ref net45
-  <Reference Include="FParsec">
-       <HintPath>packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll</HintPath>
-  </Reference>
-  <Reference Include="FParsecCS">
-       <HintPath>packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll</HintPath>
-  </Reference>
-  <Reference Include="FS.INIReader">
-       <HintPath>packages/FS.INIReader.1.0.3/lib/net45/FS.INIReader.dll</HintPath>
-  </Reference>
-  <Reference Include="Microsoft.Web.XmlTransform">
-       <HintPath>packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll</HintPath>
-  </Reference>
-  <Reference Include="NuGet.Core">
-       <HintPath>packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll</HintPath>
-  </Reference>
-  <Reference Include="OxyPlot">
-       <HintPath>packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll</HintPath>
-  </Reference>
-  <Reference Include="OxyPlot.Pdf">
-       <HintPath>packages/OxyPlot.Pdf.1.0.0/lib/net40/OxyPlot.Pdf.dll</HintPath>
-  </Reference>
-  ...
+    asm --type [file]                                    Show all types exported by assembly [file]
+    asm --type [file] [type]                             Show information about [type] exported by assembly [file].
+    asm --interface [file]                               Show all interfaces exported by assembly [file]. 
+    asm --abstract  [file]                               Show all abstract classes exported by assembly [file].
+   
+    asm --class  [file]                                  Show all classes exported by assembly [file].
+    asm --classn [file]                                  Show all non-abstract classes exported by assembly [file]
+
+    asm --docgen [file]                                  Print all types documentation on screen
+    asm --docgen [file] [output-file]                    Export all types documentation to org-mode file.
+        
+
+
 #+END_SRC
 
-*** Assembly metadata
 **** Show Assembly Attributes
 
  - =$ pget.exe asm --info [assembly-file]=
@@ -1172,122 +1304,520 @@ NuGet.XElementExtensions
 
  - =$ pget.exe asm --type [asmFile] [TypeName]=
 
+Example: Show information about type NuGet.ZipPackage exported by NuGet.Core.dll .
+
 #+BEGIN_SRC text
-$ bin/pget.exe repo --files NuGet.Core
-packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll
-
-$ bin/pget.exe asm --type packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll NuGet.ZipPackage
-
-Type Info:
-
-  Name:           ZipPackage
-  Full Name:      NuGet.ZipPackage
-  Namespace:      NuGet
-  Module:         NuGet.Core.dll
-  Base Type:      NuGet.LocalPackage
-
-Predicates
-
-  Class:          True
-  Abstract Class: False
-  Primitive       False
-  Array:          False
-  Interface       False   
-  Enum            False
-  Public          True
-  Visible         True
-  
-                        
-
-Fields
-----------------
-
-Properties
-----------------
-	System.String Id
-
-	NuGet.SemanticVersion Version
-
-	System.String Title
-
-	System.Collections.Generic.IEnumerable`1[System.String] Authors
-
-	System.Collections.Generic.IEnumerable`1[System.String] Owners
-
-	System.Uri IconUrl
-
-	System.Uri LicenseUrl
-
-	System.Uri ProjectUrl
-
-	System.Uri ReportAbuseUrl
-
-	Int32 DownloadCount
-
-	Boolean RequireLicenseAcceptance
-
-	Boolean DevelopmentDependency
-
-	System.String Description
-
-	System.String Summary
-
-	System.String ReleaseNotes
-
-	System.String Language
-
-	System.String Tags
-
-	System.Version MinClientVersion
-
-	Boolean IsAbsoluteLatestVersion
-
-	Boolean IsLatestVersion
-
-	Boolean Listed
-
-	System.Nullable`1[System.DateTimeOffset] Published
-
-	System.String Copyright
-
-	System.Collections.Generic.IEnumerable`1[NuGet.PackageDependencySet] DependencySets
-
-	System.Collections.Generic.IEnumerable`1[NuGet.FrameworkAssemblyReference] FrameworkAssemblies
-
-	System.Collections.Generic.IEnumerable`1[NuGet.IPackageAssemblyReference] AssemblyReferences
-
-	System.Collections.Generic.ICollection`1[NuGet.PackageReferenceSet] PackageAssemblyReferences
+  $ bin/pget.exe repo --files NuGet.Core
+  packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll
 
 
-Constructors
-----------------
-	Void .ctor(String)
+  $ bin/pget.exe asm --type packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll NuGet.ZipPackage
 
-	Void .ctor(Func`1, Func`1)
+  ,**** Type Info
 
-	Void .ctor(Stream)
+   - Name:           ZipPackage
+   - Full Name:      NuGet.ZipPackage
+   - Namespace:      NuGet
+   - Module:         NuGet.Core.dll
+   - Base Type:      NuGet.LocalPackage
+
+  ,*Predicates*
+
+   - Class:          True
+   - Abstract Class: False
+   - Primitive       False
+   - Array:          False
+   - Interface       False
+   - Enum            False
+   - Public          True
+   - Visible         True
+
+                          
+
+  ,**** Fields
+
+  ,**** Properties
+   - System.String Id
+
+   - NuGet.SemanticVersion Version
+
+   - System.String Title
+
+   - System.Collections.Generic.IEnumerable`1[System.String] Authors
+
+   - System.Collections.Generic.IEnumerable`1[System.String] Owners
+
+   - System.Uri IconUrl
+
+   - System.Uri LicenseUrl
+
+   - System.Uri ProjectUrl
+
+   - System.Uri ReportAbuseUrl
+
+   - Int32 DownloadCount
+
+   - Boolean RequireLicenseAcceptance
+
+   - Boolean DevelopmentDependency
+
+   - System.String Description
+
+   - System.String Summary
+
+   - System.String ReleaseNotes
+
+   - System.String Language
+
+   - System.String Tags
+
+   - System.Version MinClientVersion
+
+   - Boolean IsAbsoluteLatestVersion
+
+   - Boolean IsLatestVersion
+
+   - Boolean Listed
+
+   - System.Nullable`1[System.DateTimeOffset] Published
+
+   - System.String Copyright
+
+   - System.Collections.Generic.IEnumerable`1[NuGet.PackageDependencySet] DependencySets
+
+   - System.Collections.Generic.IEnumerable`1[NuGet.FrameworkAssemblyReference] FrameworkAssemblies
+
+   - System.Collections.Generic.IEnumerable`1[NuGet.IPackageAssemblyReference] AssemblyReferences
+
+   - System.Collections.Generic.ICollection`1[NuGet.PackageReferenceSet] PackageAssemblyReferences
 
 
-Methods
-----------------
-	System.IO.Stream GetStream()
+  ,**** Constructors
+      Void .ctor(String)
 
-	Void ExtractContents(NuGet.IFileSystem, System.String)
+      Void .ctor(Func`1, Func`1)
 
-	System.String GetPackageIdentifier(System.IO.Packaging.Package)
+      Void .ctor(Stream)
 
-	System.Collections.Generic.IEnumerable`1[System.Runtime.Versioning.FrameworkName] GetSupportedFrameworks()
 
-	System.Collections.Generic.IEnumerable`1[NuGet.IPackageFile] GetFiles()
+  ,**** Methods
+   - System.IO.Stream GetStream()
 
-	System.String ToString()
+   - Void ExtractContents(NuGet.IFileSystem, System.String)
 
-	Boolean Equals(System.Object)
+   - System.String GetPackageIdentifier(System.IO.Packaging.Package)
 
-	Int32 GetHashCode()
+   - System.Collections.Generic.IEnumerable`1[System.Runtime.Versioning.FrameworkName] GetSupportedFrameworks()
 
-	System.Type GetType()
+   - System.Collections.Generic.IEnumerable`1[NuGet.IPackageFile] GetFiles()
+
+   - System.String ToString()
+
+   - Boolean Equals(System.Object)
+
+   - Int32 GetHashCode()
+
+   - System.Type GetType()
+
 #+END_SRC 
+
+Example: Show type information about type Eto.Forms.Form defined in Eto.dll.
+
+Note: The summaries about the methods, fields and properties comes
+from file Eto.xml 
+
+#+BEGIN_SRC text
+  $ bin/pget.exe asm --type packages/Eto.Forms.2.3.0/lib/net45/Eto.dll Eto.Forms.Form
+
+  ,**** Type Info
+
+   - Name:           Form
+   - Full Name:      Eto.Forms.Form
+   - Namespace:      Eto.Forms
+   - Module:         Eto.dll
+   - Base Type:      Eto.Forms.Window
+
+  ,*Predicates*
+
+   - Class:          True
+   - Abstract Class: False
+   - Primitive       False
+   - Array:          False
+   - Interface       False
+   - Enum            False
+   - Public          True
+   - Visible         True
+
+                          
+
+  ,**** Fields
+
+  ,**** Properties
+   - Boolean ShowActivated
+
+  Gets or sets a value indicating that the form should be activated when initially shown.
+
+   - System.String Title
+
+  Gets or sets the title of the window
+
+   - Eto.Drawing.Point Location
+
+  Gets or sets the location of the window
+
+   - Eto.Drawing.Rectangle Bounds
+
+  Gets or sets the size and location of the window
+
+   - Eto.Forms.ToolBar ToolBar
+
+  Gets or sets the tool bar for the window.
+
+   - Double Opacity
+
+  Gets or sets the opacity of the window
+
+   - Eto.Forms.Window Owner
+
+  Gets or sets the owner of this window.
+
+   - Eto.Forms.Screen Screen
+
+  Gets the screen this window is mostly contained in. Typically defined by the screen center of the window is visible.
+
+   - Eto.Forms.MenuBar Menu
+
+  Gets or sets the menu bar for this window
+
+   - Eto.Drawing.Icon Icon
+
+  Gets or sets the icon for the window to show in the menu bar.
+
+   - Boolean Resizable
+
+  Gets or sets a value indicating whether this  is resizable.
+
+   - Boolean Maximizable
+
+  Gets or sets a value indicating whether this  can be maximized.
+
+   - Boolean Minimizable
+
+  Gets or sets a value indicating whether this  can be minimized.
+
+   - Boolean ShowInTaskbar
+
+  Gets or sets a value indicating whether this  will show in the taskbar.
+
+   - Boolean Topmost
+
+  Gets or sets a value indicating whether this  is above all other windows.
+
+   - Eto.Forms.WindowState WindowState
+
+  Gets or sets the state of the window.
+
+   - Eto.Drawing.Rectangle RestoreBounds
+
+  Gets the bounds of the window before it was minimized or maximized, or the current bounds if  is Normal.
+
+   - Eto.Forms.WindowStyle WindowStyle
+
+  Gets or sets the style of this window.
+
+   - Single LogicalPixelSize
+
+  Gets the number of pixels per logical pixel when on a high DPI display.
+
+   - System.Collections.Generic.IEnumerable`1[Eto.Forms.Control] Controls
+
+  Gets an enumeration of controls that are directly contained by this container
+
+   - Eto.Drawing.Padding Padding
+
+  Gets or sets the padding around the  of the panel.
+
+   - Eto.Drawing.Size MinimumSize
+
+  Gets or sets the minimum size of the panel.
+
+   - Eto.Forms.ContextMenu ContextMenu
+
+  Gets or sets the context menu for the panel.
+
+   - Eto.Forms.Control Content
+
+  Gets or sets the main content of the panel.
+
+   - Eto.Drawing.Size ClientSize
+
+  Gets or sets the size for the client area of the control
+
+   - System.Collections.Generic.IEnumerable`1[Eto.Forms.Control] VisualControls
+
+  Gets an enumeration of controls that are in the visual tree.
+
+   - System.Collections.Generic.IEnumerable`1[Eto.Forms.Control] Children
+
+  Gets an enumeration of all contained child controls, including controls within child containers
+
+   - System.Collections.Generic.IEnumerable`1[Eto.Forms.Control] VisualChildren
+
+  Gets an enumeration of all contained child controls in the visual tree, including controls within child containers.
+
+   - Boolean Loaded
+
+  Gets a value indicating that the control is loaded onto a form, that is it has been created, added to a parent, and shown
+
+   - System.Object Tag
+
+  Gets or sets a user-defined object that contains data about the control
+
+   - Eto.Drawing.Size Size
+
+  Gets or sets the size of the control. Use -1 to specify auto sizing for either the width and/or height.
+
+   - Int32 Width
+
+  Gets or sets the width of the control size.
+
+   - Int32 Height
+
+  Gets or sets the height of the control size.
+
+   - Boolean Enabled
+
+  Gets or sets a value indicating whether this  is enabled and accepts user input.
+
+   - Boolean Visible
+
+  Gets or sets a value indicating whether this  is visible to the user.
+
+   - Eto.Forms.Container Parent
+
+  Gets the container which this control has been added to, if any
+
+   - Eto.Forms.Container VisualParent
+
+  Gets the visual container of this control, if any.
+
+   - Eto.Drawing.Color BackgroundColor
+
+  Gets or sets the color for the background of the control
+
+   - Boolean HasFocus
+
+  Gets a value indicating whether this instance has the keyboard input focus.
+
+   - Boolean IsSuspended
+
+  Gets a value indicating whether the layout of child controls is suspended.
+
+   - Eto.Forms.Window ParentWindow
+
+  Gets the window this control is contained in
+
+   - System.Collections.Generic.IEnumerable`1[System.String] SupportedPlatformCommands
+
+  Gets the supported platform commands that can be used to hook up system functions to user defined logic
+
+   - Eto.Forms.Cursor Cursor
+
+  Gets or sets the type of cursor to use when the mouse is hovering over the control
+
+   - System.String ToolTip
+
+  Gets or sets the tool tip to show when the mouse is hovered over the control
+
+   - Eto.Widget Parent
+
+  Gets the parent widget which this widget has been added to, if any
+
+   - System.Collections.Generic.IEnumerable`1[Eto.Widget] Parents
+
+  Gets an enumeration of all parent widgets in the heirarchy by traversing the  property.
+
+   - System.Object DataContext
+
+  Gets or sets the data context for this widget for binding
+
+   - Eto.Forms.BindingCollection Bindings
+
+  Gets the collection of bindings that are attached to this widget
+
+   - Eto.Platform Platform
+
+  Gets the platform that was used to create the  for this widget
+
+   - System.Object Handler
+
+  Gets the platform-specific handler for this widget
+
+   - IntPtr NativeHandle
+
+  Gets the native platform-specific handle for integration purposes
+
+   - Eto.PropertyStore Properties
+
+  Gets the dictionary of properties for this widget
+
+   - System.String ID
+
+  Gets or sets the ID of this widget
+
+   - System.String Style
+
+  Gets or sets the style of this widget
+
+   - System.Object ControlObject
+
+  Gets the instance of the platform-specific object
+
+
+  ,**** Constructors
+      Void .ctor()
+
+      Void .ctor(IHandler)
+
+
+  ,**** Methods
+   - Void Show()
+
+  Show the form
+
+   - Void Close()
+
+  Closes the window
+
+   - Void Minimize()
+
+  Sets  to
+
+   - Void Maximize()
+
+  Sets  to
+
+   - Void BringToFront()
+
+  Brings the window in front of all other windows in the z-order.
+
+   - Void SendToBack()
+
+  Sends the window behind all other windows in the z-order.
+
+   - Void Remove(Eto.Forms.Control)
+
+  Removes the specified child from the container
+
+   - Void Unbind()
+
+  Unbinds any bindings in the  collection and removes the bindings, and recurses to this container's children
+
+   - Void UpdateBindings(Eto.Forms.BindingUpdateMode)
+
+  Updates all bindings in this widget, and recurses to this container's children
+
+   - Void Remove(System.Collections.Generic.IEnumerable`1[Eto.Forms.Control])
+
+  Remove the specified  from this container
+
+   - Void RemoveAll()
+
+  Removes all controls from this container
+
+   - T FindChild[T](System.String)
+
+  Finds a child control in this container or any of its child containers with the specified
+
+   - Eto.Forms.Control FindChild(System.Type, System.String)
+
+  Finds a child control in this container or any of its child containers with the specified
+
+   - Eto.Forms.Control FindChild(System.String)
+
+  Finds a child control in this container or any of its child containers with the specified
+
+   - Void Invalidate()
+
+  Queues a repaint of the entire control on the screen
+
+   - Void Invalidate(Eto.Drawing.Rectangle)
+
+  Queues a repaint of the entire control on the screen
+
+   - Eto.Forms.Container FindParent(System.Type, System.String)
+
+  Finds a control in the parent hierarchy with the specified type and  if specified
+
+   - Eto.Forms.Container FindParent(System.String)
+
+  Finds a control in the parent hierarchy with the specified type and  if specified
+
+   - Void Detach()
+
+  Detaches the control by removing it from its parent
+
+   - Void AttachNative()
+
+  Attaches the control for direct use in a native application
+
+   - Void Focus()
+
+  Attempts to set the keyboard input focus to this control, or the first child that accepts focus
+
+   - Void SuspendLayout()
+
+  Suspends the layout of child controls
+
+   - Void ResumeLayout()
+
+  Resumes the layout after it has been suspended, and performs a layout
+
+   - Void MapPlatformCommand(System.String, Eto.Forms.Command)
+
+  Specifies a command to execute for a platform-specific command
+
+   - Eto.Drawing.PointF PointFromScreen(Eto.Drawing.PointF)
+
+  Converts a point from screen space to control space.
+
+   - Eto.Drawing.PointF PointToScreen(Eto.Drawing.PointF)
+
+  Converts a point from control space to screen space
+
+   - Eto.Drawing.RectangleF RectangleToScreen(Eto.Drawing.RectangleF)
+
+  Converts a rectangle from screen space to control space.
+
+   - Eto.Drawing.RectangleF RectangleFromScreen(Eto.Drawing.RectangleF)
+
+  Converts a rectangle from control space to screen space
+
+   - T FindParent[T](System.String)
+
+  Finds a control in the parent hierarchy with the specified type and  if specified
+
+   - Eto.Widget FindParent(System.Type, System.String)
+
+  Finds a control in the parent hierarchy with the specified type and  if specified
+
+   - Eto.Widget FindParent(System.String)
+
+  Finds a control in the parent hierarchy with the specified type and  if specified
+
+   - Void Dispose()
+
+  Disposes of this widget, supressing the finalizer
+
+   - Boolean Equals(System.Object)
+
+   - Int32 GetHashCode()
+
+   - System.Type GetType()
+
+   - System.String ToString()
+
+#+END_SRC
 
 **** Show all exported classes 
 
@@ -1561,7 +2091,1070 @@ Example:
   ...
 #+END_SRC
 
-*** Show System Information 
+**** Generate documentation about all exported namespaces 
+
+This command generates documentation in org-mode markdown format with
+all types methods, constructors, fields, properties categorized by
+Namespace and also includes the XML comments. 
+
+ - =$ pget.exe asm --docgen [asmfile] [output-file]=
+
+Example:
+
+Find the package files.
+
+#+BEGIN_SRC text 
+$ bin/pget.exe repo -l
+Eto.Forms 2.3.0
+Eto.Platform.Gtk 2.3.0
+FParsec 1.0.2
+FS.INIReader 1.0.3
+Microsoft.Web.Xdt 2.1.1
+NuGet.Core 2.12.0
+OxyPlot.Core 1.0.0
+OxyPlot.Pdf 1.0.0
+PDFsharp-MigraDoc-GDI 1.32.4334.0
+
+$ bin/pget.exe repo --files Eto.Forms
+packages/Eto.Forms.2.3.0/lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll
+packages/Eto.Forms.2.3.0/lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.xml
+packages/Eto.Forms.2.3.0/lib/net45/Eto.dll
+packages/Eto.Forms.2.3.0/lib/net45/Eto.xml
+packages/Eto.Forms.2.3.0/lib/net40/Eto.dll
+packages/Eto.Forms.2.3.0/lib/net40/Eto.xml
+packages/Eto.Forms.2.3.0/LICENSE.txt
+#+END_SRC
+
+Generating documentation: 
+
+#+BEGIN_SRC text
+$ bin/pget.exe asm --docgen packages/Eto.Forms.2.3.0/lib/net45/Eto.dll Eto-doc.org
+#+END_SRC
+
+Browser documentation: 
+
+#+BEGIN_SRC doc
+$ emacs -Q  Eto-doc.org 
+#+END_SRC
+
+*Screenshots:*
+
+The picture below picture shows all namespaces defined in Eto.dll assembly of
+Eto-forms package.
+
+#+CAPTION: Eto forms namespaces 
+[[file:images/42cf8c02-f803-4713-a7d1-0e557de60891.png%0A][file:images/42cf8c02-f803-4713-a7d1-0e557de60891.png
+]]
+This picture shows all types within in the Eto.Forms namespace.
+
+#+CAPTION: Browsing Eto.Forms namespace. 
+[[file:images/84aba9e2-5e75-4903-80af-eb293ab698f4.png%0A][file:images/84aba9e2-5e75-4903-80af-eb293ab698f4.png
+]]
+This pictures below show the properties of type Eto.Forms.Form 
+
+#+CAPTION: Eto.Forms.Form type information / type predicates.
+[[file:images/e6701dd4-4ec6-4e26-a930-9b80299369b4.png%0A][file:images/e6701dd4-4ec6-4e26-a930-9b80299369b4.png
+]]
+#+CAPTION: Eto.Forms.Form type information / properties
+[[file:images/cce9388f-a5da-4cac-b9c7-b379c52b5494.png%0A][file:images/cce9388f-a5da-4cac-b9c7-b379c52b5494.png
+]]
+#+CAPTION: Eto.Forms.Form type information / methods 
+[[file:images/ccf94d57-77cb-480a-a036-52855ff5c582.png%0A][file:images/ccf94d57-77cb-480a-a036-52855ff5c582.png
+]]
+
+*** Fsproj Helpers
+
+Generate include tags for all packages in project repository (./packages)
+
+- =$ pget.exe fsproj --ref [framework]=
+
+Where framework can be
+
+ - net40 for .NET 4.0
+ - net45 for .NET 4.5
+
+#+BEGIN_SRC sh
+  $ bin/pget.exe fsproj --ref net45
+  <Reference Include="FParsec">
+       <HintPath>packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll</HintPath>
+  </Reference>
+  <Reference Include="FParsecCS">
+       <HintPath>packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll</HintPath>
+  </Reference>
+  <Reference Include="FS.INIReader">
+       <HintPath>packages/FS.INIReader.1.0.3/lib/net45/FS.INIReader.dll</HintPath>
+  </Reference>
+  <Reference Include="Microsoft.Web.XmlTransform">
+       <HintPath>packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll</HintPath>
+  </Reference>
+  <Reference Include="NuGet.Core">
+       <HintPath>packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll</HintPath>
+  </Reference>
+  <Reference Include="OxyPlot">
+       <HintPath>packages/OxyPlot.Core.1.0.0/lib/net40/OxyPlot.dll</HintPath>
+  </Reference>
+  <Reference Include="OxyPlot.Pdf">
+       <HintPath>packages/OxyPlot.Pdf.1.0.0/lib/net40/OxyPlot.Pdf.dll</HintPath>
+  </Reference>
+  ...
+#+END_SRC
+
+*** XML tools 
+**** Display help for xml commands                                     :help:
+
+ - =$ pget.exe xml=
+
+#+BEGIN_SRC text 
+$ bin/pget.exe xml 
+
+  XML query commands.
+
+    xml --show [xmluri]            Show formatted xml human-readable output from uri or file.
+    xml --show [xmluri] [file]     Export [xmluri] (file or url) to a xml human-readable file.
+
+    xml --struct [xmluri]          Show xml structure - tags hierarchy
+    xml --struct [xmluri] attr     Show xml structure tags hierarchy with attributes names.
+    xml --struct [xmluri] ns       Show xml structure tags hierarchy with namespaces
+
+
+    xml -ns                                  Show all XML namespaces 
+    xml --namespace                          Show all XML namespaces
+
+
+    xml --xvalue [xpath] [xmluri]                 Query xml nodes using xpath and show its values.
+    xml --xtext  [xpath] [xmluri]                 Query xml nodes using xpath and show its texts.
+    xml --xtext --nons [xpath] [xmluri]           Query xml nodes using xpath and show its texts ignoring namespaces.
+    xml --xattr  [xpath] [attr] [xmluri]          Query xml nodes using xpath and show the values of a node attribute.
+    xml --xattr  --nons [xpath] [attr] [xmluri]   Similar to command above but ignore namespaces.       
+        
+#+END_SRC
+ 
+**** Display XML in human-readable format from URI/URL or file 
+
+ - =$ pget.exe xml --show [xmluri]=
+
+*Examples:*
+
+Display XML from file:
+
+#+BEGIN_SRC text 
+$ bin/pget.exe xml --show  infoq.rss
+<?xml version="1.0" encoding="utf-16"?>
+<rss xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>InfoQ</title>
+    <link>http://www.infoq.com</link>
+    <description>InfoQ feed</description>
+    <item>
+      <title>Presentation: Spring and Big Data</title>
+      <link>http://www.infoq.com/presentations/big-data-spring?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/big-data-spring/en/mediumimage/tombig.JPG"/&gt;&lt;p&gt;Thomas Risberg discusses developing big data pipelines with Spring, focusing around the code needed and he also covers how to set up a test environment both locally and in the cloud.&lt;/p&gt; &lt;i&gt;By Thomas Risberg&lt;/i&gt;</description>
+      <category>Java</category>
+      <category>Spring</category>
+      <category>Languages</category>
+... ... ... ... ... ... ... 
+
+      <dc:creator>Jie Yu</dc:creator>
+      <dc:date>2017-01-07T18:22:00Z</dc:date>
+      <dc:identifier>/presentations/mesos-api/en</dc:identifier>
+    </item>
+    <item>
+      <title>Presentation: Building a Microservices Platform with Kubernetes</title>
+      <link>http://www.infoq.com/presentations/microservices-kubernetes?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/microservices-kubernetes/en/mediumimage/Matbig.JPG"/&gt;&lt;p&gt;Matthew Mark Miller discusses Kubernetes’ primitives and microservices patterns on top of them, including rolling deployments, stateful services and adding behaviors via sidecars.&lt;/p&gt; &lt;i&gt;By Matthew Mark Miller&lt;/i&gt;</description>
+      <category>Conferences</category>
+      <category>Deployment</category>
+      <category>QCon</category>
+      <category>Architecture</category>
+      <category>Cloud Computing</category>
+      <category>DevOps</category>
+      <category>Architecture &amp; Design</category>
+      <category>Microservices</category>
+      <category>Kubernetes</category>
+      <category>Containers</category>
+      <category>QCon San Francisco 2016</category>
+      <category>presentation</category>
+      <pubDate>Sat, 07 Jan 2017 16:37:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/microservices-kubernetes?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Matthew Mark Miller</dc:creator>
+      <dc:date>2017-01-07T16:37:00Z</dc:date>
+      <dc:identifier>/presentations/microservices-kubernetes/en</dc:identifier>
+    </item>
+  </channel>
+</rss>
+
+#+END_SRC
+
+Display XML from URL:
+
+#+BEGIN_SRC text
+$ bin/pget.exe xml --show "https://www.infoq.com/feed?token=WSVCFU3gCRvgXaLKxLiHKq90pV5PnH1z"
+
+<?xml version="1.0" encoding="utf-16"?>
+<rss xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>InfoQ</title>
+    <link>http://www.infoq.com</link>
+    <description>InfoQ feed</description>
+    <item>
+      <title>Presentation: Spring and Big Data</title>
+      <link>http://www.infoq.com/presentations/big-data-spring?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+
+...  ... ... 
+
+      <category>Containers</category>
+      <category>QCon San Francisco 2016</category>
+      <category>presentation</category>
+      <pubDate>Sat, 07 Jan 2017 16:37:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/microservices-kubernetes?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Matthew Mark Miller</dc:creator>
+      <dc:date>2017-01-07T16:37:00Z</dc:date>
+      <dc:identifier>/presentations/microservices-kubernetes/en</dc:identifier>
+    </item>
+  </channel>
+</rss>
+
+#+END_SRC
+**** Save XML in human-readable format from file or URI to a new file. 
+
+ - =$ pget.exe --show xmluri xmlfile=
+
+*Examples*
+
+Save xml from url to a file:
+
+#+BEGIN_SRC text
+$ bin/pget.exe xml --show https://www.infoq.com/feed?token=WSVCFU3gCRvgXaLKxLiHKq90pV5PnH1z infoq.rss
+
+$ bin/pget.exe xml --show infoq.rss
+<?xml version="1.0" encoding="utf-16"?>
+<rss xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>InfoQ</title>
+    <link>http://www.infoq.com</link>
+    <description>InfoQ feed</description>
+    <item>
+      <title>Presentation: Spring and Big Data</title>
+      <link>http://www.infoq.com/presentations/big-data-spring?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/big-data-spring/en/mediumimage/tombig.JPG"/&gt;&lt;p&gt;Thomas Risberg discusses developing big data pipelines with Spring, focusing around the code needed and he also covers how to set up a test environment both locally and in the cloud.&lt;/p&gt; &lt;i&gt;By Thomas Risberg&lt;/i&gt;</description>
+      <category>Java</category>
+ 
+ ... ... ... ... ... ... 
+
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/mesos-api/en/mediumimage/Jiebig.JPG"/&gt;&lt;p&gt;Jie Yu gives an overview of Mesos and its API which allows users to deploy stateless and stateful services. He discusses how containers are managed in Mesos, the future of container support in Mesos, and shows some of the new container networking and storage features that have been added recently.&lt;/p&gt; &lt;i&gt;By Jie Yu&lt;/i&gt;</description>
+      <category>Conferences</category>
+      <category>Orchestration</category>
+      <category>QCon</category>
+      <category>Cloud Computing</category>
+      <category>DevOps</category>
+      <category>Infrastructure</category>
+      <category>Mesos</category>
+      <category>Architecture &amp; Design</category>
+      <category>Containers</category>
+      <category>QCon San Francisco 2016</category>
+      <category>presentation</category>
+      <pubDate>Sat, 07 Jan 2017 18:22:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/mesos-api?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Jie Yu</dc:creator>
+      <dc:date>2017-01-07T18:22:00Z</dc:date>
+      <dc:identifier>/presentations/mesos-api/en</dc:identifier>
+    </item>
+    <item>
+      <title>Presentation: Building a Microservices Platform with Kubernetes</title>
+      <link>http://www.infoq.com/presentations/microservices-kubernetes?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/microservices-kubernetes/en/mediumimage/Matbig.JPG"/&gt;&lt;p&gt;Matthew Mark Miller discusses Kubernetes’ primitives and microservices patterns on top of them, including rolling deployments, stateful services and adding behaviors via sidecars.&lt;/p&gt; &lt;i&gt;By Matthew Mark Miller&lt;/i&gt;</description>
+      <category>Conferences</category>
+      <category>Deployment</category>
+      <category>QCon</category>
+      <category>Architecture</category>
+      <category>Cloud Computing</category>
+      <category>DevOps</category>
+      <category>Architecture &amp; Design</category>
+      <category>Microservices</category>
+      <category>Kubernetes</category>
+      <category>Containers</category>
+      <category>QCon San Francisco 2016</category>
+      <category>presentation</category>
+      <pubDate>Sat, 07 Jan 2017 16:37:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/microservices-kubernetes?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Matthew Mark Miller</dc:creator>
+      <dc:date>2017-01-07T16:37:00Z</dc:date>
+      <dc:identifier>/presentations/microservices-kubernetes/en</dc:identifier>
+    </item>
+  </channel>
+</rss>
+
+#+END_SRC
+
+**** Show XML all namespaces 
+
+ - =$ pget.exe --namespace [xmluri]=
+
+or 
+
+ - =$ pget.exe --ns [xmluri]=
+
+*Example:*
+
+#+BEGIN_SRC text 
+  $ bin/pget.exe xml --namespace pget-exe.fsproj 
+  Prefix = 
+  Uri    = http://schemas.microsoft.com/developer/msbuild/2003
+
+  $ bin/pget.exe xml --namespace infoq.rss 
+  Prefix = 
+  Uri    = 
+
+  Prefix = dc
+  Uri    = http://purl.org/dc/elements/1.1/
+
+
+  $ bin/pget.exe xml -ns eurofxref-daily.xml 
+  Prefix = gesmes
+  Uri    = http://www.gesmes.org/xml/2002-08-01
+
+  Prefix = 
+  Uri    = http://www.ecb.int/vocabulary/2002-08-01/eurofxref
+
+  $ bin/pget.exe xml --show eurofxref-daily.xml
+
+  <?xml version="1.0" encoding="utf-16"?>
+  <gesmes:Envelope xmlns:gesmes="http://www.gesmes.org/xml/2002-08-01" xmlns="http://www.ecb.int/vocabulary/2002-08-01/eurofxref">
+    <gesmes:subject>Reference rates</gesmes:subject>
+    <gesmes:Sender>
+      <gesmes:name>European Central Bank</gesmes:name>
+    </gesmes:Sender>
+    <Cube>
+      <Cube time="2017-01-09">
+        <Cube currency="USD" rate="1.0516" />
+        <Cube currency="JPY" rate="122.66" />
+        <Cube currency="BGN" rate="1.9558" />
+        <Cube currency="CZK" rate="27.021" />
+        <Cube currency="DKK" rate="7.4339" />
+        <Cube currency="GBP" rate="0.86660" />
+        <Cube currency="HUF" rate="308.21" />
+        <Cube currency="PLN" rate="4.3777" />
+        <Cube currency="RON" rate="4.5016" />
+        <Cube currency="SEK" rate="9.5533" />
+        <Cube currency="CHF" rate="1.0721" />
+        <Cube currency="NOK" rate="9.0193" />
+        <Cube currency="HRK" rate="7.5701" />
+        <Cube currency="RUB" rate="62.8383" />
+        <Cube currency="TRY" rate="3.9210" />
+        <Cube currency="AUD" rate="1.4357" />
+        <Cube currency="BRL" rate="3.3780" />
+        <Cube currency="CAD" rate="1.3954" />
+        <Cube currency="CNY" rate="7.2958" />
+        <Cube currency="HKD" rate="8.1562" />
+        <Cube currency="IDR" rate="14033.73" />
+        <Cube currency="ILS" rate="4.0480" />
+        <Cube currency="INR" rate="71.6875" />
+        <Cube currency="KRW" rate="1266.33" />
+        <Cube currency="MXN" rate="22.3940" />
+        <Cube currency="MYR" rate="4.7080" />
+        <Cube currency="NZD" rate="1.5067" />
+        <Cube currency="PHP" rate="52.188" />
+        <Cube currency="SGD" rate="1.5135" />
+        <Cube currency="THB" rate="37.574" />
+        <Cube currency="ZAR" rate="14.4127" />
+      </Cube>
+    </Cube>
+  </gesmes:Envelope>
+
+#+END_SRC
+
+**** Show XML tags hierarchy
+
+ - =$ pget.exe xml --struct [xmluri]=
+
+*Example:*
+
+#+BEGIN_SRC text 
+  $ bin/pget.exe xml --struct infoq.rss
+  (0.0) channel
+      (1.0) title
+          (2.0) #text
+      (1.1) link
+          (2.0) #text
+      (1.2) description
+          (2.0) #text
+      (1.3) item
+          (2.0) title
+              (3.0) #text
+          (2.1) link
+              (3.0) #text
+          (2.2) description
+              (3.0) #text
+          (2.3) category
+              (3.0) #text
+          (2.4) category
+              (3.0) #text
+          (2.5) category
+              (3.0) #text
+          (2.6) category
+              (3.0) #text
+          (2.7) category
+              (3.0) #text
+          (2.8) category
+              (3.0) #text
+          (2.9) category
+              (3.0) #text
+          (2.10) category
+              (3.0) #text
+          (2.11) category
+              (3.0) #text
+          (2.12) category
+              (3.0) #text
+          (2.13) category
+              (3.0) #text
+          (2.14) category
+              (3.0) #text
+          (2.15) category
+              (3.0) #text
+          (2.16) category
+              (3.0) #text
+          (2.17) category
+              (3.0) #text
+          (2.18) pubDate
+              (3.0) #text
+          (2.19) guid
+              (3.0) #text
+          (2.20) dc:creator
+              (3.0) #text
+          (2.21) dc:date
+              (3.0) #text
+          (2.22) dc:identifier
+              (3.0) #text
+      (1.4) item
+          (2.0) title
+              (3.0) #text
+          (2.1) link
+              (3.0) #text
+          (2.2) description
+              (3.0) #text
+          (2.3) category
+              (3.0) #text
+          (2.4) category
+              (3.0) #text
+          (2.5) category
+              (3.0) #text
+          (2.6) category
+              (3.0) #text
+          (2.7) category
+              (3.0) #text
+          (2.8) category
+              (3.0) #text
+          (2.9) category
+              (3.0) #text
+          (2.10) category
+              (3.0) #text
+          (2.11) category
+              (3.0) #text
+          (2.12) category
+              (3.0) #text
+          (2.13) category
+              (3.0) #text
+          (2.14) category
+              (3.0) #text
+          (2.15) pubDate
+              (3.0) #text
+          (2.16) guid
+              (3.0) #text
+          (2.17) dc:creator
+              (3.0) #text
+          (2.18) dc:date
+              (3.0) #text
+          (2.19) dc:identifier
+              (3.0) #text
+      (1.5) item
+          (2.0) title
+              (3.0) #text
+          (2.1) link
+              (3.0) #text
+          (2.2) description
+              (3.0) #text
+          (2.3) category
+              (3.0) #text
+          (2.4) category
+              (3.0) #text
+          (2.5) category
+              (3.0) #text
+          (2.6) category
+              (3.0) #text
+          (2.7) category
+              (3.0) #text
+          (2.8) category
+              (3.0) #text
+          (2.9) category
+              (3.0) #text
+          (2.10) category
+              (3.0) #text
+          (2.11) category
+              (3.0) #text
+          (2.12) category
+              (3.0) #text
+          (2.13) category
+              (3.0) #text
+          (2.14) category
+              (3.0) #text
+          (2.15) category
+              (3.0) #text
+          (2.16) pubDate
+              (3.0) #text
+          (2.17) guid
+              (3.0) #text
+          (2.18) dc:creator
+              (3.0) #text
+          (2.19) dc:date
+              (3.0) #text
+          (2.20) dc:identifier
+              (3.0) #text
+      (1.6) item
+          (2.0) title
+              (3.0) #text
+          (2.1) link
+              (3.0) #text
+          (2.2) description
+              (3.0) #text
+          (2.3) category
+              (3.0) #text
+          (2.4) category
+              (3.0) #text
+          (2.5) category
+              (3.0) #text
+          (2.6) category
+              (3.0) #text
+          (2.7) category
+              (3.0) #text
+          (2.8) category
+              (3.0) #text
+          (2.9) category
+              (3.0) #text
+          (2.10) category
+              (3.0) #text
+          (2.11) category
+              (3.0) #text
+          (2.12) category
+              (3.0) #text
+          (2.13) category
+              (3.0) #text
+          (2.14) category
+              (3.0) #text
+          (2.15) category
+              (3.0) #text
+          (2.16) category
+              (3.0) #text
+          (2.17) pubDate
+              (3.0) #text
+          (2.18) guid
+              (3.0) #text
+          (2.19) dc:creator
+              (3.0) #text
+          (2.20) dc:date
+              (3.0) #text
+          (2.21) dc:identifier
+              (3.0) #text
+  ... ...  .... ....
+
+      (1.17) item
+          (2.0) title
+              (3.0) #text
+          (2.1) link
+              (3.0) #text
+          (2.2) description
+              (3.0) #text
+          (2.3) category
+              (3.0) #text
+          (2.4) category
+              (3.0) #text
+  ... ... ... 
+#+END_SRC
+
+**** Show XML tags hierarchy with attribute names 
+
+ - =$ pget.exe xml --struct attr [xmlfile]=
+
+*Example:*
+
+#+BEGIN_SRC text
+  $ bin/pget.exe xml --struct attr pget-exe.fsproj 
+
+  (0.0) Import [Project; Condition]
+  (0.1) PropertyGroup []
+      (1.0) Configuration [Condition]
+          (2.0) #text []
+      (1.1) Platform [Condition]
+          (2.0) #text []
+      (1.2) SchemaVersion []
+          (2.0) #text []
+      (1.3) ProjectGuid []
+          (2.0) #text []
+      (1.4) OutputType []
+          (2.0) #text []
+      (1.5) RootNamespace []
+          (2.0) #text []
+      (1.6) AssemblyName []
+          (2.0) #text []
+      (1.7) TargetFrameworkVersion []
+          (2.0) #text []
+      (1.8) #text []
+      (1.9) AutoGenerateBindingRedirects []
+          (2.0) #text []
+      (1.10) TargetFSharpCoreVersion []
+          (2.0) #text []
+      (1.11) Name []
+          (2.0) #text []
+  (0.2) PropertyGroup [Condition]
+      (1.0) DebugSymbols []
+          (2.0) #text []
+      (1.1) DebugType []
+          (2.0) #text []
+      (1.2) Optimize []
+          (2.0) #text []
+      (1.3) Tailcalls []
+          (2.0) #text []
+      (1.4) OutputPath []
+          (2.0) #text []
+      (1.5) DefineConstants []
+          (2.0) #text []
+      (1.6) WarningLevel []
+          (2.0) #text []
+      (1.7) #comment []
+  (0.3) PropertyGroup [Condition]
+      (1.0) DebugType []
+          (2.0) #text []
+      (1.1) Optimize []
+          (2.0) #text []
+      (1.2) Tailcalls []
+          (2.0) #text []
+      (1.3) OutputPath []
+          (2.0) #text []
+      (1.4) DefineConstants []
+          (2.0) #text []
+      (1.5) WarningLevel []
+          (2.0) #text []
+      (1.6) DocumentationFile []
+          (2.0) #text []
+      (1.7) OtherFlags []
+          (2.0) #text []
+  (0.4) #comment []
+  (0.5) ItemGroup []
+      (1.0) Reference [Include]
+      (1.1) Reference [Include]
+          (2.0) Private []
+              (3.0) #text []
+      (1.2) Reference [Include]
+      (1.3) Reference [Include]
+      (1.4) Reference [Include]
+      (1.5) Reference [Include]
+      (1.6) Reference [Include]
+      (1.7) Reference [Include]
+      (1.8) #comment []
+      (1.9) Reference [Include]
+          (2.0) HintPath []
+              (3.0) #text []
+      (1.10) Reference [Include]
+          (2.0) HintPath []
+              (3.0) #text []
+  (0.6) #comment []
+  (0.7) ItemGroup []
+      (1.0) Compile [Include]
+      (1.1) Compile [Include]
+      (1.2) Compile [Include]
+      (1.3) Compile [Include]
+      (1.4) Compile [Include]
+  (0.8) PropertyGroup []
+      (1.0) MinimumVisualStudioVersion [Condition]
+          (2.0) #text []
+  (0.9) Choose []
+      (1.0) When [Condition]
+          (2.0) PropertyGroup []
+              (3.0) FSharpTargetsPath []
+                  (4.0) #text []
+      (1.1) Otherwise []
+          (2.0) PropertyGroup [Condition]
+              (3.0) FSharpTargetsPath []
+                  (4.0) #text []
+  (0.10) Import [Project; Condition]
+  (0.11) #comment []
+
+#+END_SRC
+
+**** Show XML tags hintpath with namespaces
+
+ - =$ pget.exe xml --struct ns [xmluri]=
+
+*Example:*
+
+#+BEGIN_SRC text
+  $ bin/pget.exe xml --struct ns pget-exe.fsproj
+
+  (0.0) Import / http://schemas.microsoft.com/developer/msbuild/2003
+  (0.1) PropertyGroup / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.0) Configuration / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.1) Platform / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.2) SchemaVersion / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.3) ProjectGuid / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.4) OutputType / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.5) RootNamespace / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.6) AssemblyName / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.7) TargetFrameworkVersion / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.8) #text / 
+      (1.9) AutoGenerateBindingRedirects / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.10) TargetFSharpCoreVersion / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.11) Name / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+  (0.2) PropertyGroup / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.0) DebugSymbols / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.1) DebugType / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.2) Optimize / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.3) Tailcalls / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.4) OutputPath / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.5) DefineConstants / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.6) WarningLevel / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.7) #comment / 
+  (0.3) PropertyGroup / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.0) DebugType / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.1) Optimize / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.2) Tailcalls / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.3) OutputPath / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.4) DefineConstants / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.5) WarningLevel / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.6) DocumentationFile / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+      (1.7) OtherFlags / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+  (0.4) #comment / 
+  (0.5) ItemGroup / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.0) Reference / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.1) Reference / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) Private / http://schemas.microsoft.com/developer/msbuild/2003
+              (3.0) #text / 
+      (1.2) Reference / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.3) Reference / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.4) Reference / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.5) Reference / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.6) Reference / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.7) Reference / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.8) #comment / 
+      (1.9) Reference / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) HintPath / http://schemas.microsoft.com/developer/msbuild/2003
+              (3.0) #text / 
+      (1.10) Reference / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) HintPath / http://schemas.microsoft.com/developer/msbuild/2003
+              (3.0) #text / 
+  (0.6) #comment / 
+  (0.7) ItemGroup / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.0) Compile / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.1) Compile / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.2) Compile / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.3) Compile / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.4) Compile / http://schemas.microsoft.com/developer/msbuild/2003
+  (0.8) PropertyGroup / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.0) MinimumVisualStudioVersion / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) #text / 
+  (0.9) Choose / http://schemas.microsoft.com/developer/msbuild/2003
+      (1.0) When / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) PropertyGroup / http://schemas.microsoft.com/developer/msbuild/2003
+              (3.0) FSharpTargetsPath / http://schemas.microsoft.com/developer/msbuild/2003
+                  (4.0) #text / 
+      (1.1) Otherwise / http://schemas.microsoft.com/developer/msbuild/2003
+          (2.0) PropertyGroup / http://schemas.microsoft.com/developer/msbuild/2003
+              (3.0) FSharpTargetsPath / http://schemas.microsoft.com/developer/msbuild/2003
+                  (4.0) #text / 
+  (0.10) Import / http://schemas.microsoft.com/developer/msbuild/2003
+  (0.11) #comment / 
+#+END_SRC
+**** Query xml nodes using xpath and show its texts
+
+ - =$ xml --xtext  [xpath] [xmluri]=
+
+*Example:*
+
+#+BEGIN_SRC text 
+  $ bin/pget.exe xml --xtext "//item/title" infoq.rss 
+  Presentation: Spring and Big Data
+
+  Presentation: Data Science-powered Apps for the Internet of Things
+
+  Amazon Introduces Rekognition for Image Analysis
+
+  Presentation: Building Resilient and Evolutionary Data Microservices
+
+  Article: Chaos Engineering
+
+  Presentation: Task Madness - Modern on Demand Processing
+
+  Presentation: Data Microservices in the Cloud
+
+  Presentation: Secure & Dynamic App Config at GapTech with Spring Cloud, Vault and Consul
+
+  Presentation: Consumer Driven Contracts and Your Microservice Architecture
+
+  Presentation: Amazon ECS: a Platform to Run Production Containers
+
+  Presentation: Elastic Efficient Execution of Varied Containers
+
+  Presentation: The Past, Present, and Future of JavaScript
+
+  Multiple DNS Providers to Mitigate DDoS Attacks
+
+  Presentation: Mesos: A State-of-the-art Container Orchestrator
+
+  Presentation: Building a Microservices Platform with Kubernetes
+
+#+END_SRC
+
+#+BEGIN_SRC text 
+    $ bin/pget.exe xml --xtext "//item/link" infoq.rss 
+    http://www.infoq.com/presentations/big-data-spring?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+
+    http://www.infoq.com/presentations/iot-human-activities?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+
+    http://www.infoq.com/news/2017/01/AWS-Rekognition?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+
+    http://www.infoq.com/presentations/spring-schema-repository?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+
+    http://www.infoq.com/articles/chaos-engineering?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+
+    http://www.infoq.com/presentations/spring-cloud-task?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+
+    http://www.infoq.com/presentations/spring-cloud-dataflow?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+
+    http://www.infoq.com/presentations/gaptech-spring-cloud?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+
+    http://www.infoq.com/presentations/spring-cloud-contract-verifier?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+
+    http://www.infoq.com/presentations/amazon-ecs?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+
+    http://www.infoq.com/presentations/netflix-containers-2016?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+
+    http://www.infoq.com/presentations/tc39-es2015?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+
+    http://www.infoq.com/news/2017/01/dns-providers-ddos-attacks?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+
+    http://www.infoq.com/presentations/mesos-api?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+
+    http://www.infoq.com/presentations/microservices-kubernetes?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+
+#+END_SRC
+**** Query xml nodes using xpath and show a node attribute
+
+ - =$ pget.exe xml --xattr [xpath] [attribute] [xmluri]=
+
+*Example:*
+
+#+BEGIN_SRC text
+  arch@arch-pc 14:22 /run/media/arch/transfer/projects/pget.fsharp
+  $ bin/pget.exe xml --xattr "//book[@id]" id xml/catalog.xml 
+  bk101
+
+  bk102
+
+  bk103
+
+  bk104
+
+  bk105
+
+  bk106
+
+  bk107
+
+  bk108
+
+  bk109
+
+  bk110
+
+  bk111
+
+  bk112
+
+
+
+  $ bin/pget.exe xml --show xml/catalog.xml 
+  <?xml version="1.0" encoding="utf-16"?>
+  <catalog>
+    <book id="bk101">
+      <author>Gambardella, Matthew</author>
+      <title>XML Developer's Guide</title>
+      <genre>Computer</genre>
+      <price>44.95</price>
+      <publish_date>2000-10-01</publish_date>
+      <description>An in-depth look at creating applications 
+        with XML.</description>
+    </book>
+    <book id="bk102">
+      <author>Ralls, Kim</author>
+      <title>Midnight Rain</title>
+      <genre>Fantasy</genre>
+      <price>5.95</price>
+      <publish_date>2000-12-16</publish_date>
+      <description>A former architect battles corporate zombies, 
+        an evil sorceress, and her own childhood to become queen 
+        of the world.</description>
+    </book>
+  ...  ... ... ... 
+
+  $ bin/pget.exe xml --xtext "//book/author" xml/catalog.xml 
+  Gambardella, Matthew
+
+  Ralls, Kim
+
+  Corets, Eva
+
+  Corets, Eva
+
+  Corets, Eva
+
+  Randall, Cynthia
+
+  Thurman, Paula
+
+  Knorr, Stefan
+
+  Kress, Peter
+
+  O'Brien, Tim
+
+  O'Brien, Tim
+
+  Galos, Mike
+
+#+END_SRC
+**** Query xml nodes using xpath and show a node attribute ignoring namespaces 
+
+ - =$ pget.exe xml --xattr --nons [xpath] [attribute] [xmluri]=
+
+*Example:*
+
+#+BEGIN_SRC text
+  $ bin/pget.exe xml --struct attr xml/eurofxref-daily.xml 
+  (0.0) gesmes:subject []
+      (1.0) #text []
+  (0.1) gesmes:Sender []
+      (1.0) gesmes:name []
+          (2.0) #text []
+  (0.2) Cube []
+      (1.0) Cube [time]
+          (2.0) Cube [currency; rate]
+          (2.1) Cube [currency; rate]
+          (2.2) Cube [currency; rate]
+          (2.3) Cube [currency; rate]
+          (2.4) Cube [currency; rate]
+          (2.5) Cube [currency; rate]
+          (2.6) Cube [currency; rate]
+          (2.7) Cube [currency; rate]
+          (2.8) Cube [currency; rate]
+          (2.9) Cube [currency; rate]
+          (2.10) Cube [currency; rate]
+          (2.11) Cube [currency; rate]
+          (2.12) Cube [currency; rate]
+          (2.13) Cube [currency; rate]
+          (2.14) Cube [currency; rate]
+          (2.15) Cube [currency; rate]
+          (2.16) Cube [currency; rate]
+          (2.17) Cube [currency; rate]
+          (2.18) Cube [currency; rate]
+          (2.19) Cube [currency; rate]
+          (2.20) Cube [currency; rate]
+          (2.21) Cube [currency; rate]
+          (2.22) Cube [currency; rate]
+          (2.23) Cube [currency; rate]
+          (2.24) Cube [currency; rate]
+          (2.25) Cube [currency; rate]
+          (2.26) Cube [currency; rate]
+          (2.27) Cube [currency; rate]
+          (2.28) Cube [currency; rate]
+          (2.29) Cube [currency; rate]
+          (2.30) Cube [currency; rate]
+
+  # It doens't work because XML namespaces
+  #
+  $ bin/pget.exe xml --xattr  "//Cube//Cube[@currency]" currency xml/eurofxref-daily.xml 
+
+  $ bin/pget.exe xml --xattr --nons "//Cube//Cube[@currency]" currency xml/eurofxref-daily.xml 
+  USD
+
+  JPY
+
+  BGN
+
+  CZK
+
+  DKK
+  ...
+
+  NZD
+
+  PHP
+
+  SGD
+
+  THB
+
+  ZAR
+
+
+  $ bin/pget.exe xml --xattr --nons  "//Cube//Cube[@currency]" rate xml/eurofxref-daily.xml 
+  1.0516
+
+  122.66
+
+  1.9558
+
+  27.021
+
+  7.4339
+
+  0.86660
+
+  308.21
+
+  4.3777
+
+  .. ... ... ... ...
+
+
+  4.7080
+
+  1.5067
+
+  52.188
+
+  1.5135
+
+  37.574
+
+  14.4127
+
+#+END_SRC
+*** Misc 
+**** Show System Information 
 
  - =$ pget.exe --system=
 
@@ -1598,7 +3191,7 @@ Linux:
 #+BEGIN_SRC text 
 
 #+END_SRC
-*** Generate GUID
+**** Generate GUID
 
  - =$ pget.exe --guid=
 
@@ -1612,15 +3205,17 @@ Example:
 
  - [ ] - Improve display of F# types.
  - [ ] - Improve command line argument handling.
- - [ ] - Improve error handling
- - [ ] - Query types and XML documentation.
+ - [ ] - Improve error handling - Exceptions and result types.
+ - [X] - Query types and XML documentation.
+ - [ ] - Add more xml query commands
+ - [ ] - Add commands to query GAC - Global Assembly Cache libraries 
+ - [ ] - Add commands to search types and namespaces
  - [ ] - Add more commands to manipulate and query fsproj files.
  - [ ] - Create an Emacs client for pget.exe. 
  - [ ] - MAYBE: support to a cached nuget repository.
  - [ ] - MAYBE: interactive shell.
- - [ ] - MAYBE: Windows Forms display.
  - [ ] - MAYBE: generate html file with all exported types information.
- - [ ] - MAYBE: generate org-mode file with all exported types information.
+ - [X] - MAYBE: generate org-mode file with all exported types information.
  - [ ] - Add better html layout for documentation. 
 
 * Pget.dll
