@@ -414,14 +414,24 @@ module AsmDisplay =
         | None    -> errorFn ()
         | Some x  -> actionFn x
 
+    // let showType (asmFile: string) (typeName: string) =
+    //     let errorHandler1 () = Console.WriteLine "Error: Assembly file doesn't exist"
+    //     let errorHandler2 () = Console.WriteLine "Error: Type not found in assembly."
+    //     asmFile
+    //     |> AsmAttr.loadFromOpt
+    //     |> optIter2 errorHandler1 ( AsmAttr.getType typeName
+    //                                 >> (optIter2 errorHandler2 TInfo.show)
+    //                               )
+
     let showType (asmFile: string) (typeName: string) =
-        let errorHandler1 () = Console.WriteLine "Error: Assembly file doesn't exist"
-        let errorHandler2 () = Console.WriteLine "Error: Type not found in assembly."
-        asmFile
-        |> AsmAttr.loadFromOpt
-        |> optIter2 errorHandler1 ( AsmAttr.getType typeName
-                                    >> (optIter2 errorHandler2 TInfo.show)
-                                  )
+        let xmlFile = System.IO.Path.ChangeExtension(asmFile, "xml")
+        let doc = if System.IO.File.Exists xmlFile
+                  then Some (FXml.Doc.loadFile xmlFile)
+                  else None
+                  
+        asmFile |> AsmAttr.loadFrom
+                |> AsmAttr.getType typeName
+                |> Option.iter (TInfo.show2 doc)
 
     let showTypeSelector (asmFile: string) predicate =
         asmFile
