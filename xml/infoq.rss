@@ -1,0 +1,355 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>InfoQ</title>
+    <link>http://www.infoq.com</link>
+    <description>InfoQ feed</description>
+    <item>
+      <title>Presentation: Spring and Big Data</title>
+      <link>http://www.infoq.com/presentations/big-data-spring?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/big-data-spring/en/mediumimage/tombig.JPG"/&gt;&lt;p&gt;Thomas Risberg discusses developing big data pipelines with Spring, focusing around the code needed and he also covers how to set up a test environment both locally and in the cloud.&lt;/p&gt; &lt;i&gt;By Thomas Risberg&lt;/i&gt;</description>
+      <category>Java</category>
+      <category>Spring</category>
+      <category>Languages</category>
+      <category>Conferences</category>
+      <category>Database</category>
+      <category>Programming</category>
+      <category>SpringOne</category>
+      <category>Infrastructure</category>
+      <category>Big Data</category>
+      <category>Development</category>
+      <category>Pivotal</category>
+      <category>Data Science</category>
+      <category>SpringOne Platform 2016</category>
+      <category>Data Pipelines</category>
+      <category>presentation</category>
+      <pubDate>Mon, 09 Jan 2017 04:06:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/big-data-spring?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Thomas Risberg</dc:creator>
+      <dc:date>2017-01-09T04:06:00Z</dc:date>
+      <dc:identifier>/presentations/big-data-spring/en</dc:identifier>
+    </item>
+    <item>
+      <title>Presentation: Data Science-powered Apps for the Internet of Things</title>
+      <link>http://www.infoq.com/presentations/iot-human-activities?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/iot-human-activities/en/mediumimage/Chrisbig.JPG"/&gt;&lt;p&gt;Chris Rawles describes approaches to addressing the concerns around any IoT project through a deep-dive into an interactive demo centered around classification of human activities. &lt;/p&gt; &lt;i&gt;By Chris Rawles&lt;/i&gt;</description>
+      <category>Java</category>
+      <category>Spring</category>
+      <category>Languages</category>
+      <category>Conferences</category>
+      <category>Programming</category>
+      <category>SpringOne</category>
+      <category>Internet Of Things</category>
+      <category>IOT</category>
+      <category>Pivotal</category>
+      <category>Data Science</category>
+      <category>SpringOne Platform 2016</category>
+      <category>presentation</category>
+      <pubDate>Mon, 09 Jan 2017 02:26:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/iot-human-activities?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Chris Rawles</dc:creator>
+      <dc:date>2017-01-09T02:26:00Z</dc:date>
+      <dc:identifier>/presentations/iot-human-activities/en</dc:identifier>
+    </item>
+    <item>
+      <title>Amazon Introduces Rekognition for Image Analysis</title>
+      <link>http://www.infoq.com/news/2017/01/AWS-Rekognition?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/styles/i/logo_bigger.jpg"/&gt;&lt;p&gt;At the AWS re:Invent conference, Amazon launched Rekognition, a managed service for Image Recognition and Analysis, powered by Deep Learning. The capabilities that Rekognition provides include Object and Scene detection, Facial Analysis, Face Comparison and Facial Recognition. The service attempts to extract meaning, from visual content, for the 1.2 Trillion pictures captured annually.&lt;/p&gt; &lt;i&gt;By Kent Weare&lt;/i&gt;</description>
+      <category>Programming</category>
+      <category>Amazon</category>
+      <category>AWS</category>
+      <category>Cloud Computing</category>
+      <category>Artificial Intelligence</category>
+      <category>Machine Learning</category>
+      <category>IaaS</category>
+      <category>Architecture &amp; Design</category>
+      <category>Companies</category>
+      <category>Cloud</category>
+      <category>Deep Learning</category>
+      <category>BOTS</category>
+      <category>news</category>
+      <pubDate>Mon, 09 Jan 2017 00:54:00 GMT</pubDate>
+      <guid>http://www.infoq.com/news/2017/01/AWS-Rekognition?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Kent Weare</dc:creator>
+      <dc:date>2017-01-09T00:54:00Z</dc:date>
+      <dc:identifier>/news/2017/01/AWS-Rekognition/en</dc:identifier>
+    </item>
+    <item>
+      <title>Presentation: Building Resilient and Evolutionary Data Microservices</title>
+      <link>http://www.infoq.com/presentations/spring-schema-repository?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/spring-schema-repository/en/mediumimage/Vinbig.JPG"/&gt;&lt;p&gt;Vinicius Carvalho talks about the role of a centralized Schema repository, and how can we work with different data models and protocols to achieve schema evolution. A centralized schema service will also help one understand what kind of data is currently being served and consumed by the different parts of a distributed system.&lt;/p&gt; &lt;i&gt;By Vinicius Carvalho&lt;/i&gt;</description>
+      <category>Java</category>
+      <category>Spring</category>
+      <category>Languages</category>
+      <category>Conferences</category>
+      <category>Programming</category>
+      <category>Architecture</category>
+      <category>SpringOne</category>
+      <category>Architecture &amp; Design</category>
+      <category>Schema</category>
+      <category>Microservices</category>
+      <category>Pivotal</category>
+      <category>Data Science</category>
+      <category>SpringOne Platform 2016</category>
+      <category>presentation</category>
+      <pubDate>Mon, 09 Jan 2017 00:25:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/spring-schema-repository?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Vinicius Carvalho</dc:creator>
+      <dc:date>2017-01-09T00:25:00Z</dc:date>
+      <dc:identifier>/presentations/spring-schema-repository/en</dc:identifier>
+    </item>
+    <item>
+      <title>Article: Chaos Engineering</title>
+      <link>http://www.infoq.com/articles/chaos-engineering?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/articles/chaos-engineering/en/headerimage/GettyImages-626394312.jpg"/&gt;&lt;p&gt;Modern software-based services are implemented as distributed systems with complex behavior and failure modes. Many large tech organizations are using experimentation to verify such systems' reliability. Netflix engineers call this approach chaos engineering. They've determined several principles underlying it and have used it to run experiments. This article is part of a theme issue on DevOps.&lt;/p&gt; &lt;i&gt;By Ali Basiri&lt;/i&gt;</description>
+      <category>Netflix</category>
+      <category>Streaming Video</category>
+      <category>Process</category>
+      <category>DevOps</category>
+      <category>Software Engineering</category>
+      <category>Organization</category>
+      <category>IEEE</category>
+      <category>article</category>
+      <pubDate>Sun, 08 Jan 2017 22:16:00 GMT</pubDate>
+      <guid>http://www.infoq.com/articles/chaos-engineering?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Ali Basiri, Niosha Behnam, Ruud de Rooij, Lorin Hochstein, Luke Kosewski, Justin Reynolds, Casey Rosenthal</dc:creator>
+      <dc:date>2017-01-08T22:16:00Z</dc:date>
+      <dc:identifier>/articles/chaos-engineering/en</dc:identifier>
+    </item>
+    <item>
+      <title>Presentation: Task Madness - Modern on Demand Processing</title>
+      <link>http://www.infoq.com/presentations/spring-cloud-task?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/spring-cloud-task/en/mediumimage/doibig.JPG"/&gt;&lt;p&gt;Michael Minella and Glenn Renfro introduce Spring Cloud Task, a new project in the Spring portfolio that provides both functional and non-functional capabilities for building short lived, cloud-native microservices, as well as look at example applications.&lt;/p&gt; &lt;i&gt;By Michael Minella&lt;/i&gt;</description>
+      <category>Java</category>
+      <category>Spring</category>
+      <category>Languages</category>
+      <category>Conferences</category>
+      <category>Programming</category>
+      <category>Architecture</category>
+      <category>SpringOne</category>
+      <category>DevOps</category>
+      <category>Development</category>
+      <category>Architecture &amp; Design</category>
+      <category>Cloud</category>
+      <category>Microservices</category>
+      <category>Spring Cloud</category>
+      <category>Pivotal</category>
+      <category>SpringOne Platform 2016</category>
+      <category>presentation</category>
+      <pubDate>Sun, 08 Jan 2017 22:06:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/spring-cloud-task?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Michael Minella, Glenn Renfro</dc:creator>
+      <dc:date>2017-01-08T22:06:00Z</dc:date>
+      <dc:identifier>/presentations/spring-cloud-task/en</dc:identifier>
+    </item>
+    <item>
+      <title>Presentation: Data Microservices in the Cloud</title>
+      <link>http://www.infoq.com/presentations/spring-cloud-dataflow?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/spring-cloud-dataflow/en/mediumimage/Markbig.JPG"/&gt;&lt;p&gt;Mark Pollack introduces Spring Cloud Data Flow enabling one to create pipelines for data ingestion, real-time analytics and data import/export, demoing apps that are deployed onto multiple runtimes.&lt;/p&gt; &lt;i&gt;By Mark Pollack&lt;/i&gt;</description>
+      <category>Java</category>
+      <category>Spring</category>
+      <category>Languages</category>
+      <category>Conferences</category>
+      <category>Programming</category>
+      <category>Architecture</category>
+      <category>SpringOne</category>
+      <category>Development</category>
+      <category>Data</category>
+      <category>Demo</category>
+      <category>Microservices</category>
+      <category>Spring Cloud</category>
+      <category>Spring XD</category>
+      <category>Pivotal</category>
+      <category>Data Science</category>
+      <category>Spring Cloud Data Flow</category>
+      <category>SpringOne Platform 2016</category>
+      <category>Data Pipelines</category>
+      <category>presentation</category>
+      <pubDate>Sun, 08 Jan 2017 20:36:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/spring-cloud-dataflow?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Mark Pollack</dc:creator>
+      <dc:date>2017-01-08T20:36:00Z</dc:date>
+      <dc:identifier>/presentations/spring-cloud-dataflow/en</dc:identifier>
+    </item>
+    <item>
+      <title>Presentation: Secure &amp; Dynamic App Config at GapTech with Spring Cloud, Vault and Consul</title>
+      <link>http://www.infoq.com/presentations/gaptech-spring-cloud?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/gaptech-spring-cloud/en/mediumimage/Nivbig.JPG"/&gt;&lt;p&gt;Nivesh Gopathi describes the use cases for dynamic configuration and application secrets management with some high level requirements, how GapTech are collaboratively solving these at enterprise scale using Spring Cloud Config, Vault and Consul and what’s coming next.&lt;/p&gt; &lt;i&gt;By Nivesh Gopathi&lt;/i&gt;</description>
+      <category>Java</category>
+      <category>Spring</category>
+      <category>Languages</category>
+      <category>Conferences</category>
+      <category>Programming</category>
+      <category>Operations management</category>
+      <category>SpringOne</category>
+      <category>DevOps</category>
+      <category>Infrastructure</category>
+      <category>Spring Cloud</category>
+      <category>Pivotal</category>
+      <category>SpringOne Platform 2016</category>
+      <category>presentation</category>
+      <pubDate>Sun, 08 Jan 2017 18:46:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/gaptech-spring-cloud?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Nivesh Gopathi</dc:creator>
+      <dc:date>2017-01-08T18:46:00Z</dc:date>
+      <dc:identifier>/presentations/gaptech-spring-cloud/en</dc:identifier>
+    </item>
+    <item>
+      <title>Presentation: Consumer Driven Contracts and Your Microservice Architecture</title>
+      <link>http://www.infoq.com/presentations/spring-cloud-contract-verifier?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/spring-cloud-contract-verifier/en/mediumimage/Marbig.JPG"/&gt;&lt;p&gt;Marcin Grzejszczak shows how to use the Spring Cloud Contract Verifier to stub HTTP / Messaging collaborators, faking microservices with stubs that were tested against their producer.&lt;/p&gt; &lt;i&gt;By Marcin Grzejszczak&lt;/i&gt;</description>
+      <category>Java</category>
+      <category>Spring</category>
+      <category>Languages</category>
+      <category>Conferences</category>
+      <category>Programming</category>
+      <category>Architecture</category>
+      <category>SpringOne</category>
+      <category>DevOps</category>
+      <category>Development</category>
+      <category>Architecture &amp; Design</category>
+      <category>Cloud</category>
+      <category>Microservices</category>
+      <category>Spring Cloud</category>
+      <category>Pivotal</category>
+      <category>SpringOne Platform 2016</category>
+      <category>presentation</category>
+      <pubDate>Sun, 08 Jan 2017 16:13:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/spring-cloud-contract-verifier?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Marcin Grzejszczak</dc:creator>
+      <dc:date>2017-01-08T16:13:00Z</dc:date>
+      <dc:identifier>/presentations/spring-cloud-contract-verifier/en</dc:identifier>
+    </item>
+    <item>
+      <title>Presentation: Amazon ECS: a Platform to Run Production Containers</title>
+      <link>http://www.infoq.com/presentations/amazon-ecs?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/amazon-ecs/en/mediumimage/Utabig.JPG"/&gt;&lt;p&gt;Uttara Sridhar dives deep into the architecture behind Amazon ECS and the design choices that have enabled scalable cluster management, highly performant container orchestration and scheduling, and the open-sourced golang-based Amazon ECS Agent. She also demonstrates the key features to build and run a container-based application on Amazon ECS.&lt;/p&gt; &lt;i&gt;By Uttara Sridhar&lt;/i&gt;</description>
+      <category>Conferences</category>
+      <category>Amazon</category>
+      <category>QCon</category>
+      <category>Cloud Computing</category>
+      <category>IaaS</category>
+      <category>DevOps</category>
+      <category>Development</category>
+      <category>Companies</category>
+      <category>Cloud</category>
+      <category>Containers</category>
+      <category>QCon San Francisco 2016</category>
+      <category>presentation</category>
+      <pubDate>Sun, 08 Jan 2017 00:12:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/amazon-ecs?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Uttara Sridhar</dc:creator>
+      <dc:date>2017-01-08T00:12:00Z</dc:date>
+      <dc:identifier>/presentations/amazon-ecs/en</dc:identifier>
+    </item>
+    <item>
+      <title>Presentation: Elastic Efficient Execution of Varied Containers</title>
+      <link>http://www.infoq.com/presentations/netflix-containers-2016?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/netflix-containers-2016/en/mediumimage/Shabig.JPG"/&gt;&lt;p&gt;Sharma Podila reviews the state of containers usage in Netflix. With references to projects Titus and Mantis, he highlights the integrations with AWS to run Apache Mesos clusters and how they adapted resource scheduling via NetflixOSS Fenzo to run an elastic infrastructure for a varied mix of workloads.Topics include capacity guarantees, network isolation, modeling multiple EC2 instance types etc.&lt;/p&gt; &lt;i&gt;By Sharma Podila&lt;/i&gt;</description>
+      <category>Conferences</category>
+      <category>Amazon</category>
+      <category>QCon</category>
+      <category>AWS</category>
+      <category>Cloud Computing</category>
+      <category>Netflix</category>
+      <category>IaaS</category>
+      <category>DevOps</category>
+      <category>Architecture &amp; Design</category>
+      <category>Companies</category>
+      <category>Cloud</category>
+      <category>Containers</category>
+      <category>QCon San Francisco 2016</category>
+      <category>presentation</category>
+      <pubDate>Sat, 07 Jan 2017 22:26:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/netflix-containers-2016?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Sharma Podila</dc:creator>
+      <dc:date>2017-01-07T22:26:00Z</dc:date>
+      <dc:identifier>/presentations/netflix-containers-2016/en</dc:identifier>
+    </item>
+    <item>
+      <title>Presentation: The Past, Present, and Future of JavaScript</title>
+      <link>http://www.infoq.com/presentations/tc39-es2015?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/tc39-es2015/en/mediumimage/treibig.jpg"/&gt;&lt;p&gt;Jay Phelps leads a discussion with Jafar Husain and Stefan Penner (both members of the TC39 standards body) through the history of the specification process and reveal some exciting new features coming to a browser near us: ES2015 and beyond.&lt;/p&gt; &lt;i&gt;By Stefan Penner&lt;/i&gt;</description>
+      <category>Languages</category>
+      <category>Conferences</category>
+      <category>Programming</category>
+      <category>Dynamic Languages</category>
+      <category>JavaScript</category>
+      <category>Standardization</category>
+      <category>QCon</category>
+      <category>Enterprise Architecture</category>
+      <category>ECMA</category>
+      <category>Development</category>
+      <category>Web Development</category>
+      <category>ECMAScript 6</category>
+      <category>QCon San Francisco 2016</category>
+      <category>presentation</category>
+      <pubDate>Sat, 07 Jan 2017 20:39:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/tc39-es2015?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Stefan Penner, Jay Phelps, Jafar Husain</dc:creator>
+      <dc:date>2017-01-07T20:39:00Z</dc:date>
+      <dc:identifier>/presentations/tc39-es2015/en</dc:identifier>
+    </item>
+    <item>
+      <title>Multiple DNS Providers to Mitigate DDoS Attacks</title>
+      <link>http://www.infoq.com/news/2017/01/dns-providers-ddos-attacks?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/styles/i/logo_bigger.jpg"/&gt;&lt;p&gt;Distributed Denial of Service (DDoS) attacks against Domain Name System (DNS) providers are increasing in number and scale with the proliferation of insecure IoT devices. While DNS providers have various methods of protecting themselves against such attacks, one of the ways for a website to protect itself is to use multiple DNS providers.&lt;/p&gt; &lt;i&gt;By Hrishikesh Barua&lt;/i&gt;</description>
+      <category>DevOps</category>
+      <category>DNS</category>
+      <category>Infrastructure</category>
+      <category>Networking</category>
+      <category>malware</category>
+      <category>Internet Of Things</category>
+      <category>DDoS</category>
+      <category>news</category>
+      <pubDate>Sat, 07 Jan 2017 19:40:00 GMT</pubDate>
+      <guid>http://www.infoq.com/news/2017/01/dns-providers-ddos-attacks?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Hrishikesh Barua</dc:creator>
+      <dc:date>2017-01-07T19:40:00Z</dc:date>
+      <dc:identifier>/news/2017/01/dns-providers-ddos-attacks/en</dc:identifier>
+    </item>
+    <item>
+      <title>Presentation: Mesos: A State-of-the-art Container Orchestrator</title>
+      <link>http://www.infoq.com/presentations/mesos-api?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/mesos-api/en/mediumimage/Jiebig.JPG"/&gt;&lt;p&gt;Jie Yu gives an overview of Mesos and its API which allows users to deploy stateless and stateful services. He discusses how containers are managed in Mesos, the future of container support in Mesos, and shows some of the new container networking and storage features that have been added recently.&lt;/p&gt; &lt;i&gt;By Jie Yu&lt;/i&gt;</description>
+      <category>Conferences</category>
+      <category>Orchestration</category>
+      <category>QCon</category>
+      <category>Cloud Computing</category>
+      <category>DevOps</category>
+      <category>Infrastructure</category>
+      <category>Mesos</category>
+      <category>Architecture &amp; Design</category>
+      <category>Containers</category>
+      <category>QCon San Francisco 2016</category>
+      <category>presentation</category>
+      <pubDate>Sat, 07 Jan 2017 18:22:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/mesos-api?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Jie Yu</dc:creator>
+      <dc:date>2017-01-07T18:22:00Z</dc:date>
+      <dc:identifier>/presentations/mesos-api/en</dc:identifier>
+    </item>
+    <item>
+      <title>Presentation: Building a Microservices Platform with Kubernetes</title>
+      <link>http://www.infoq.com/presentations/microservices-kubernetes?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/resource/presentations/microservices-kubernetes/en/mediumimage/Matbig.JPG"/&gt;&lt;p&gt;Matthew Mark Miller discusses Kubernetes’ primitives and microservices patterns on top of them, including rolling deployments, stateful services and adding behaviors via sidecars.&lt;/p&gt; &lt;i&gt;By Matthew Mark Miller&lt;/i&gt;</description>
+      <category>Conferences</category>
+      <category>Deployment</category>
+      <category>QCon</category>
+      <category>Architecture</category>
+      <category>Cloud Computing</category>
+      <category>DevOps</category>
+      <category>Architecture &amp; Design</category>
+      <category>Microservices</category>
+      <category>Kubernetes</category>
+      <category>Containers</category>
+      <category>QCon San Francisco 2016</category>
+      <category>presentation</category>
+      <pubDate>Sat, 07 Jan 2017 16:37:00 GMT</pubDate>
+      <guid>http://www.infoq.com/presentations/microservices-kubernetes?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Matthew Mark Miller</dc:creator>
+      <dc:date>2017-01-07T16:37:00Z</dc:date>
+      <dc:identifier>/presentations/microservices-kubernetes/en</dc:identifier>
+    </item>
+  </channel>
+</rss>
