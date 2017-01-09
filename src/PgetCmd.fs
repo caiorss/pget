@@ -226,6 +226,30 @@ module Main =
     asm --classn [file]                                  Show all non-abstract classes exported by assembly [file]
         """
 
+    let showXmlHelp () =
+        Console.WriteLine """
+  XML query commands.
+
+    xml --show [xmluri]            Show formatted xml human-readable output from uri or file.
+    xml --show [xmluri] [file]     Export [xmluri] (file or url) to a xml human-readable file.
+
+    xml --struct [xmluri]          Show xml structure - tags hierarchy
+    xml --struct [xmluri] attr     Show xml structure tags hierarchy with attributes names.
+    xml --struct [xmluri] ns       Show xml structure tags hierarchy with namespaces
+
+
+    xml -ns                                  Show all XML namespaces
+    xml --namespace                          Show all XML namespaces
+
+
+    xml --xvalue [xpath] [xmluri]                 Query xml nodes using xpath and show its values.
+    xml --xtext  [xpath] [xmluri]                 Query xml nodes using xpath and show its texts.
+    xml --xtext --nons [xpath] [xmluri]           Query xml nodes using xpath and show its texts ignoring namespaces.
+    xml --xattr  [xpath] [attr] [xmluri]          Query xml nodes using xpath and show the values of a node attribute.
+    xml --xattr  --nons [xpath] [attr] [xmluri]   Similar to command above but ignore namespaces.
+
+    """
+
     let showHelp () =
         Console.WriteLine("Pget - Package Get - Enhanced command line interface to NuGet.Core")
         Console.WriteLine("""
