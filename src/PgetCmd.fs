@@ -441,7 +441,8 @@ module Main =
         | ["asm"; "--docgen" ; asmFile ; reportFile]        -> AsmDisplay.genExportedTypesReport asmFile reportFile
 
         // ===================  XML tools ==========================
-
+        | ["xml"]                                           -> showXmlHelp()
+        
         // Pretty print XML 
         | ["xml"; "--show" ; xmlUri ]                       -> FXml.File.show xmlUri
         | ["xml"; "--show" ; xmlUri ; xmlFile]              -> FXml.File.save xmlUri xmlFile
@@ -475,7 +476,7 @@ module Main =
 
 
         // Select nodes by xpath and show them
-        | ["xml"; "--xnode"; "--nons"; xpath; xmluri]                           -> FXml.File.showXPathNodesNoNS xmluri xpath 
+        // | ["xml"; "--xnode"; "--nons"; xpath; xmluri]                           -> FXml.File.showXPathNodesNoNS xmluri xpath 
         
         // =================== Miscellaneous =======================
 
