@@ -229,7 +229,7 @@ module TInfo =
                           t.IsAbstract
                           );
 
-         Console.WriteLine("\n**** Fields");
+         Console.WriteLine("\n**** Fields\n");
          // Console.WriteLine("----------------");
 
          t.GetFields()
@@ -241,7 +241,7 @@ module TInfo =
                       Option.iter (printfn "%s\n")  summary
                       );
 
-         Console.WriteLine("\n**** Properties");
+         Console.WriteLine("\n**** Properties\n");
          // Console.WriteLine("----------------");
 
          t.GetProperties()
@@ -254,18 +254,28 @@ module TInfo =
                       );
 
 
-         Console.WriteLine("\n**** Constructors");
+         Console.WriteLine("\n**** Constructors\n");
          // Console.WriteLine("----------------");
          t |> getConstructors
            |> Seq.iter (printfn "\t%A\n");
 
-         Console.WriteLine("\n**** Methods");
+         Console.WriteLine("\n**** Instance Methods\n");
 
-         t |> getMethodsNonProp
+         t |> getPublicInstanceMethods
            |> Seq.iter (fun mi ->
                         let query = "M:" + mi.DeclaringType.FullName + "." + mi.Name
                         let summary = doc |> Option.bind (queryXmlSummary query)
-                        printfn " - %A\n" mi
+                        printfn " - %s\n" (MInfo.format mi)
+                        Option.iter (printfn "%s\n")  summary
+                        );
+
+         Console.WriteLine("\n**** Static Methods\n");
+
+         t |> getPublicStaticMethods
+           |> Seq.iter (fun mi ->
+                        let query = "M:" + mi.DeclaringType.FullName + "." + mi.Name
+                        let summary = doc |> Option.bind (queryXmlSummary query)
+                        printfn " - %s\n" (MInfo.format mi)
                         Option.iter (printfn "%s\n")  summary
                         );
 
