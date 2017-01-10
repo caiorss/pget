@@ -149,6 +149,15 @@ module TInfo =
                                 && not (MInfo.isSpecialName mi)
                          )
 
+    /// Get all public static methods
+    let getPublicStaticMethods (t: T) =
+        t.GetMethods()
+        |> Seq.filter (fun mi -> MInfo.isPublic mi
+                                 && MInfo.isStatic mi
+                                 && not (MInfo.isSpecialName mi)
+                       )
+
+
     /// Get all methods of a type ignoring properties
     /// (methods which name starts with get_ or set_)
     ///
