@@ -1,3 +1,14 @@
+
+#+LaTeX_CLASS: article
+#+LaTeX_CLASS_OPTIONS: [a4paper, captions=tableheading, 10pt, microtype, urlcolor=blue]
+#+LATEX_HEADER: \usepackage[margin=0.25in]{geometry}
+#+LATEX_HEADER: \RequirePackage{fancyvrb}
+#+LATEX_HEADER: \DefineVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\scriptsize}
+#+LaTeX_HEADER: \lstset{basicstyle=\scriptsize\ttfamily}
+#+LaTeX_HEADER: \usepackage{longtable}
+# #+LaTeX_HEADER: \usepackage{minted}
+# #+LaTeX_HEADER: \usepackage{xcolor}
+
 ** Eto
 *** Eto.ContentPropertyAttribute
 
