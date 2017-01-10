@@ -141,6 +141,14 @@ module TInfo =
     /// Get all constructors of a type (class)
     let getConstructors (t: T) = t.GetConstructors()
 
+    /// Get all non-static methods
+    let getPublicInstanceMethods (t: T) =
+        t.GetMethods()
+        |> Seq.filter (fun mi -> MInfo.isPublic mi
+                                && not (MInfo.isStatic mi)
+                                && not (MInfo.isSpecialName mi)
+                         )
+
     /// Get all methods of a type ignoring properties
     /// (methods which name starts with get_ or set_)
     ///
