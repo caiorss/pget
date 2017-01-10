@@ -1,0 +1,65 @@
+* Examples about Generated Documentation 
+** Overview 
+
+This directory stores examples about the generated documentation from
+asseblies and xml comment files.
+
+The documentation is generated in org-mode format that can be browsed
+with Emacs and exported to html or pdf with commands 
+
+ - Export to html: M-x org-html-export-to-html
+  
+ - Export to pdf: M-x org-latex-export-to-pdf
+
+** Generating System Libraries documentation
+
+Example how to generate documentation from assembly:
+
+#+BEGIN_SRC sh
+$ bin/pget.exe asm --docgen /usr/lib/mono/4.5-api/mscorlib.dll docgen/mscorlib.org
+#+END_SRC
+
+See: file [[file:mscorlib.org][mscorlib.org]]
+** Generating Package Dll documentation 
+
+Find the repository libraries:
+
+#+BEGIN_SRC sh
+$ bin/pget.exe repo --list
+Common.Logging 3.3.1
+Common.Logging.Core 3.3.1
+Eto.Forms 2.3.0
+Eto.Platform.Gtk 2.3.0
+FParsec 1.0.2
+FS.INIReader 1.0.3
+Microsoft.Web.Xdt 2.1.1
+Newtonsoft.Json 6.0.4
+NuGet.Core 2.12.0
+NuGet.Core.Ultimate 3.3.2
+OxyPlot.Pdf 1.0.0
+PDFsharp-MigraDoc-GDI 1.32.4334.0
+Quartz 2.4.1
+
+#+END_SRC
+
+Show package files:
+
+#+BEGIN_SRC sh
+$ bin/pget.exe repo --files Eto.Forms
+packages/Eto.Forms.2.3.0/lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll
+packages/Eto.Forms.2.3.0/lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.xml
+packages/Eto.Forms.2.3.0/lib/net45/Eto.dll
+packages/Eto.Forms.2.3.0/lib/net45/Eto.xml
+packages/Eto.Forms.2.3.0/lib/net40/Eto.dll
+packages/Eto.Forms.2.3.0/lib/net40/Eto.xml
+packages/Eto.Forms.2.3.0/LICENSE.txt
+
+#+END_SRC
+
+Generate assembly documentation 
+
+#+BEGIN_SRC sh
+bin/pget.exe asm --docgen packages/Eto.Forms.2.3.0/lib/net45/Eto.dll docgen/Eto.org
+#+END_SRC
+
+
