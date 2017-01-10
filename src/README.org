@@ -1,0 +1,2237 @@
+#+TITLE: Development Notes
+#+STARTURP: content 
+
+* Development Notes 
+** Overview 
+
+Pget.exe development notes, brainstorms, snippets and examples for
+future reference. 
+
+*Files*
+
+ - file:PgetCmd.fs - Entry point of Pget.exe. Handles command line
+   arguments.
+
+ - file:Pget.fs - Functional around NuGet.Core
+
+ - file:FXml.fs - Functional wrapper around .NET System.Xml classes
+
+ - file:AsmAttr.fs  - Extract Assembly Metadata like exported types,
+   classes, interfaces and assembly attributes.
+
+ - file:AssemblyInfo.fs - Assembly attributes.
+
+** Needs 
+
+ - Deal with NuGet packages
+
+ - Show packages metadata and information 
+
+ - Find packages assembly references
+
+ - Extract assembly XML comments
+
+ - Generate assembly documentation about all exported types with XML comments
+   - Formats org-mode and html
+
+ - Automate fsproj handling by command line
+
+ - Improve command line handling
+
+ - Parse and query XML
+
+ - Provide commands to extract xml
+
+ - Manipulate fsproj programatically
+
+ - Convert ini files to fsproj
+
+ - Add references and files to fsproj from command line.
+
+ - Integrate to Emacs.
+
+ - Generate Documentation
+  
+* Modules 
+** Module AsmAttr.fs 
+
+ - file:AsmAttr.fs - Provides modules to extract assembly metadata
+   like exported types, classes, methods, types, namespaces, GUID,
+   copyright and so on. 
+
+*Examples:* 
+
+Load AsmAttr.fs library. 
+
+#+BEGIN_SRC fsharp 
+#load "FXml.fs"   
+#load "AsmAttr.fs"
+open Pget
+
+open System 
+open System.Reflection
+#+END_SRC
+
+Load an assembly 
+
+#+BEGIN_SRC fsharp 
+> let asmfile = "/home/arch/Documents/projects/pget.fsharp/packages/Eto.Forms.2.3.0/lib/net45/Eto.dll"
+
+> let asm = AsmAttr.loadFrom asmfile
+
+val asm : Assembly =
+  Eto, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null
+
+#+END_SRC
+
+Get exported namespaces 
+
+#+BEGIN_SRC fsharp 
+> asm |> AsmAttr.getExportedNS ;;
+val it : seq<string> =
+  seq ["Eto"; "Eto.IO"; "Eto.Threading"; "Eto.Forms"; ...]
+
+
+> asm |> AsmAttr.getExportedNS |> Seq.iter (printfn "%s") ;;
+Eto
+Eto.IO
+Eto.Threading
+Eto.Forms
+Eto.Forms.ThemedControls
+Eto.Drawing
+val it : unit = ()
+
+#+END_SRC
+
+Get all exported types within an namespace 
+
+#+BEGIN_SRC fsharp 
+> 
+AsmAttr.getTypesWithinExportedNS "Eto.Forms" (fun t -> true) asm 
+|> Seq.take 10 
+|> Seq.iter (printfn "%O") ;;
+
+Eto.Forms.DropDown
+Eto.Forms.AddValueEventArgs`1[T]
+Eto.Forms.EnumDropDown`1[T]
+Eto.Forms.GridColumnEventArgs
+Eto.Forms.GridLines
+Eto.Forms.GridCellFormatEventArgs
+Eto.Forms.Grid
+Eto.Forms.PasswordBox
+Eto.Forms.ProgressBar
+Eto.Forms.SearchBox
+val it : unit = ()
+> > 
+#+END_SRC
+
+Get a type from assemblu file: 
+
+#+BEGIN_SRC fsharp
+> AsmAttr.getType ;;
+val it : (string -> Assembly -> Type option) 
+>
+
+> AsmAttr.getType "Eto.Forms.Form Worng Type" asm ;;
+val it : Type option = None
+> > 
+
+> AsmAttr.getType "Eto.Forms.Form" asm ;;
+val it : Type option =
+  Some
+    Eto.Forms.Form
+      {Assembly = Eto, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null;
+       AssemblyQualifiedName = "Eto.Forms.Form, Eto, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null";
+       Attributes = NotPublic, AnsiClass, Class, Public, BeforeFieldInit;
+       BaseType = Eto.Forms.Window;
+       ContainsGenericParameters = false;
+       CustomAttributes = seq
+                            [[Eto.HandlerAttribute(typeof (Eto.Forms.Form+IHandler))]];
+       DeclaredConstructors = [|Void .ctor(); Void .ctor(IHandler)|];
+       DeclaredEvents = [||];
+       DeclaredFields = [||];
+       DeclaredMembers = [|IHandler get_Handler(); Boolean get_ShowActivated();
+                           Void set_ShowActivated(Boolean); Void Show();
+                           Void .ctor(); Void .ctor(IHandler);
+                           IHandler Handler; Boolean ShowActivated;
+                           Eto.Forms.Form+IHandler|];
+       DeclaredMethods = [|IHandler get_Handler(); Boolean get_ShowActivated();
+                           Void set_ShowActivated(Boolean); Void Show()|];
+       DeclaredNestedTypes = seq [Eto.Forms.Form+IHandler];
+       DeclaredProperties = [|IHandler Handler; Boolean ShowActivated|];
+       DeclaringMethod = ?;
+       DeclaringType = null;
+...  ...  ... ... 
+
+       ReflectedType = null;
+       StructLayoutAttribute = System.Runtime.InteropServices.StructLayoutAttribute;
+       TypeHandle = System.RuntimeTypeHandle;
+       TypeInitializer = null;
+       UnderlyingSystemType = ...;}
+
+
+#+END_SRC
+
+Show type information 
+
+#+BEGIN_SRC fsharp 
+> asm |> AsmAttr.getType "Eto.Forms.Formasdasd" |> Option.iter TInfo.show ;;
+val it : unit = ()
+> 
+
+> asm |> AsmAttr.getType "Eto.Forms.Form" |> Option.iter TInfo.show 
+;;
+
+Type Info:
+
+  Name:           Form
+  Full Name:      Eto.Forms.Form
+  Namespace:      Eto.Forms
+  Module:         Eto.dll
+  Base Type:      Eto.Forms.Window
+
+Predicates
+
+  Class:          True
+  Abstract Class: False
+  Primitive       False
+  Array:          False
+  Interface       False   
+  Enum            False
+  Public          True
+  Visible         True
+  
+                        
+
+Fields
+----------------
+
+Properties
+----------------
+	Boolean ShowActivated
+
+	System.String Title
+
+	Eto.Drawing.Point Location
+
+	Eto.Drawing.Rectangle Bounds
+
+	Eto.Forms.ToolBar ToolBar
+
+	Double Opacity
+
+	Eto.Forms.Window Owner
+
+	Eto.Forms.Screen Screen
+
+	Eto.Forms.MenuBar Menu
+
+	Eto.Drawing.Icon Icon
+
+	Boolean Resizable
+
+	Boolean Maximizable
+
+	Boolean Minimizable
+
+	Boolean ShowInTaskbar
+
+	Boolean Topmost
+
+	Eto.Forms.WindowState WindowState
+
+	Eto.Drawing.Rectangle RestoreBounds
+
+	Eto.Forms.WindowStyle WindowStyle
+
+	Single LogicalPixelSize
+
+	System.Collections.Generic.IEnumerable`1[Eto.Forms.Control] Controls
+
+	Eto.Drawing.Padding Padding
+
+	Eto.Drawing.Size MinimumSize
+
+	Eto.Forms.ContextMenu ContextMenu
+
+	Eto.Forms.Control Content
+
+	Eto.Drawing.Size ClientSize
+
+	System.Collections.Generic.IEnumerable`1[Eto.Forms.Control] VisualControls
+
+	System.Collections.Generic.IEnumerable`1[Eto.Forms.Control] Children
+
+	System.Collections.Generic.IEnumerable`1[Eto.Forms.Control] VisualChildren
+
+	Boolean Loaded
+
+	System.Object Tag
+
+	Eto.Drawing.Size Size
+
+	Int32 Width
+
+	Int32 Height
+
+	Boolean Enabled
+
+	Boolean Visible
+
+	Eto.Forms.Container Parent
+
+	Eto.Forms.Container VisualParent
+
+	Eto.Drawing.Color BackgroundColor
+
+	Boolean HasFocus
+
+	Boolean IsSuspended
+
+	Eto.Forms.Window ParentWindow
+
+	System.Collections.Generic.IEnumerable`1[System.String] SupportedPlatformCommands
+
+	Eto.Forms.Cursor Cursor
+
+	System.String ToolTip
+
+	Eto.Widget Parent
+
+	System.Collections.Generic.IEnumerable`1[Eto.Widget] Parents
+
+	System.Object DataContext
+
+	Eto.Forms.BindingCollection Bindings
+
+	Eto.Platform Platform
+
+	System.Object Handler
+
+	IntPtr NativeHandle
+
+	Eto.PropertyStore Properties
+
+	System.String ID
+
+	System.String Style
+
+	System.Object ControlObject
+
+
+Constructors
+----------------
+	Void .ctor()
+
+	Void .ctor(IHandler)
+
+
+Methods
+----------------
+	Void Show()
+
+	Void Close()
+
+	Void Minimize()
+
+	Void Maximize()
+
+	Void BringToFront()
+
+	Void SendToBack()
+
+	Void Remove(Eto.Forms.Control)
+
+	Void Unbind()
+
+	Void UpdateBindings(Eto.Forms.BindingUpdateMode)
+
+	Void Remove(System.Collections.Generic.IEnumerable`1[Eto.Forms.Control])
+
+	Void RemoveAll()
+
+	T FindChild[T](System.String)
+
+	Eto.Forms.Control FindChild(System.Type, System.String)
+
+	Eto.Forms.Control FindChild(System.String)
+
+	Void Invalidate()
+
+	Void Invalidate(Eto.Drawing.Rectangle)
+
+	Eto.Forms.Container FindParent(System.Type, System.String)
+
+	Eto.Forms.Container FindParent(System.String)
+
+	Void Detach()
+
+	Void AttachNative()
+
+	Void Focus()
+
+	Void SuspendLayout()
+
+	Void ResumeLayout()
+
+	Void MapPlatformCommand(System.String, Eto.Forms.Command)
+
+	Eto.Drawing.PointF PointFromScreen(Eto.Drawing.PointF)
+
+	Eto.Drawing.PointF PointToScreen(Eto.Drawing.PointF)
+
+	Eto.Drawing.RectangleF RectangleToScreen(Eto.Drawing.RectangleF)
+
+	Eto.Drawing.RectangleF RectangleFromScreen(Eto.Drawing.RectangleF)
+
+	T FindParent[T](System.String)
+
+	Eto.Widget FindParent(System.Type, System.String)
+
+	Eto.Widget FindParent(System.String)
+
+	Void Dispose()
+
+	Boolean Equals(System.Object)
+
+	Int32 GetHashCode()
+
+	System.Type GetType()
+
+	System.String ToString()
+
+val it : unit = ()
+> > 
+#+END_SRC
+
+Get public methods from type: 
+
+#+BEGIN_SRC fsharp 
+> > 
+asm |> AsmAttr.getType "Eto.Forms.Form"  
+    |> Option.map TInfo.getPublicInstanceMethods
+;;
+val it : seq<MethodInfo> option =
+  Some
+    (seq
+       [Void Show() {Attributes = ReuseSlot, Public, HideBySig;
+                     CallingConvention = Standard, HasThis;
+                     ContainsGenericParameters = false;
+                     CustomAttributes = seq [];
+                     DeclaringType = Eto.Forms.Form;
+                     IsAbstract = false;
+                     IsAssembly = false;
+                     IsConstructor = false;
+                     IsFamily = false;
+                     IsFamilyAndAssembly = false;
+                     IsFamilyOrAssembly = false;
+                     IsFinal = false;
+                     IsGenericMethod = false;
+                     IsGenericMethodDefinition = false;
+                     IsHideBySig = true;
+                     IsPrivate = false;
+                     IsPublic = true;
+                     IsSecurityCritical = false;
+                     IsSecuritySafeCritical = false;
+                     IsSecurityTransparent = true;
+                     IsSpecialName = false;
+                     IsStatic = false;
+                     IsVirtual = false;
+                     MemberType = Method;
+                     MetadataToken = 100664126;
+                     MethodHandle = System.RuntimeMethodHandle;
+                     MethodImplementationFlags = IL;
+                     Module = Eto.dll;
+                     Name = "Show";
+                     ReflectedType = Eto.Forms.Form;
+                     ReturnParameter = Void;
+                     ReturnType = System.Void;
+                     ReturnTypeCustomAttributes = Void;};
+        Void Close()
+          {Attributes = ReuseSlot, Public, Virtual, HideBySig, NewSlot;
+           CallingConvention = Standard, HasThis;
+           ContainsGenericParameters = false;
+           CustomAttributes = seq [];
+           DeclaringType = Eto.Forms.Window;
+           IsAbstract = false;
+           IsAssembly = false;
+           IsConstructor = false;
+           IsFamily = false;
+           IsFamilyAndAssembly = false;
+           IsFamilyOrAssembly = false;
+           IsFinal = false;
+           IsGenericMethod = false;
+           IsGenericMethodDefinition = false;
+           IsHideBySig = true;
+           IsPrivate = false;
+           IsPublic = true;
+           IsSecurityCritical = false;
+           IsSecuritySafeCritical = false;
+           IsSecurityTransparent = true;
+           IsSpecialName = false;
+           IsStatic = false;
+           IsVirtual = true;
+           MemberType = Method;
+           MetadataToken = 100664261;
+           MethodHandle = System.RuntimeMethodHandle;
+           MethodImplementationFlags = IL;
+           Module = Eto.dll;
+           Name = "Close";
+           ReflectedType = Eto.Forms.Form;
+           ReturnParameter = Void;
+           ReturnType = System.Void;
+           ReturnTypeCustomAttributes = Void;};
+        Void Minimize() {Attributes = ReuseSlot, Public, HideBySig;
+                         CallingConvention = Standard, HasThis;
+                         ContainsGenericParameters = false;
+                         CustomAttributes = seq [];
+                         DeclaringType = Eto.Forms.Window;
+                         IsAbstract = false;
+                         IsAssembly = false;
+                         IsConstructor = false;
+                         IsFamily = false;
+                         IsFamilyAndAssembly = false;
+                         IsFamilyOrAssembly = false;
+                         IsFinal = false;
+                         IsGenericMethod = false;
+                         IsGenericMethodDefinition = false;
+                         IsHideBySig = true;
+                         IsPrivate = false;
+                         IsPublic = true;
+                         IsSecurityCritical = false;
+                         IsSecuritySafeCritical = false;
+                         IsSecurityTransparent = true;
+                         IsSpecialName = false;
+                         IsStatic = false;
+                         IsVirtual = false;
+                         MemberType = Method;
+                         MetadataToken = 100664282;
+                         MethodHandle = System.RuntimeMethodHandle;
+                         MethodImplementationFlags = IL;
+                         Module = Eto.dll;
+                         Name = "Minimize";
+                         ReflectedType = Eto.Forms.Form;
+                         ReturnParameter = Void;
+                         ReturnType = System.Void;
+                         ReturnTypeCustomAttributes = Void;};
+
+... ... ... 
+
+> 
+asm |> AsmAttr.getType "Eto.Forms.Form"  
+    |> Option.map TInfo.getPublicInstanceMethods
+    |> Option.iter (Seq.iter (printfn "%O"))
+;;
+
+Void Show()
+Void Close()
+Void Minimize()
+Void Maximize()
+Void BringToFront()
+Void SendToBack()
+Void Remove(Eto.Forms.Control)
+Void Unbind()
+Void UpdateBindings(Eto.Forms.BindingUpdateMode)
+Void Remove(System.Collections.Generic.IEnumerable`1[Eto.Forms.Control])
+Void RemoveAll()
+T FindChild[T](System.String)
+Eto.Forms.Control FindChild(System.Type, System.String)
+Eto.Forms.Control FindChild(System.String)
+Void Invalidate()
+Void Invalidate(Eto.Drawing.Rectangle)
+Eto.Forms.Container FindParent(System.Type, System.String)
+Eto.Forms.Container FindParent(System.String)
+Void Detach()
+Void AttachNative()
+Void Focus()
+Void SuspendLayout()
+Void ResumeLayout()
+Void MapPlatformCommand(System.String, Eto.Forms.Command)
+Eto.Drawing.PointF PointFromScreen(Eto.Drawing.PointF)
+Eto.Drawing.PointF PointToScreen(Eto.Drawing.PointF)
+Eto.Drawing.RectangleF RectangleToScreen(Eto.Drawing.RectangleF)
+Eto.Drawing.RectangleF RectangleFromScreen(Eto.Drawing.RectangleF)
+T FindParent[T](System.String)
+Eto.Widget FindParent(System.Type, System.String)
+Eto.Widget FindParent(System.String)
+Void Dispose()
+Boolean Equals(System.Object)
+Int32 GetHashCode()
+System.Type GetType()
+System.String ToString()
+val it : unit = ()
+> > 
+
+
+> > 
+asm |> AsmAttr.getType "Eto.Forms.Form"  
+    |> Option.map TInfo.getPublicInstanceMethods
+    |> Option.iter (Seq.iter MInfo.show)
+;;
+
+Public  Show ()
+Public  Close ()
+Public  Minimize ()
+Public  Maximize ()
+Public  BringToFront ()
+Public  SendToBack ()
+Public  Remove (Eto.Forms.Control child)
+Public  Unbind ()
+Public  UpdateBindings (Eto.Forms.BindingUpdateMode mode)
+Public  Remove (System.Collections.Generic.IEnumerable`1[Eto.Forms.Control] controls)
+Public  RemoveAll ()
+Public  FindChild (System.String id)
+Public  FindChild (System.Type type, System.String id)
+Public  FindChild (System.String id)
+Public  Invalidate ()
+Public  Invalidate (Eto.Drawing.Rectangle rect)
+Public  FindParent (System.Type type, System.String id)
+Public  FindParent (System.String id)
+Public  Detach ()
+Public  AttachNative ()
+Public  Focus ()
+Public  SuspendLayout ()
+Public  ResumeLayout ()
+Public  MapPlatformCommand (System.String systemCommand, Eto.Forms.Command command)
+Public  PointFromScreen (Eto.Drawing.PointF point)
+Public  PointToScreen (Eto.Drawing.PointF point)
+Public  RectangleToScreen (Eto.Drawing.RectangleF rect)
+Public  RectangleFromScreen (Eto.Drawing.RectangleF rect)
+Public  FindParent (System.String id)
+Public  FindParent (System.Type type, System.String id)
+Public  FindParent (System.String id)
+Public  Dispose ()
+Public  Equals (System.Object obj)
+Public  GetHashCode ()
+Public  GetType ()
+Public  ToString ()
+val it : unit = ()
+> > 
+#+END_SRC
+** Module FXml.fs
+
+Modules:
+ 
+ - FXml.Node -> Functions related to XmlNode class
+
+ - FXml.Doc  -> Functions related to XmlDocument class
+
+ - FXml.File -> Functions that operates directly on files or URI (http)
+
+
+Example: 
+
+Scrap CNN rss feed - http://rss.cnn.com/rss/edition_world.rss
+
+#+BEGIN_SRC fsharp 
+
+  open System 
+  open System.Xml
+
+  #load "FXml.fsx"
+
+
+
+  open System 
+  open System.Xml
+
+  #load "FXml.fsx"
+
+
+  let doc = FXml.Doc.loadFile "http://rss.cnn.com/rss/edition_world.rss"
+
+  /// Display XML   
+  FXml.Doc.show doc
+
+  /// Print the headlines 
+  doc |> FXml.Doc.selectNodes "//rss//channel//item"
+      |> Seq.iter (fun node ->
+                   node |> FXml.Node.findChildNodeTagText "title"
+                        |> Option.iter (printfn "Title:       %s") ;
+                   
+                   node |> FXml.Node.findChildNodeTagText "description"
+                        |> Option.iter (printfn "Description: %s")
+
+                   node |> FXml.Node.findChildNodeTagText "link"
+                        |>  Option.iter (printfn "Link:       %s\n\n")
+                  )
+
+#+END_SRC
+
+Output: 
+
+#+BEGIN_SRC text 
+
+Title:       Dozens killed by bomb in Syrian city, activists say
+Description: A deadly car bomb Saturday rocked the center of the rebel-held city of Azaz in northern Syria, near the Turkish border, according to activists.<img src="http://feeds.feedburner.com/~r/rss/edition_world/~4/8Y6nOsOAKUc" height="1" width="1" alt=""/>
+Link:       http://rss.cnn.com/~r/rss/edition_world/~3/8Y6nOsOAKUc/index.html
+
+
+Title:       Russia 'starts to withdraw' forces from Syria 
+Description: Russia has started to cut back its forces in Syria, beginning with an aircraft carrier group, Russian state news agency TASS reported Friday.<img src="http://feeds.feedburner.com/~r/rss/edition_world/~4/D1wS-EpaM6g" height="1" width="1" alt=""/>
+Link:       http://rss.cnn.com/~r/rss/edition_world/~3/D1wS-EpaM6g/index.html
+
+
+Title:       History will be a cruel judge of Obama's risk aversion in Syria
+Description: The Syrian civil war is by no means over, but this year will bring a decisive turn in the conflict that may reduce the overall level of violence and fundamentally -- and perhaps for some time to come -- change the balance of power on the ground.<img src="http://feeds.feedburner.com/~r/rss/edition_world/~4/xu1plmH2v3U" height="1" width="1" alt=""/>
+Link:       http://rss.cnn.com/~r/rss/edition_world/~3/xu1plmH2v3U/index.html
+
+... ... ... ...         ...
+#+END_SRC
+
+
+Signature 
+
+#+BEGIN_SRC fsharp 
+namespace FSI_0217
+  module Node = begin
+    val value : node:XmlNode -> string
+    val name : node:XmlNode -> string
+    val attrv : attr:string -> node:XmlNode -> string option
+    val attrv2 : attr:string -> node:XmlNode -> string
+    val attributes : node:XmlNode -> seq<string * string>
+    val childNodes : node:XmlNode -> seq<XmlNode>
+    val findChildNode : fn:(XmlNode -> bool) -> node:XmlNode -> XmlNode option
+    val filterChildNodes :
+      fn:(XmlNode -> bool) -> node:XmlNode -> seq<XmlNode>
+    val findChildNodeTag : tag:string -> node:XmlNode -> XmlNode option
+    val findChildNodeTagText : tag:string -> node:XmlNode -> string option
+    val innerText : node:XmlNode -> string
+    val showAttributes : node:XmlNode -> unit
+    val selectNode : xpath:string -> node:XmlNode -> XmlNode option
+    val selectValue : xpath:string -> node:XmlNode -> string option
+    val selectValueCdata : xpath:string -> doc:XmlNode -> string option
+    val iterValue : xpath:string -> fn:(string -> unit) -> doc:XmlNode -> unit
+    val iterValueCdata :
+      xpath:string -> fn:(string -> unit) -> doc:XmlNode -> unit
+    val show : node:XmlNode -> unit
+    val showTop : node:XmlNode -> unit
+    val showStruct : node:XmlNode -> unit
+  end
+  module Doc = begin
+    val load : xmlString:string -> XmlDocument
+    val loadFile : uri:string -> XmlDocument
+    val childNodes : doc:XmlDocument -> XmlNodeList
+    val root : doc:XmlDocument -> XmlElement
+    val toString : doc:XmlDocument -> string
+    val makeNs :
+      prefix:string -> uri:string -> doc:XmlDocument -> XmlNamespaceManager
+    val selectNode : xpath:string -> doc:XmlDocument -> XmlNode option
+    val selectNodes : xpath:string -> doc:XmlDocument -> seq<XmlNode>
+    val selectNodesNs :
+      ns:XmlNamespaceManager ->
+        xpath:string -> doc:XmlDocument -> seq<XmlNode>
+    val selectNodesNs2 :
+      prefix:string * uri:string ->
+        xpath:string -> doc:XmlDocument -> seq<XmlNode>
+    val selectNodeCdata :
+      xpath:string -> doc:XmlDocument -> XmlCDataSection option
+    val selectValueCdata : xpath:string -> doc:XmlDocument -> string option
+    val xpathNodesFn :
+      prefix:string * uri:string ->
+        xpath:string -> fn:(XmlNode -> 'a) -> doc:XmlDocument -> seq<'a>
+    val xpathSelectAttr :
+      xpath:string -> attribute:string -> doc:XmlDocument -> seq<string>
+    val xpathSelectAttrNs :
+      prefix:string * uri:string ->
+        xpath:string -> attribute:string -> doc:XmlDocument -> seq<string>
+    val xpathSelectValue : xpath:string -> doc:XmlDocument -> seq<string>
+    val xpathSelectValueNs :
+      prefix:string * uri:string ->
+        xpath:string -> doc:XmlDocument -> seq<string>
+    val xpathNodesNsManySeq :
+      prefix:string * uri:string ->
+        xpath:string ->
+          attributes:string list -> doc:XmlDocument -> Map<string,seq<string>>
+    val show : doc:XmlDocument -> unit
+    val showStruct : doc:XmlDocument -> unit
+  end
+  module File = begin
+    val show : xmlFile:string -> unit
+    val showStruct : xmlFile:string -> unit
+    val formatUri : xmlUri:string -> xmlFile:string -> unit
+    val showXPathValue : xmlFile:string -> xpath:string -> unit
+    val showXPathValueNs :
+      xmlFile:string -> prefix:string * uri:string -> xpath:string -> unit
+    val showXpathAttr :
+      xmlFile:string -> xpath:string -> attribute:string -> unit
+    val showXpathAttrNS :
+      xmlFile:string ->
+        prefix:string * uri:string -> xpath:string -> attribute:string -> unit
+  end
+#+END_SRC
+
+* Non Categorized
+** Functions to redirect stdout 
+*** Redirect stdout to string 
+
+#+BEGIN_SRC fsharp 
+open System 
+
+let withStdout fn =
+    let stdout = Console.Out
+    let sw = new System.IO.StringWriter ()
+    Console.SetOut(sw)
+    fn ()
+    let out = sw.ToString()
+    sw.Close()
+    Console.SetOut(sdout)
+    out 
+
+> withStdout (fun () -> Console.WriteLine "Hello world ! Hola Mundo ! Ola Mundo") ;;
+val it : string = "Hello world ! Hola Mundo ! Ola Mundo
+"
+> Console.WriteLine "Hello" ;;
+Hello
+val it : unit = ()
+> 
+
+#+END_SRC
+
+*** Redirect stodut to file 
+
+#+BEGIN_SRC fsharp 
+/// Redirect stdout print to a file. 
+let withStdoutFile (file: string) fn  =
+    let stdout = Console.Out
+    let sw = new System.IO.StreamWriter(file)
+    Console.SetOut(sw)
+    fn ()   
+    sw.Close()
+    Console.SetOut(stdout)
+
+> withStdoutFile "/tmp/test20.txt" (fun () -> Console.WriteLine "Hello world ! Hola Mundo ! Ola Mundo") ;;
+val it : unit = ()
+> 
+
+System.IO.File.ReadAllLines "/tmp/test20.txt" ;;
+val it : string [] = [|"Hello world ! Hola Mundo ! Ola Mundo"|]
+> 
+#+END_SRC
+
+* NuGet.Core library 
+** Overview 
+
+Snippets and information about NuGet.Core.dll 
+
+** Snippets 
+*** NuGet.PackageRepositoryFactory
+
+Load NuGet package.
+
+#+BEGIN_SRC fsharp 
+#if INTERACTIVE
+#r "../packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll"
+#r "../packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll"
+#r "System.Linq.dll"
+#endif
+
+open System 
+open NuGet
+#+END_SRC
+
+Create Repository object
+
+#+BEGIN_SRC fsharp 
+
+let localPath = "/home/arch/Documents/projects/pget.fsharp/packages" 
+
+> let localRepo =  NuGet.PackageRepositoryFactory.Default.CreateRepository(localPath)
+;;
+val localRepo : IPackageRepository
+
+/// List repository 
+
+> > localRepo.GetPackages () |> Seq.iter (printfn "%O") ;;
+Eto.Forms 2.3.0
+Eto.Platform.Gtk 2.3.0
+FParsec 1.0.2
+FS.INIReader 1.0.3
+Microsoft.Web.Xdt 2.1.1
+NuGet.Core 2.12.0
+OxyPlot.Core 1.0.0
+OxyPlot.Pdf 1.0.0
+PDFsharp-MigraDoc-GDI 1.32.4334.0
+val it : unit = ()
+> > 
+
+#+END_SRC
+
+Get individual package 
+
+#+BEGIN_SRC fsharp 
+> > 
+let pkg = localRepo.GetPackages() |> Seq.item 0 ;;
+
+val pkg : IPackage = Eto.Forms 2.3.0
+
+
+> > pkg ;;
+val it : IPackage =
+  Eto.Forms 2.3.0
+    {AssemblyReferences = seq
+                            [lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll;
+                             lib/net45/Eto.dll; lib/net40/Eto.dll];
+     Authors = [|"Picoe Software Solutions Inc."|];
+     Copyright = "(c) 2010-2016 by Curtis Wensley, 2012-2014 by Vivek Jhaveri and contributors";
+     DependencySets = seq [];
+     Description = "Eto.Forms is a cross platform desktop user interface framework.
+
+This framework is built so that you can target multiple platforms with one UI codebase.
+
+The goal of this framework is to expose a common API that can be used to build functional applications that run across platforms using their native toolkit. This will make your applications look and work as if it were a native application on all platforms.
+
+For advanced scenarios, you can take advantage of each platform's capabilities by wrapping your common UI in a larger application, or even create your own high-level controls with a custom implementations per platform.
+
+This framework currently supports creating Desktop applications that work across Windows Forms, WPF, MonoMac/Xamarin.Mac, and GTK#.
+
+In order to run your Eto.Forms based application, you must also install one (or more) of the following packages:
+
+- Eto.Platform.Wpf
+- Eto.Platform.Windows
+- Eto.Platform.Direct2D
+- Eto.Platform.Gtk
+- Eto.Platform.Gtk3
+- Eto.Platform.Mac
+- Eto.Platform.XamMac  * requires Xamarin Studio on OS X.
+- Eto.Platform.XamMac2  * requires Xamarin Studio on OS X.
+
+To get more information about how to get started, read the wiki:
+
+https://github.com/picoe/Eto/wiki";
+     DevelopmentDependency = false;
+     DownloadCount = -1;
+     FrameworkAssemblies = [||];
+     IconUrl = null;
+     Id = "Eto.Forms";
+     IsAbsoluteLatestVersion = true;
+     IsLatestVersion = true;
+     IsValid = true;
+     Language = null;
+     LicenseUrl = https://github.com/picoe/Eto/raw/master/LICENSE;
+     Listed = true;
+     MinClientVersion = null;
+     Owners = [|"Picoe Software Solutions Inc."|];
+     PackageAssemblyReferences = seq [];
+     ProjectUrl = https://github.com/picoe/Eto;
+     Published = 1/5/2017 7:07:04 PM +00:00;
+     ReleaseNotes = null;
+     ReportAbuseUrl = null;
+     RequireLicenseAcceptance = false;
+     Summary = "Eto.Forms UI Framework";
+     Tags = " cross platform gui ui framework desktop winforms wpf mac osx gtk eto.forms ";
+     Title = "Eto.Forms";
+     Version = 2.3.0;}
+> > 
+#+END_SRC
+
+Package properties
+
+#+BEGIN_SRC fsharp 
+> > 
+pkg.Id ;;
+val it : string = "Eto.Forms"
+> > 
+pkg.ProjectUrl ;;
+val it : Uri =
+  https://github.com/picoe/Eto
+    {AbsolutePath = "/picoe/Eto";
+     AbsoluteUri = "https://github.com/picoe/Eto";
+     Authority = "github.com";
+     DnsSafeHost = "github.com";
+     Fragment = "";
+     Host = "github.com";
+     HostNameType = Dns;
+     IdnHost = "github.com";
+     IsAbsoluteUri = true;
+     IsDefaultPort = true;
+     IsFile = false;
+     IsLoopback = false;
+     IsUnc = false;
+     LocalPath = "/picoe/Eto";
+     OriginalString = "https://github.com/picoe/Eto";
+     PathAndQuery = "/picoe/Eto";
+     Port = 443;
+     Query = "";
+     Scheme = "https";
+     Segments = [|"/"; "picoe/"; "Eto"|];
+     UserEscaped = false;
+     UserInfo = "";}
+> > 
+pkg.Summary ;;
+val it : string = "Eto.Forms UI Framework"
+> > 
+pkg.Title ;;
+val it : string = "Eto.Forms"
+> > 
+pkg.Version ;;
+val it : SemanticVersion = 2.3.0 {SpecialVersion = "";
+                                  Version = 2.3.0.0;}
+> > 
+pkg.Authors ;;
+val it : Collections.Generic.IEnumerable<string> =
+  [|"Picoe Software Solutions Inc."|]
+> > 
+
+
+pkg.GetFiles () ;;
+val it : Collections.Generic.IEnumerable<IPackageFile> =
+  seq
+    [lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll
+       {EffectivePath = "Eto.dll";
+        Path = "lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll";
+        SourcePath = "/tmp/NuGetScratch/5df9ac85-fdfe-4c5b-9bd5-55301295a35c/mlvrkqon.mlh/lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll";
+        SupportedFrameworks = seq
+                                [.NETPortable,Version=v0.0,Profile=net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10];
+        TargetFramework = .NETPortable,Version=v0.0,Profile=net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10;
+        TargetPath = "lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll";};
+     lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.xml
+       {EffectivePath = "Eto.xml";
+        Path = "lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.xml";
+        SourcePath = "/tmp/NuGetScratch/5df9ac85-fdfe-4c5b-9bd5-55301295a35c/mlvrkqon.mlh/lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.xml";
+        SupportedFrameworks = seq
+                                [.NETPortable,Version=v0.0,Profile=net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10];
+        TargetFramework = .NETPortable,Version=v0.0,Profile=net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10;
+        TargetPath = "lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.xml";};
+     lib/net45/Eto.dll
+       {EffectivePath = "Eto.dll";
+        Path = "lib/net45/Eto.dll";
+        SourcePath = "/tmp/NuGetScratch/5df9ac85-fdfe-4c5b-9bd5-55301295a35c/mlvrkqon.mlh/lib/net45/Eto.dll";
+        SupportedFrameworks = seq [.NETFramework,Version=v4.5];
+        TargetFramework = .NETFramework,Version=v4.5;
+        TargetPath = "lib/net45/Eto.dll";};
+     lib/net45/Eto.xml
+       {EffectivePath = "Eto.xml";
+        Path = "lib/net45/Eto.xml";
+        SourcePath = "/tmp/NuGetScratch/5df9ac85-fdfe-4c5b-9bd5-55301295a35c/mlvrkqon.mlh/lib/net45/Eto.xml";
+        SupportedFrameworks = seq [.NETFramework,Version=v4.5];
+        TargetFramework = .NETFramework,Version=v4.5;
+        TargetPath = "lib/net45/Eto.xml";}; ...]
+> > 
+
+> pkg.GetFiles() |> Seq.iter (printfn "%O") ;;
+lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll
+lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.xml
+lib/net45/Eto.dll
+lib/net45/Eto.xml
+lib/net40/Eto.dll
+lib/net40/Eto.xml
+LICENSE.txt
+val it : unit = ()
+> > 
+
+> pkg.GetSupportedFrameworks() ;;
+val it : Collections.Generic.IEnumerable<Runtime.Versioning.FrameworkName> =
+  seq
+    [.NETPortable,Version=v0.0,Profile=net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10
+       {FullName = ".NETPortable,Version=v0.0,Profile=net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10";
+        Identifier = ".NETPortable";
+        Profile = "net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10";
+        Version = 0.0;};
+     .NETFramework,Version=v4.5 {FullName = ".NETFramework,Version=v4.5";
+                                 Identifier = ".NETFramework";
+                                 Profile = "";
+                                 Version = 4.5;};
+     .NETFramework,Version=v4.0 {FullName = ".NETFramework,Version=v4.0";
+                                 Identifier = ".NETFramework";
+                                 Profile = "";
+                                 Version = 4.0;}]
+> > 
+#+END_SRC
+
+Package Assembly References:
+
+#+BEGIN_SRC fsharp 
+pkg.AssemblyReferences ;;
+val it : Collections.Generic.IEnumerable<IPackageAssemblyReference> =
+  seq
+    [lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll
+       {EffectivePath = "Eto.dll";
+        Name = "Eto.dll";
+        Path = "lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll";
+        SourcePath = "/tmp/NuGetScratch/5df9ac85-fdfe-4c5b-9bd5-55301295a35c/mlvrkqon.mlh/lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll";
+        SupportedFrameworks = seq
+                                [.NETPortable,Version=v0.0,Profile=net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10];
+        TargetFramework = .NETPortable,Version=v0.0,Profile=net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10;
+        TargetPath = "lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll";};
+     lib/net45/Eto.dll
+       {EffectivePath = "Eto.dll";
+        Name = "Eto.dll";
+        Path = "lib/net45/Eto.dll";
+        SourcePath = "/tmp/NuGetScratch/5df9ac85-fdfe-4c5b-9bd5-55301295a35c/mlvrkqon.mlh/lib/net45/Eto.dll";
+        SupportedFrameworks = seq [.NETFramework,Version=v4.5];
+        TargetFramework = .NETFramework,Version=v4.5;
+        TargetPath = "lib/net45/Eto.dll";};
+     lib/net40/Eto.dll
+       {EffectivePath = "Eto.dll";
+        Name = "Eto.dll";
+        Path = "lib/net40/Eto.dll";
+        SourcePath = "/tmp/NuGetScratch/5df9ac85-fdfe-4c5b-9bd5-55301295a35c/mlvrkqon.mlh/lib/net40/Eto.dll";
+        SupportedFrameworks = seq [.NETFramework,Version=v4.0];
+        TargetFramework = .NETFramework,Version=v4.0;
+        TargetPath = "lib/net40/Eto.dll";}]
+> > 
+
+
+let pkgref = pkg.AssemblyReferences |> Seq.item 0 ;;
+
+val pkgref : IPackageAssemblyReference =
+  lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll
+
+> pkgref ;;
+val it : IPackageAssemblyReference =
+  lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll
+    {EffectivePath = "Eto.dll";
+     Name = "Eto.dll";
+     Path = "lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll";
+     SourcePath = "/tmp/NuGetScratch/5df9ac85-fdfe-4c5b-9bd5-55301295a35c/mlvrkqon.mlh/lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll";
+     SupportedFrameworks = seq
+                             [.NETPortable,Version=v0.0,Profile=net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10];
+     TargetFramework = .NETPortable,Version=v0.0,Profile=net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10;
+     TargetPath = "lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll";}
+>  
+
+> pkgref.EffectivePath ;;
+val it : string = "Eto.dll"
+
+
+> pkgref.Path ;;
+val it : string =
+  "lib/portable-net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Eto.dll"
+
+
+> pkgref.TargetFramework ;;
+val it : Runtime.Versioning.FrameworkName =
+  .NETPortable,Version=v0.0,Profile=net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10
+    {FullName = ".NETPortable,Version=v0.0,Profile=net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10";
+     Identifier = ".NETPortable";
+     Profile = "net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10";
+     Version = 0.0;}
+> 
+
+> pkgref.TargetFramework.Profile ;;
+val it : string =
+  "net45+win8+wp8+wpa81+Xamarin.Mac+MonoAndroid10+MonoTouch10+Xamarin.iOS10"
+> > 
+
+ 
+> pkgref.TargetFramework.Profile.Split([|'+'|]) ;;
+val it : string [] =
+  [|"net45"; "win8"; "wp8"; "wpa81"; "Xamarin.Mac"; "MonoAndroid10";
+    "MonoTouch10"; "Xamarin.iOS10"|]
+> > 
+#+END_SRC
+
+*** NuGet.LocalPackageRepository
+
+Load NuGet.Core 
+
+#+BEGIN_SRC fsharp 
+#if INTERACTIVE
+#r "../packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll"
+#r "../packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll"
+#r "System.Linq.dll"
+#endif
+
+open System 
+open NuGet
+#+END_SRC
+
+Crate a LocalPackageRepository
+
+#+BEGIN_SRC fsharp 
+
+let localPath = "/home/arch/Documents/projects/pget.fsharp/packages" 
+
+let localRepo2 = new NuGet.LocalPackageRepository(localPath)
+
+
+> 
+> localRepo2 ;;
+
+val it : LocalPackageRepository =
+NuGet.LocalPackageRepository
+    {Logger = NuGet.NullLogger;
+     PackageSaveMode = Nupkg;
+     PathResolver = NuGet.DefaultPackagePathResolver;
+     Source = "/home/arch/Documents/projects/pget.fsharp/packages";
+     SupportsPrereleasePackages = true;}
+> > 
+
+> 
+
+localRepo2.GetPackages() 
+|> Seq.iter (printfn "%O") 
+;;
+
+Eto.Forms 2.3.0
+Eto.Platform.Gtk 2.3.0
+FParsec 1.0.2
+FS.INIReader 1.0.3
+Microsoft.Web.Xdt 2.1.1
+NuGet.Core 2.12.0
+OxyPlot.Core 1.0.0
+OxyPlot.Pdf 1.0.0
+PDFsharp-MigraDoc-GDI 1.32.4334.0
+val it : unit = ()
+> > 
+
+
+#+END_SRC
+
+
+Find a package:
+
+#+BEGIN_SRC fsharp 
+> > 
+localRepo2.FindPackage("FSharp") ;;
+val it : IPackage = null
+> > 
+localRepo2.FindPackage("OxyPlot.Core") ;;
+val it : IPackage =
+  OxyPlot.Core 1.0.0
+    {AssemblyReferences = seq
+                            [lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1+Xamarin.iOS10/OxyPlot.dll;
+                             lib/net45/OxyPlot.dll;
+                             lib/net40-client/OxyPlot.dll;
+                             lib/net40/OxyPlot.dll; ...];
+     Authors = [|"Oystein Bjorke"|];
+     Copyright = null;
+     DependencySets = seq [];
+     Description = "OxyPlot is a plotting library for .NET. This is the portable core library that is referenced by the platform-specific OxyPlot packages.";
+     DevelopmentDependency = false;
+     DownloadCount = -1;
+     FrameworkAssemblies = [||];
+     IconUrl = https://raw.githubusercontent.com/oxyplot/oxyplot/develop/Icons/OxyPlot_128.png;
+     Id = "OxyPlot.Core";
+     IsAbsoluteLatestVersion = true;
+     IsLatestVersion = true;
+     IsValid = true;
+     Language = null;
+     LicenseUrl = https://raw.githubusercontent.com/oxyplot/oxyplot/master/LICENSE;
+     Listed = true;
+     MinClientVersion = null;
+     Owners = [|"Oystein Bjorke"|];
+     PackageAssemblyReferences = seq [];
+     ProjectUrl = http://oxyplot.org/;
+     Published = 12/19/2016 5:22:39 AM +00:00;
+     ReleaseNotes = "";
+     ReportAbuseUrl = null;
+     RequireLicenseAcceptance = false;
+     Summary = null;
+     Tags = " plotting plot charting chart ";
+     Title = "OxyPlot core library (PCL)";
+     Version = 1.0.0;}
+> > 
+
+
+#+END_SRC
+
+
+Remove a package:
+
+#+BEGIN_SRC fsharp 
+> localRepo2.RemovePackage ;;
+val it : (IPackage -> unit) 
+> > 
+
+> localRepo2.RemovePackage(localRepo2.FindPackage("OxyPlot.Core")) ;;
+val it : unit = ()
+> > 
+
+> localRepo2.GetPackages() |> Seq.iter (printfn "%O") ;;
+
+Eto.Forms 2.3.0
+Eto.Platform.Gtk 2.3.0
+FParsec 1.0.2
+FS.INIReader 1.0.3
+Microsoft.Web.Xdt 2.1.1
+NuGet.Core 2.12.0
+OxyPlot.Pdf 1.0.0
+PDFsharp-MigraDoc-GDI 1.32.4334.0
+val it : unit = ()
+> > 
+#+END_SRC
+
+*** Machine Cache 
+
+Get Default NuGet package cache location.
+
+#+BEGIN_SRC fsharp 
+
+#if INTERACTIVE
+#r "../packages/Microsoft.Web.Xdt.2.1.1/lib/net40/Microsoft.Web.XmlTransform.dll"
+#r "../packages/NuGet.Core.2.12.0/lib/net40-Client/NuGet.Core.dll"
+#r "System.Linq.dll"
+#endif
+
+open System 
+open NuGet
+
+> NuGet.MachineCache.Default ;;
+val it : MachineCache =
+  NuGet.MachineCache {Logger = NuGet.NullLogger;
+                      PackageSaveMode = Nupkg;
+                      PathResolver = NuGet.DefaultPackagePathResolver;
+                      Source = "/home/arch/.local/share/NuGet/Cache";
+                      SupportsPrereleasePackages = true;}
+
+
+> NuGet.MachineCache.Default.Source ;;
+val it : string = "/home/arch/.local/share/NuGet/Cache"
+
+#+END_SRC
+
+List all packages in NuGet cache. 
+
+#+BEGIN_SRC fsharp 
+
+> NuGet.MachineCache.Default.GetPackages ;;
+val it : (unit -> Linq.IQueryable<IPackage>) = 
+>
+
+
+> NuGet.MachineCache.Default.GetPackages() |> Seq.iter (printfn "%O") ;;
+
+Baseclass.Contrib.Nuget.Output 2.1.0
+Deedle 1.0.0
+Deedle 1.2.5
+EntityFramework 4.1.10311.0
+EntityFramework 4.1.10331.0
+EntityFramework 4.1.10715.0
+EntityFramework 4.2.0.0
+...
+
+Octokit 0.13.0
+Octokit 0.21.1
+Octokit 0.22.0
+OpenGL.Net 0.3.2
+OxyPlot 2014.1.546
+OxyPlot.Core 1.0.0
+OxyPlot.Pdf 1.0.0
+OxyPlot.WindowsForms 1.0.0
+PDFsharp-MigraDoc-GDI 1.32.4334.0
+SFML.Net 2.2
+SQL 1.0.0.0
+SQL 1.0.0.1
+SQL 1.0.5075.31045
+SourceLink.Fake 0.5.0
+SourceLink.Fake 1.1.0
+UnionArgParser 0.8.7
+Zlib.Portable 1.11.0
+
+....
+
+
+NuGet.MachineCache.Default.GetPackages() |> Seq.item 10 ;;
+val it : IPackage =
+  EntityFramework 5.0.0-beta1
+    {AssemblyReferences = seq
+                            [lib/net40/EntityFramework.dll;
+                             lib/net45/EntityFramework.dll];
+     Authors = [|"Microsoft"|];
+     Copyright = null;
+     DependencySets = seq [];
+     Description = "Entity Framework is Microsoft's recommended data access technology for new applications.";
+     DevelopmentDependency = false;
+     DownloadCount = -1;
+     FrameworkAssemblies = seq
+                             [NuGet.FrameworkAssemblyReference;
+                              NuGet.FrameworkAssemblyReference];
+     IconUrl = http://go.microsoft.com/fwlink/?LinkID=386613;
+     Id = "EntityFramework";
+     IsAbsoluteLatestVersion = true;
+     IsLatestVersion = false;
+     IsValid = true;
+     Language = "en-US";
+     LicenseUrl = http://go.microsoft.com/fwlink/?LinkId=242870;
+     Listed = true;
+     MinClientVersion = null;
+     Owners = [|"Microsoft"|];
+     PackageAssemblyReferences = seq [];
+     ProjectUrl = http://go.microsoft.com/fwlink/?LinkId=242869;
+     Published = 11/27/2016 9:03:51 AM +00:00;
+     ReleaseNotes = null;
+     ReportAbuseUrl = null;
+     RequireLicenseAcceptance = true;
+     Summary = "Entity Framework is Microsoft's recommended data access technology for new applications.";
+     Tags = null;
+     Title = null;
+     Version = 5.0.0-beta1;}
+> > 
+#+END_SRC
+
+List all distinct packages. 
+
+#+BEGIN_SRC fsharp 
+> 
+NuGet.MachineCache.Default.GetPackages() 
+|> Seq.groupBy (fun pk -> pk.Id) 
+|> Seq.map fst 
+|> Seq.iter (printfn "%s")
+;;
+
+Baseclass.Contrib.Nuget.Output
+Deedle
+EntityFramework
+Eto.Forms
+Eto.Platform.Gtk
+FAKE
+FParsec
+FS.INIReader
+FSharp.Charting.Gtk
+FSharp.Compiler.Service
+FSharp.Core
+FSharp.Data
+FSharp.Formatting
+FSharp.Formatting.CommandTool
+FSharpVSPowerTools.Core
+FsUnit
+FunScript
+MathNet.Numerics
+Microsoft.Bcl
+Microsoft.Bcl.Build
+Microsoft.Net.Http
+Microsoft.Web.Xdt
+NUnit
+NUnit.Runners
+NuGet.CommandLine
+Nuget.Core
+NuGet.Core
+Octokit
+OpenGL.Net
+OxyPlot
+OxyPlot.Core
+OxyPlot.Pdf
+OxyPlot.WindowsForms
+PDFsharp-MigraDoc-GDI
+SFML.Net
+SQL
+SourceLink.Fake
+UnionArgParser
+Zlib.Portable
+_TestNuGet
+zlib.net
+val it : unit = ()
+#+END_SRC
+
+Find package by Id:
+
+#+BEGIN_SRC fsharp 
+> NuGet.MachineCache.Default.FindPackagesById ;;
+val it : (string -> Collections.Generic.IEnumerable<IPackage>) =
+ 
+>
+
+> > NuGet.MachineCache.Default.FindPackagesById("OxyPlot") ;;
+val it : Collections.Generic.IEnumerable<IPackage> =
+  seq
+    [OxyPlot 2014.1.546
+       {AssemblyReferences = seq
+                               [lib/OxyPlot.dll; lib/net45/OxyPlot.Wpf.dll;
+                                lib/net40/OxyPlot.Wpf.dll;
+                                lib/net45/OxyPlot.Xps.dll; ...];
+        Authors = [|"Oystein Bjorke"|];
+        Copyright = null;
+        DependencySets = seq [];
+        Description = "OxyPlot is an open source plotting library for .NET. This package contains the components for WPF, Windows Universal, Silverlight, Windows Forms and Windows Phone Silverlight. The Xamarin components are not included in this package.";
+        DevelopmentDependency = false;
+        DownloadCount = -1;
+        FrameworkAssemblies = [||];
+        IconUrl = http://resources.oxyplot.org/icons/oxyplot_128.png;
+        Id = "OxyPlot";
+        IsAbsoluteLatestVersion = true;
+        IsLatestVersion = true;
+        IsValid = true;
+        Language = null;
+        LicenseUrl = https://raw.githubusercontent.com/oxyplot/oxyplot/master/LICENSE;
+        Listed = true;
+        MinClientVersion = null;
+        Owners = [|"Oystein Bjorke"|];
+        PackageAssemblyReferences = seq [];
+        ProjectUrl = http://oxyplot.org/;
+        Published = 12/1/2016 8:36:48 PM +00:00;
+        ReleaseNotes = "2014.1.*
+--------
+
+New features
+
+- Support data binding paths ("Point.X") (#210)
+- Support for Xamarin.Forms (#204)
+- Support for Windows Universal apps (#190)
+
+Enhancements
+
+- Improve TrackerFormatString consistency (#214)
+- Support LineColor.BrokenLineColor
+- LabelFormatString for ScatterSeries (#12)
+
+Breaking changes
+
+- Changed tracker format strings arguments (#214)
+- Rename OxyPenLineJoin to LineJoin
+- Rename LineStyle.Undefined to LineStyle.Automatic
+
+Bugfixes
+
+- Improved text rendering for Android and iOS (#209)
+- Custom shape outline for PointAnnotation (#174)
+- Synchronize Wpf.Axis.MinimumRange (#205)
+- TrackerHitResult bug (#198)
+- Position of axis when PositionAtZeroCrossing = true (#189)
+- Expose ScatterSeries.ActualPoints (#201)
+- Add overridable Axis.FormatValueOverride (#181)
+- PngExporter text formatting (#170)";
+        ReportAbuseUrl = null;
+        RequireLicenseAcceptance = false;
+        Summary = null;
+        Tags = " plotting plot charting chart ";
+        Title = null;
+        Version = 2014.1.546;}]
+> > 
+
+> > NuGet.MachineCache.Default.FindPackagesById("FSharp") ;;
+val it : Collections.Generic.IEnumerable<IPackage> = seq []
+> > 
+
+> > NuGet.MachineCache.Default.FindPackagesById("FSharp.Data") |> Seq.iter (printfn "%O") ;;
+FSharp.Data 1.0.0
+FSharp.Data 2.0.0
+FSharp.Data 2.0.8
+FSharp.Data 2.3.1-beta2
+FSharp.Data 2.3.2
+val it : unit = ()
+> > 
+#+END_SRC
+
+
+Find unique package matching an Id: 
+
+#+BEGIN_SRC fsharp 
+> NuGet.MachineCache.Default.FindPackage  ;;
+val it : (string -> IPackage) 
+
+> NuGet.MachineCache.Default.FindPackage("FSharp") ;;
+val it : IPackage = null
+>  
+
+> > NuGet.MachineCache.Default.FindPackage("OxyPlot") ;;
+val it : IPackage =
+  OxyPlot 2014.1.546
+    {AssemblyReferences = seq
+                            [lib/OxyPlot.dll; lib/net45/OxyPlot.Wpf.dll;
+                             lib/net40/OxyPlot.Wpf.dll;
+                             lib/net45/OxyPlot.Xps.dll; ...];
+     Authors = [|"Oystein Bjorke"|];
+     Copyright = null;
+     DependencySets = seq [];
+     Description = "OxyPlot is an open source plotting library for .NET. This package contains the components for WPF, Windows Universal, Silverlight, Windows Forms and Windows Phone Silverlight. The Xamarin components are not included in this package.";
+     DevelopmentDependency = false;
+     DownloadCount = -1;
+     FrameworkAssemblies = [||];
+     IconUrl = http://resources.oxyplot.org/icons/oxyplot_128.png;
+     Id = "OxyPlot";
+     IsAbsoluteLatestVersion = true;
+     IsLatestVersion = true;
+     IsValid = true;
+     Language = null;
+     LicenseUrl = https://raw.githubusercontent.com/oxyplot/oxyplot/master/LICENSE;
+     Listed = true;
+     MinClientVersion = null;
+     Owners = [|"Oystein Bjorke"|];
+     PackageAssemblyReferences = seq [];
+     ProjectUrl = http://oxyplot.org/;
+     Published = 12/1/2016 8:36:48 PM +00:00;
+     ReleaseNotes = "2014.1.*
+--------
+
+New features
+
+- Support data binding paths ("Point.X") (#210)
+- Support for Xamarin.Forms (#204)
+- Support for Windows Universal apps (#190)
+
+Enhancements
+
+- Improve TrackerFormatString consistency (#214)
+- Support LineColor.BrokenLineColor
+- LabelFormatString for ScatterSeries (#12)
+
+Breaking changes
+
+- Changed tracker format strings arguments (#214)
+- Rename OxyPenLineJoin to LineJoin
+- Rename LineStyle.Undefined to LineStyle.Automatic
+
+Bugfixes
+
+- Improved text rendering for Android and iOS (#209)
+- Custom shape outline for PointAnnotation (#174)
+- Synchronize Wpf.Axis.MinimumRange (#205)
+- TrackerHitResult bug (#198)
+- Position of axis when PositionAtZeroCrossing = true (#189)
+- Expose ScatterSeries.ActualPoints (#201)
+- Add overridable Axis.FormatValueOverride (#181)
+- PngExporter text formatting (#170)";
+     ReportAbuseUrl = null;
+     RequireLicenseAcceptance = false;
+     Summary = null;
+     Tags = " plotting plot charting chart ";
+     Title = null;
+     Version = 2014.1.546;}
+> > 
+ 
+#+END_SRC
+
+Find Package by Id and Version: 
+
+ - NuGet.IPackage FindPackage(System.String, NuGet.SemanticVersion)                                             
+
+#+BEGIN_SRC fsharp 
+> > NuGet.MachineCache.Default.FindPackagesById("FSharp.Data") |> Seq.iter (printfn "%O") ;;
+FSharp.Data 1.0.0
+FSharp.Data 2.0.0
+FSharp.Data 2.0.8
+FSharp.Data 2.3.1-beta2
+FSharp.Data 2.3.2
+val it : unit = ()
+> > 
+
+
+> > NuGet.SemanticVersion.Parse("2.3.2") ;;
+val it : SemanticVersion = 2.3.2 {SpecialVersion = "";
+                                  Version = 2.3.2.0;}
+
+> > NuGet.SemanticVersion.Parse("2.3.2A") ;;
+System.ArgumentException: '2.3.2A' is not a valid version string.
+Parameter name: version
+  at NuGet.SemanticVersion.Parse (System.String version) [0x0003d] in <2ce18daa0150492e9cefec1c35c43904>:0 
+  at <StartupCode$FSI_0040>.$FSI_0040.main@ () [0x00000] in <b01c9a48e5084d66b1d5bc0d36ac7e0e>:0 
+  at (wrapper managed-to-native) System.Reflection.MonoMethod:InternalInvoke (System.Reflection.MonoMethod,object,object[],System.Exception&)
+  at System.Reflection.MonoMethod.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x00038] in <dca3b561b8ad4f9fb10141d81b39ff45>:0 
+Stopped due to error
+> > 
+
+> > NuGet.MachineCache.Default.FindPackage("FSharp.Data",  NuGet.SemanticVersion.Parse("2.3.2")) ;; 
+val it : IPackage =
+  FSharp.Data 2.3.2
+    {AssemblyReferences = seq
+                            [lib/net40/FSharp.Data.dll;
+                             lib/net40/FSharp.Data.DesignTime.dll;
+                             lib/portable-net45+sl50+netcore45/FSharp.Data.dll;
+                             lib/portable-net45+sl50+netcore45/FSharp.Data.DesignTime.dll;
+                             ...];
+     Authors = [|"Tomas Petricek"; " Gustavo Guerra"; " Colin Bull"|];
+     Copyright = "Copyright 2015";
+     DependencySets = seq
+                        [NuGet.PackageDependencySet;
+                         NuGet.PackageDependencySet;
+                         NuGet.PackageDependencySet;
+                         NuGet.PackageDependencySet];
+     Description = "The F# Data library (FSharp.Data.dll) implements everything you need to access data in your F# applications and scripts. It implements F# type providers for working with structured file formats (CSV, HTML, JSON and XML) and for accessing the WorldBank data. It also includes helpers for parsing CSV, HTML and JSON files and for sending HTTP requests.";
+     DevelopmentDependency = false;
+     DownloadCount = -1;
+     FrameworkAssemblies = seq [NuGet.FrameworkAssemblyReference];
+     IconUrl = https://raw.github.com/fsharp/FSharp.Data/master/misc/logo.png;
+     Id = "FSharp.Data";
+     IsAbsoluteLatestVersion = true;
+     IsLatestVersion = true;
+     IsValid = true;
+     Language = null;
+     LicenseUrl = http://github.com/fsharp/FSharp.Data/blob/master/LICENSE.md;
+     Listed = true;
+     MinClientVersion = null;
+     Owners = [|"Tomas Petricek"; " Gustavo Guerra"; " Colin Bull"|];
+     PackageAssemblyReferences = seq [NuGet.PackageReferenceSet];
+     ProjectUrl = http://fsharp.github.io/FSharp.Data;
+     Published = 11/27/2016 10:41:50 AM +00:00;
+     ReleaseNotes = "Add support for HTML entities with Unicode characters above 65535.
+Improve resilience when parsing invalid Set-Cookie headers.";
+     ReportAbuseUrl = null;
+     RequireLicenseAcceptance = false;
+     Summary = "Library of F# type providers and data access tools";
+     Tags = " F# fsharp data typeprovider WorldBank CSV HTML CSS JSON XML HTTP linqpad-samples ";
+     Title = "F# Data";
+     Version = 2.3.2;}
+> > 
+
+#+END_SRC
+
+Clear package cache: 
+
+#+BEGIN_SRC fsharp 
+NuGet.MachineCache.Default.Clear()
+#+END_SRC
+
+** Selected Types of NuGet.Core
+*** Overview 
+
+The information in this section was generated using pget.exe tool with
+information extracted from assembly.
+
+*** NuGet.MachineCache
+**** Type Info
+
+ - Name:           MachineCache
+ - Full Name:      NuGet.MachineCache
+ - Namespace:      NuGet
+ - Module:         NuGet.Core.dll
+ - Base Type:      NuGet.LocalPackageRepository
+
+*Predicates*
+
+ - Class:          True
+ - Abstract Class: False
+ - Primitive       False
+ - Array:          False
+ - Interface       False
+ - Enum            False
+ - Public          True
+ - Visible         True
+                       
+**** Fields
+**** Properties
+
+ - NuGet.MachineCache Default
+
+ - System.String Source
+
+ - NuGet.IPackagePathResolver PathResolver
+
+ - Boolean SupportsPrereleasePackages
+
+ - NuGet.ILogger Logger
+
+ - NuGet.PackageSaveModes PackageSaveMode
+
+**** Constructors
+**** Methods
+
+ - Void AddPackage(NuGet.IPackage)
+
+ - Boolean Exists(System.String, NuGet.SemanticVersion)
+
+ - Boolean InvokeOnPackage(System.String, NuGet.SemanticVersion, System.Action`1[System.IO.Stream])
+
+ - Void Clear()
+
+ - System.Linq.IQueryable`1[NuGet.IPackage] GetPackages()
+
+ - Void RemovePackage(NuGet.IPackage)
+
+ - NuGet.IPackage FindPackage(System.String, NuGet.SemanticVersion)
+
+ - System.Collections.Generic.IEnumerable`1[NuGet.IPackage] FindPackagesById(System.String)
+
+ - System.Collections.Generic.IEnumerable`1[System.String] GetPackageLookupPaths(System.String, NuGet.SemanticVersion)
+
+ - Boolean Equals(System.Object)
+
+ - Int32 GetHashCode()
+
+ - System.Type GetType()
+
+ - System.String ToString()
+*** NuGet.PackageRepositoryFactory
+**** Type Info
+
+ - Name:           PackageRepositoryFactory
+ - Full Name:      NuGet.PackageRepositoryFactory
+ - Namespace:      NuGet
+ - Module:         NuGet.Core.dll
+ - Base Type:      System.Object
+
+*Predicates*
+
+ - Class:          True
+ - Abstract Class: False
+ - Primitive       False
+ - Array:          False
+ - Interface       False
+ - Enum            False
+ - Public          True
+ - Visible         True
+
+                        
+**** Fields
+
+**** Properties
+ - NuGet.PackageRepositoryFactory Default
+
+ - System.Func`2[System.Uri,NuGet.IHttpClient] HttpClientFactory
+
+**** Constructors
+	Void .ctor()
+
+**** Methods
+ - NuGet.IPackageRepository CreateRepository(System.String)
+
+ - Boolean Equals(System.Object)
+
+ - Int32 GetHashCode()
+
+ - System.Type GetType()
+
+ - System.String ToString()
+*** NuGet.LocalPackageRepository
+**** Type Info
+
+ - Name:           LocalPackageRepository
+ - Full Name:      NuGet.LocalPackageRepository
+ - Namespace:      NuGet
+ - Module:         NuGet.Core.dll
+ - Base Type:      NuGet.PackageRepositoryBase
+
+*Predicates*
+
+ - Class:          True
+ - Abstract Class: False
+ - Primitive       False
+ - Array:          False
+ - Interface       False
+ - Enum            False
+ - Public          True
+ - Visible         True
+                        
+**** Fields
+**** Properties
+
+ - System.String Source
+
+ - NuGet.IPackagePathResolver PathResolver
+
+ - Boolean SupportsPrereleasePackages
+
+ - NuGet.ILogger Logger
+
+ - NuGet.PackageSaveModes PackageSaveMode
+
+**** Constructors
+	Void .ctor(String)
+
+	Void .ctor(String, Boolean)
+
+	Void .ctor(IPackagePathResolver, IFileSystem)
+
+	Void .ctor(IPackagePathResolver, IFileSystem, Boolean)
+
+**** Methods
+ - System.Linq.IQueryable`1[NuGet.IPackage] GetPackages()
+
+ - Void AddPackage(NuGet.IPackage)
+
+ - Void RemovePackage(NuGet.IPackage)
+
+ - NuGet.IPackage FindPackage(System.String, NuGet.SemanticVersion)
+
+ - System.Collections.Generic.IEnumerable`1[NuGet.IPackage] FindPackagesById(System.String)
+
+ - Boolean Exists(System.String, NuGet.SemanticVersion)
+
+ - System.Collections.Generic.IEnumerable`1[System.String] GetPackageLookupPaths(System.String, NuGet.SemanticVersion)
+
+ - Boolean Equals(System.Object)
+
+ - Int32 GetHashCode()
+
+ - System.Type GetType()
+
+ - System.String ToString()
+
+*** NuGet.SemanticVersion
+**** Type Info
+
+ - Name:           SemanticVersion
+ - Full Name:      NuGet.SemanticVersion
+ - Namespace:      NuGet
+ - Module:         NuGet.Core.dll
+ - Base Type:      System.Object
+
+*Predicates*
+
+ - Class:          True
+ - Abstract Class: False
+ - Primitive       False
+ - Array:          False
+ - Interface       False
+ - Enum            False
+ - Public          True
+ - Visible         True
+                       
+**** Fields
+**** Properties
+
+ - System.Version Version
+
+ - System.String SpecialVersion
+
+**** Constructors
+
+	Void .ctor(String)
+
+	Void .ctor(Int32, Int32, Int32, Int32)
+
+	Void .ctor(Int32, Int32, Int32, String)
+
+	Void .ctor(Version)
+
+	Void .ctor(Version, String)
+
+**** Methods
+
+ - System.String[] GetOriginalVersionComponents()
+
+ - NuGet.SemanticVersion Parse(System.String)
+
+ - Boolean TryParse(System.String, NuGet.SemanticVersion ByRef)
+
+ - Boolean TryParseStrict(System.String, NuGet.SemanticVersion ByRef)
+
+ - NuGet.SemanticVersion ParseOptionalVersion(System.String)
+
+ - Int32 CompareTo(System.Object)
+
+ - Int32 CompareTo(NuGet.SemanticVersion)
+
+ - System.String ToString()
+
+ - System.String ToNormalizedString()
+
+ - Boolean Equals(NuGet.SemanticVersion)
+
+ - Boolean Equals(System.Object)
+
+ - Int32 GetHashCode()
+
+ - System.Type GetType()
+*** NuGet.PackageReferenceFile
+**** Type Info
+
+ - Name:           PackageReferenceFile
+ - Full Name:      NuGet.PackageReferenceFile
+ - Namespace:      NuGet
+ - Module:         NuGet.Core.dll
+ - Base Type:      System.Object
+
+*Predicates*
+
+ - Class:          True
+ - Abstract Class: False
+ - Primitive       False
+ - Array:          False
+ - Interface       False
+ - Enum            False
+ - Public          True
+ - Visible         True
+                       
+**** Fields
+**** Properties
+
+ - System.String FullPath
+
+**** Constructors
+
+	Void .ctor(String)
+
+	Void .ctor(IFileSystem, String)
+
+	Void .ctor(IFileSystem, String, String)
+
+**** Methods
+
+ - NuGet.PackageReferenceFile CreateFromProject(System.String)
+
+ - Boolean IsValidConfigFileName(System.String)
+
+ - System.Collections.Generic.IEnumerable`1[NuGet.PackageReference] GetPackageReferences()
+
+ - System.Collections.Generic.IEnumerable`1[NuGet.PackageReference] GetPackageReferences(Boolean)
+
+ - Boolean DeleteEntry(System.String, NuGet.SemanticVersion)
+
+ - Boolean EntryExists(System.String, NuGet.SemanticVersion)
+
+ - Void AddEntry(System.String, NuGet.SemanticVersion)
+
+ - Void AddEntry(System.String, NuGet.SemanticVersion, Boolean)
+
+ - Void AddEntry(System.String, NuGet.SemanticVersion, Boolean, System.Runtime.Versioning.FrameworkName)
+
+ - Void MarkEntryForReinstallation(System.String, NuGet.SemanticVersion, System.Runtime.Versioning.FrameworkName, Boolean)
+
+ - Boolean Equals(System.Object)
+
+ - Int32 GetHashCode()
+
+ - System.Type GetType()
+
+ - System.String ToString()
+*** NuGet.PackageManager
+**** Type Info
+
+ - Name:           PackageManager
+ - Full Name:      NuGet.PackageManager
+ - Namespace:      NuGet
+ - Module:         NuGet.Core.dll
+ - Base Type:      System.Object
+
+*Predicates*
+
+ - Class:          True
+ - Abstract Class: False
+ - Primitive       False
+ - Array:          False
+ - Interface       False
+ - Enum            False
+ - Public          True
+ - Visible         True
+                       
+**** Fields
+**** Properties
+
+ - NuGet.IFileSystem FileSystem
+
+ - NuGet.IPackageRepository SourceRepository
+
+ - NuGet.IPackageRepository LocalRepository
+
+ - NuGet.IPackagePathResolver PathResolver
+
+ - NuGet.ILogger Logger
+
+ - NuGet.DependencyVersion DependencyVersion
+
+ - Boolean WhatIf
+
+ - Boolean SkipPackageTargetCheck
+
+ - Boolean CheckDowngrade
+
+**** Constructors
+	Void .ctor(IPackageRepository, String)
+
+	Void .ctor(IPackageRepository, IPackagePathResolver, IFileSystem)
+
+	Void .ctor(IPackageRepository, IPackagePathResolver, IFileSystem, IPackageRepository)
+
+**** Methods
+
+ - Void InstallPackage(System.String)
+
+ - Void InstallPackage(System.String, NuGet.SemanticVersion)
+
+ - Void InstallPackage(System.String, NuGet.SemanticVersion, Boolean, Boolean)
+
+ - Void InstallPackage(NuGet.IPackage, Boolean, Boolean)
+
+ - Void InstallPackage(NuGet.IPackage, Boolean, Boolean, Boolean)
+
+ - Void UninstallPackage(System.String)
+
+ - Void UninstallPackage(System.String, NuGet.SemanticVersion)
+
+ - Void UninstallPackage(System.String, NuGet.SemanticVersion, Boolean)
+
+ - Void UninstallPackage(System.String, NuGet.SemanticVersion, Boolean, Boolean)
+
+ - Void UninstallPackage(NuGet.IPackage)
+
+ - Void UninstallPackage(NuGet.IPackage, Boolean)
+
+ - Void UninstallPackage(NuGet.IPackage, Boolean, Boolean)
+
+ - Void UpdatePackage(System.String, Boolean, Boolean)
+
+ - Void UpdatePackage(System.String, NuGet.IVersionSpec, Boolean, Boolean)
+
+ - Void UpdatePackage(System.String, NuGet.SemanticVersion, Boolean, Boolean)
+
+ - Void UpdatePackage(NuGet.IPackage, Boolean, Boolean)
+
+ - Boolean Equals(System.Object)
+
+ - Int32 GetHashCode()
+
+ - System.Type GetType()
+
+ - System.String ToString()
+*** NuGet.ProjectManager
+**** Type Info
+
+ - Name:           ProjectManager
+ - Full Name:      NuGet.ProjectManager
+ - Namespace:      NuGet
+ - Module:         NuGet.Core.dll
+ - Base Type:      System.Object
+
+*Predicates*
+
+ - Class:          True
+ - Abstract Class: False
+ - Primitive       False
+ - Array:          False
+ - Interface       False
+ - Enum            False
+ - Public          True
+ - Visible         True
+
+                        
+**** Fields
+**** Properties
+
+ - NuGet.IPackagePathResolver PathResolver
+
+ - NuGet.IPackageRepository LocalRepository
+
+ - NuGet.IPackageRepository SourceRepository
+
+ - NuGet.IPackageConstraintProvider ConstraintProvider
+
+ - NuGet.IProjectSystem Project
+
+ - NuGet.ILogger Logger
+
+ - NuGet.DependencyVersion DependencyVersion
+
+ - Boolean WhatIf
+
+**** Constructors
+	Void .ctor(IPackageRepository, IPackagePathResolver, IProjectSystem, IPackageRepository)
+
+**** Methods
+ - Void AddPackageReference(System.String)
+
+ - Void AddPackageReference(System.String, NuGet.SemanticVersion)
+
+ - Void AddPackageReference(System.String, NuGet.SemanticVersion, Boolean, Boolean)
+
+ - Void AddPackageReference(NuGet.IPackage, Boolean, Boolean)
+
+ - Boolean IsInstalled(NuGet.IPackage)
+
+ - Void RemovePackageReference(System.String)
+
+ - Void RemovePackageReference(System.String, Boolean)
+
+ - Void RemovePackageReference(System.String, Boolean, Boolean)
+
+ - Void RemovePackageReference(NuGet.IPackage, Boolean, Boolean)
+
+ - Void UpdatePackageReference(System.String, NuGet.IVersionSpec, Boolean, Boolean)
+
+ - Void UpdatePackageReference(System.String, NuGet.SemanticVersion, Boolean, Boolean)
+
+ - Void UpdatePackageReference(NuGet.IPackage, Boolean, Boolean)
+
+ - Boolean Equals(System.Object)
+
+ - Int32 GetHashCode()
+
+ - System.Type GetType()
+
+ - System.String ToString()
+*** NuGet.IProjectSystem
+**** Type Info
+
+ - Name:           IProjectSystem
+ - Full Name:      NuGet.IProjectSystem
+ - Namespace:      NuGet
+ - Module:         NuGet.Core.dll
+ - Base Type:      
+
+*Predicates*
+
+ - Class:          False
+ - Abstract Class: True
+ - Primitive       False
+ - Array:          False
+ - Interface       True
+ - Enum            False
+ - Public          True
+ - Visible         True
+                       
+**** Fields
+**** Properties
+
+ - System.Runtime.Versioning.FrameworkName TargetFramework
+
+ - System.String ProjectName
+
+ - Boolean IsBindingRedirectSupported
+
+**** Constructors
+**** Methods
+
+ - Void AddReference(System.String, System.IO.Stream)
+
+ - Void AddFrameworkReference(System.String)
+
+ - Boolean ReferenceExists(System.String)
+
+ - Void RemoveReference(System.String)
+
+ - Boolean IsSupportedFile(System.String)
+
+ - System.String ResolvePath(System.String)
+
+ - Void AddImport(System.String, NuGet.ProjectImportLocation)
+
+ - Void RemoveImport(System.String)
+
+ - Boolean FileExistsInProject(System.String)
+*** NuGet.PhysicalPackageAssemblyReference
+**** Type Info
+
+ - Name:           PhysicalPackageAssemblyReference
+ - Full Name:      NuGet.PhysicalPackageAssemblyReference
+ - Namespace:      NuGet
+ - Module:         NuGet.Core.dll
+ - Base Type:      NuGet.PhysicalPackageFile
+
+*Predicates*
+
+ - Class:          True
+ - Abstract Class: False
+ - Primitive       False
+ - Array:          False
+ - Interface       False
+ - Enum            False
+ - Public          True
+ - Visible         True
+                       
+**** Fields
+**** Properties
+
+ - System.String Name
+
+ - System.String SourcePath
+
+ - System.String TargetPath
+
+ - System.String Path
+
+ - System.String EffectivePath
+
+ - System.Runtime.Versioning.FrameworkName TargetFramework
+
+ - System.Collections.Generic.IEnumerable`1[System.Runtime.Versioning.FrameworkName] SupportedFrameworks
+
+**** Constructors
+
+	Void .ctor()
+
+	Void .ctor(PhysicalPackageFile)
+
+	Void .ctor(Func`1)
+
+**** Methods
+
+ - System.IO.Stream GetStream()
+
+ - System.String ToString()
+
+ - Boolean Equals(System.Object)
+
+ - Int32 GetHashCode()
+
+ - System.Type GetType()
