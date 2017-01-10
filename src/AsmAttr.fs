@@ -85,25 +85,34 @@ module TInfo =
 
     let getModule (t: T) = t.Module
 
+    /// Check if type is Public
     let isPublic (t: T) = t.IsPublic
 
+    /// Check if type is not public
     let isNotPublic (t: T) = t.IsNotPublic 
 
+    /// Check if type is primitive
     let isPrimitive (t: T) = t.IsPrimitive
 
+    /// Check if type is class
     let isClass (t: T) = t.IsClass
 
+    /// Check if type is non abstract class
     let isClassNonAbstract (t: T) = t.IsClass && not t.IsAbstract
 
     /// Check if type is Abstract Class
     let isAbstract (t: T) = t.IsAbstract
 
+    /// Check if type is Array
     let isArray (t: T) = t.IsArray
 
+    /// Check if type is Enum
     let isEnum (t: T) = t.IsEnum
 
+    /// Check if type is Interface
     let isInterface (t: T) = t.IsInterface
 
+    /// Check if type is Visible
     let isVisible (t: T) = t.IsVisible
 
     /// Test if type is a public class     
