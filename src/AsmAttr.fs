@@ -75,6 +75,8 @@ module MInfo =
                                  in  String.Join(", ", plist)
                                  )
 
+    let show (mi: T) = Console.WriteLine(format mi)
+
 /// Information about type
 module TInfo =
     open System 
