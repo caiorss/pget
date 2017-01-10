@@ -66,14 +66,15 @@ module MInfo =
     /// and its parameters as string
     ///
     let format (mi: T) =
-        sprintf "%s %s %s (%s)" (if isPublic mi then "Public" else "Private")
-                                (if isStatic mi then "Static" else "")
-                                mi.Name
-                                (let plist =  mi.GetParameters()
-                                              |> Seq.map (fun pi ->
-                                                       pi.ParameterType.ToString() + " " + pi.Name)
-                                 in  String.Join(", ", plist)
-                                 )
+        sprintf "%s %s %s %s (%s)" (if isPublic mi then "Public" else "Private")
+                                   (if isStatic mi then "Static" else "")
+                                   (mi.ReturnType.ToString())
+                                   mi.Name
+                                   (let plist =  mi.GetParameters()
+                                                  |> Seq.map (fun pi ->
+                                                              pi.ParameterType.ToString() + " " + pi.Name)
+                                    in  String.Join(", ", plist)
+                                    )
 
     let show (mi: T) = Console.WriteLine(format mi)
 
