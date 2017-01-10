@@ -62,6 +62,18 @@ module MInfo =
 
     let isConstructor (mi: T) = mi.IsConstructor
 
+    /// Get summarized method information - if it is public, static or private
+    /// and its parameters as string
+    ///
+    let format (mi: T) =
+        sprintf "%s %s %s (%s)" (if isPublic mi then "Public" else "Private")
+                                (if isStatic mi then "Static" else "")
+                                mi.Name
+                                (let plist =  mi.GetParameters()
+                                              |> Seq.map (fun pi ->
+                                                       pi.ParameterType.ToString() + " " + pi.Name)
+                                 in  String.Join(", ", plist)
+                                 )
 
 /// Information about type
 module TInfo =
