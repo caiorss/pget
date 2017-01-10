@@ -1,6 +1,69 @@
 namespace Pget
 
-/// Get information about type 
+/// Parameter info - Wrapper around ParameterInfo class
+module PInfo =
+    open System.Reflection
+
+    type T = ParameterInfo
+
+    let paramType (pi: T) = pi.ParameterType
+
+    let isIn (pi: T) = pi.IsIn
+
+    let isLcid (pi: T) = pi.IsLcid
+
+    let isOut (pi: T) = pi.IsOut
+
+    let hasDefaultValue (pi: T) = pi.HasDefaultValue
+
+    let name (pi: T) = pi.Name
+
+    let position (pi: T) = pi.Position
+
+    let memberInfo (pi: T) = pi.Member
+
+    let toString (pi: T) = pi.ToString()
+
+
+/// Information about Method - Wrapper around MethodInfo class
+module MInfo =
+    open System
+    open System.Reflection
+
+    type T = MethodInfo
+
+    let name (mi: T) = mi.Name
+
+    let returnType (mi: T) = mi.ReturnType
+
+    let declaringType (mi: T) = mi.DeclaringType
+
+    let reflectedType (mi: T) = mi.ReflectedType
+
+    let paramInfo (mi: T) = mi.ReturnParameter
+
+    let attributes (mi: T) = mi.Attributes
+
+    // ===== Type Predicates or Flags ========== //
+
+    let isGenericMethod (mi: T) = mi.IsGenericMethod
+
+    let isSecurityCritical (mi: T) = mi.IsSecurityCritical
+
+    let isPublic (mi: T) = mi.IsPublic
+
+    let isStatic (mi: T) = mi.IsStatic
+
+    let isFinal (mi: T) = mi.IsFinal
+
+    let isVirtual (mi: T) = mi.IsVirtual
+
+    let isSpecialName (mi: T) = mi.IsSpecialName
+
+    let isConstructor (mi: T) = mi.IsConstructor
+
+
+/// Information about type
 module TInfo =
     open System 
     open System.Reflection
