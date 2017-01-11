@@ -54,14 +54,14 @@ future reference.
   
 * Modules 
 ** Module AsmAttr.fs 
+*** Overview 
 
  - file:AsmAttr.fs - Provides modules to extract assembly metadata
    like exported types, classes, methods, types, namespaces, GUID,
    copyright and so on. 
 
-*Examples:* 
-
-Load AsmAttr.fs library. 
+*** Examples
+**** Load AsmAttr.fs library. 
 
 #+BEGIN_SRC fsharp 
 #load "FXml.fs"   
@@ -72,7 +72,7 @@ open System
 open System.Reflection
 #+END_SRC
 
-Load an assembly 
+**** Load an assembly 
 
 #+BEGIN_SRC fsharp 
 > let asmfile = "/home/arch/Documents/projects/pget.fsharp/packages/Eto.Forms.2.3.0/lib/net45/Eto.dll"
@@ -84,7 +84,7 @@ val asm : Assembly =
 
 #+END_SRC
 
-Get exported namespaces 
+**** Get exported namespaces 
 
 #+BEGIN_SRC fsharp 
 > asm |> AsmAttr.getExportedNS ;;
@@ -103,7 +103,7 @@ val it : unit = ()
 
 #+END_SRC
 
-Get all exported types within an namespace 
+**** Get all exported types within an namespace 
 
 #+BEGIN_SRC fsharp 
 > 
@@ -125,7 +125,7 @@ val it : unit = ()
 > > 
 #+END_SRC
 
-Get a type from assemblu file: 
+**** Get a type from assembly file: 
 
 #+BEGIN_SRC fsharp
 > AsmAttr.getType ;;
@@ -172,7 +172,7 @@ val it : Type option =
 
 #+END_SRC
 
-Show type information 
+**** Show type information 
 
 #+BEGIN_SRC fsharp 
 > asm |> AsmAttr.getType "Eto.Forms.Formasdasd" |> Option.iter TInfo.show ;;
@@ -404,7 +404,7 @@ val it : unit = ()
 > > 
 #+END_SRC
 
-Get public methods from type: 
+**** Get public methods from type
 
 #+BEGIN_SRC fsharp 
 > > 
@@ -609,6 +609,10 @@ val it : unit = ()
 > > 
 #+END_SRC
 ** Module FXml.fs
+*** Overview 
+
+The module FXml provides functional wrappers around System.XMl to help
+manipulate xml files.
 
 Modules:
  
@@ -618,10 +622,10 @@ Modules:
 
  - FXml.File -> Functions that operates directly on files or URI (http)
 
+*** Example:s 
+**** Load XML 
 
-Example: 
-
-Scrap CNN rss feed - http://rss.cnn.com/rss/edition_world.rss
+Scrap infoq feed - https://www.infoq.com/feed?token=WSVCFU3gCRvgXaLKxLiHKq90pV5PnH1z
 
 #+BEGIN_SRC fsharp 
 
@@ -638,127 +642,305 @@ Scrap CNN rss feed - http://rss.cnn.com/rss/edition_world.rss
   #load "FXml.fsx"
 
 
-  let doc = FXml.Doc.loadFile "http://rss.cnn.com/rss/edition_world.rss"
-
-  /// Display XML   
-  FXml.Doc.show doc
-
-  /// Print the headlines 
-  doc |> FXml.Doc.selectNodes "//rss//channel//item"
-      |> Seq.iter (fun node ->
-                   node |> FXml.Node.findChildNodeTagText "title"
-                        |> Option.iter (printfn "Title:       %s") ;
-                   
-                   node |> FXml.Node.findChildNodeTagText "description"
-                        |> Option.iter (printfn "Description: %s")
-
-                   node |> FXml.Node.findChildNodeTagText "link"
-                        |>  Option.iter (printfn "Link:       %s\n\n")
-                  )
+  let doc = FXml.Doc.loadFile "https://www.infoq.com/feed?token=WSVCFU3gCRvgXaLKxLiHKq90pV5PnH1z"
 
 #+END_SRC
 
-Output: 
-
-#+BEGIN_SRC text 
-
-Title:       Dozens killed by bomb in Syrian city, activists say
-Description: A deadly car bomb Saturday rocked the center of the rebel-held city of Azaz in northern Syria, near the Turkish border, according to activists.<img src="http://feeds.feedburner.com/~r/rss/edition_world/~4/8Y6nOsOAKUc" height="1" width="1" alt=""/>
-Link:       http://rss.cnn.com/~r/rss/edition_world/~3/8Y6nOsOAKUc/index.html
-
-
-Title:       Russia 'starts to withdraw' forces from Syria 
-Description: Russia has started to cut back its forces in Syria, beginning with an aircraft carrier group, Russian state news agency TASS reported Friday.<img src="http://feeds.feedburner.com/~r/rss/edition_world/~4/D1wS-EpaM6g" height="1" width="1" alt=""/>
-Link:       http://rss.cnn.com/~r/rss/edition_world/~3/D1wS-EpaM6g/index.html
-
-
-Title:       History will be a cruel judge of Obama's risk aversion in Syria
-Description: The Syrian civil war is by no means over, but this year will bring a decisive turn in the conflict that may reduce the overall level of violence and fundamentally -- and perhaps for some time to come -- change the balance of power on the ground.<img src="http://feeds.feedburner.com/~r/rss/edition_world/~4/xu1plmH2v3U" height="1" width="1" alt=""/>
-Link:       http://rss.cnn.com/~r/rss/edition_world/~3/xu1plmH2v3U/index.html
-
-... ... ... ...         ...
-#+END_SRC
-
-
-Signature 
+**** Display XML
 
 #+BEGIN_SRC fsharp 
-namespace FSI_0217
-  module Node = begin
-    val value : node:XmlNode -> string
-    val name : node:XmlNode -> string
-    val attrv : attr:string -> node:XmlNode -> string option
-    val attrv2 : attr:string -> node:XmlNode -> string
-    val attributes : node:XmlNode -> seq<string * string>
-    val childNodes : node:XmlNode -> seq<XmlNode>
-    val findChildNode : fn:(XmlNode -> bool) -> node:XmlNode -> XmlNode option
-    val filterChildNodes :
-      fn:(XmlNode -> bool) -> node:XmlNode -> seq<XmlNode>
-    val findChildNodeTag : tag:string -> node:XmlNode -> XmlNode option
-    val findChildNodeTagText : tag:string -> node:XmlNode -> string option
-    val innerText : node:XmlNode -> string
-    val showAttributes : node:XmlNode -> unit
-    val selectNode : xpath:string -> node:XmlNode -> XmlNode option
-    val selectValue : xpath:string -> node:XmlNode -> string option
-    val selectValueCdata : xpath:string -> doc:XmlNode -> string option
-    val iterValue : xpath:string -> fn:(string -> unit) -> doc:XmlNode -> unit
-    val iterValueCdata :
-      xpath:string -> fn:(string -> unit) -> doc:XmlNode -> unit
-    val show : node:XmlNode -> unit
-    val showTop : node:XmlNode -> unit
-    val showStruct : node:XmlNode -> unit
-  end
-  module Doc = begin
-    val load : xmlString:string -> XmlDocument
-    val loadFile : uri:string -> XmlDocument
-    val childNodes : doc:XmlDocument -> XmlNodeList
-    val root : doc:XmlDocument -> XmlElement
-    val toString : doc:XmlDocument -> string
-    val makeNs :
-      prefix:string -> uri:string -> doc:XmlDocument -> XmlNamespaceManager
-    val selectNode : xpath:string -> doc:XmlDocument -> XmlNode option
-    val selectNodes : xpath:string -> doc:XmlDocument -> seq<XmlNode>
-    val selectNodesNs :
-      ns:XmlNamespaceManager ->
-        xpath:string -> doc:XmlDocument -> seq<XmlNode>
-    val selectNodesNs2 :
-      prefix:string * uri:string ->
-        xpath:string -> doc:XmlDocument -> seq<XmlNode>
-    val selectNodeCdata :
-      xpath:string -> doc:XmlDocument -> XmlCDataSection option
-    val selectValueCdata : xpath:string -> doc:XmlDocument -> string option
-    val xpathNodesFn :
-      prefix:string * uri:string ->
-        xpath:string -> fn:(XmlNode -> 'a) -> doc:XmlDocument -> seq<'a>
-    val xpathSelectAttr :
-      xpath:string -> attribute:string -> doc:XmlDocument -> seq<string>
-    val xpathSelectAttrNs :
-      prefix:string * uri:string ->
-        xpath:string -> attribute:string -> doc:XmlDocument -> seq<string>
-    val xpathSelectValue : xpath:string -> doc:XmlDocument -> seq<string>
-    val xpathSelectValueNs :
-      prefix:string * uri:string ->
-        xpath:string -> doc:XmlDocument -> seq<string>
-    val xpathNodesNsManySeq :
-      prefix:string * uri:string ->
-        xpath:string ->
-          attributes:string list -> doc:XmlDocument -> Map<string,seq<string>>
-    val show : doc:XmlDocument -> unit
-    val showStruct : doc:XmlDocument -> unit
-  end
-  module File = begin
-    val show : xmlFile:string -> unit
-    val showStruct : xmlFile:string -> unit
-    val formatUri : xmlUri:string -> xmlFile:string -> unit
-    val showXPathValue : xmlFile:string -> xpath:string -> unit
-    val showXPathValueNs :
-      xmlFile:string -> prefix:string * uri:string -> xpath:string -> unit
-    val showXpathAttr :
-      xmlFile:string -> xpath:string -> attribute:string -> unit
-    val showXpathAttrNS :
-      xmlFile:string ->
-        prefix:string * uri:string -> xpath:string -> attribute:string -> unit
-  end
+>   /// Display XML   
+-   FXml.Doc.show doc
+- ;;
+
+
+<?xml version="1.0" encoding="utf-16"?>
+<rss xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+  <channel>
+    <title>InfoQ</title>
+    <link>http://www.infoq.com</link>
+    <description>InfoQ feed</description>
+    <item>
+      <title>Google Solves CPython’s Concurrency Issues with Grumpy</title>
+      <link>http://www.infoq.com/news/2017/01/grumpy?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/styles/i/logo_bigger.jpg"/&gt;&lt;p&gt;Google has solved the concurrency limitations introduced by the Global Interpreter Lock existent in CPython by creating a new Python runtime in Go.&lt;/p&gt; &lt;i&gt;By Abel Avram&lt;/i&gt;</description>
+      <category>Languages</category>
+      <category>Programming</category>
+      <category>Dynamic Languages</category>
+      <category>Open Source</category>
+      <category>Python</category>
+      <category>Google</category>
+      <category>Concurrency</category>
+      <category>Development</category>
+      <category>Companies</category>
+      <category>news</category>
+      <pubDate>Wed, 11 Jan 2017 17:00:00 GMT</pubDate>
+      <guid>http://www.infoq.com/news/2017/01/grumpy?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Abel Avram</dc:creator>
+      <dc:date>2017-01-11T17:00:00Z</dc:date>
+      <dc:identifier>/news/2017/01/grumpy/en</dc:identifier>
+    </item>
+    <item>
+      <title>Opinion: What 2017 Has in Store for Culture &amp; Methods</title>
+      <link>http://www.infoq.com/news/2017/01/2017--culture-methods?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/styles/i/logo_bigger.jpg"/&gt;&lt;p&gt;We polled the InfoQ Culture &amp; Methods editors for their takes on what 2017 has in store for the technology industry, what are the trends which we see coming to the fore and what the implications will be for organizations around the globe. &lt;/p&gt; &lt;i&gt;By Shane Hastie&lt;/i&gt;</description>
+      <category>Agile</category>
+      <category>Teamwork</category>
+      <category>Agile in the Enterprise</category>
+      <category>Management</category>
+      <category>Scrum</category>
+      <category>Lean</category>
+      <category>Agile Techniques</category>
+      <category>Distributed Teams</category>
+      <category>Business</category>
+      <category>Self-organizing Team</category>
+      <category>Co-Located Teams</category>
+      <category>Diversity in Teams</category>
+      <category>Adopting Agile</category>
+      <category>Kanban</category>
+      <category>Distributed Team</category>
+      <category>Group Communication</category>
+      <category>Agile Manager</category>
+      <category>Culture &amp; Methods</category>
+      <category>LESS</category>
+      <category>SAFe</category>
+      <category>news</category>
+      <pubDate>Wed, 11 Jan 2017 16:00:00 GMT</pubDate>
+      <guid>http://www.infoq.com/news/2017/01/2017--culture-methods?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Shane Hastie, Ben Linders, Susan McIntosh, Rui Miguel Ferreira, Craig Smith</dc:creator>
+      <dc:date>2017-01-11T16:00:00Z</dc:date>
+      <dc:identifier>/news/2017/01/2017--culture-methods/en</dc:identifier>
+    </item>
+...  ... ... ... 
+#+END_SRC
+
+**** Display XML tag structures:
+
+#+BEGIN_SRC fsharp 
+- doc |> FXml.Doc.root |> FXml.Node.showStruct ;;
+(0.0) channel
+	(1.0) title
+		(2.0) #text
+	(1.1) link
+		(2.0) #text
+	(1.2) description
+		(2.0) #text
+	(1.3) item
+		(2.0) title
+			(3.0) #text
+		(2.1) link
+			(3.0) #text
+		(2.2) description
+			(3.0) #text
+		(2.3) category
+			(3.0) #text
+		(2.4) category
+			(3.0) #text
+		(2.5) category
+			(3.0) #text
+		(2.6) category
+			(3.0) #text
+		(2.7) category
+			(3.0) #text
+		(2.8) category
+			(3.0) #text
+		(2.9) category
+			(3.0) #text
+		(2.10) category
+			(3.0) #text
+		(2.11) category
+			(3.0) #text
+		(2.12) category
+			(3.0) #text
+		(2.13) pubDate
+			(3.0) #text
+		(2.14) guid
+			(3.0) #text
+		(2.15) dc:creator
+			(3.0) #text
+		(2.16) dc:date
+			(3.0) #text
+		(2.17) dc:identifier
+			(3.0) #text
+	(1.4) item
+		(2.0) title
+			(3.0) #text
+		(2.1) link
+			(3.0) #text
+		(2.2) description
+			(3.0) #text
+		(2.3) category
+			(3.0) #text
+		(2.4) category
+			(3.0) #text
+		(2.5) category
+			(3.0) #text
+		(2.6) category
+			(3.0) #text
+		(2.7) category
+			(3.0) #text
+		(2.8) category
+			(3.0) #text
+		(2.9) category
+			(3.0) #text
+		(2.10) category
+			(3.0) #text
+		(2.11) category
+			(3.0) #text
+		(2.12) category
+			(3.0) #text
+		(2.13) category
+			(3.0) #text
+		(2.14) category
+			(3.0) #text
+		(2.15) category
+			(3.0) #text
+		(2.16) category
+			(3.0) #text
+		(2.17) category
+			(3.0) #text
+		(2.18) category
+			(3.0) #text
+		(2.19) category
+			(3.0) #text
+		(2.20) category
+			(3.0) #text
+		(2.21) category
+			(3.0) #text
+		(2.22) category
+			(3.0) #text
+		(2.23) category
+			(3.0) #text
+		(2.24) pubDate
+			(3.0) #text
+		(2.25) guid
+			(3.0) #text
+		(2.26) dc:creator
+			(3.0) #text
+		(2.27) dc:date
+			(3.0) #text
+		(2.28) dc:identifier
+			(3.0) #text
+... ... ... 
+#+END_SRC
+
+**** Show XML namespaces
+
+#+BEGIN_SRC fsharp 
+- doc |> FXml.Doc.root |> FXml.Node.getNamespaces ;;   
+val it : (string * string) list =
+  [("", ""); ("dc", "http://purl.org/dc/elements/1.1/")]
+> 
+#+END_SRC
+
+**** Extract / Query data with XPath
+
+#+BEGIN_SRC fsharp
+- FXml.FXPath.xpathSelectAttr ;;
+val it : (string -> string -> FXml.FXPath.T -> seq<string>) 
+
+- FXml.FXPath.xpathSelectInnerText ;;
+val it : (string -> FXml.FXPath.T -> seq<string>) 
+> 
+
+- FXml.FXPath.xpathSelectInnerText "//item/title" doc ;;
+val it : seq<string> =
+  seq
+    ["Google Solves CPython’s Concurrency Issues with Grumpy";
+     "Opinion: What 2017 Has in Store for Culture & Methods";
+     "Presentation: Micropreneurship - What it Takes to Build a Startup Company on Your Own Dime";
+     "Presentation: Don't Put Me in a Box"; ...]
+> 
+
+- FXml.FXPath.xpathSelectInnerText "//item/title" doc |> Seq.iter (printfn "%s") ;;
+Google Solves CPython’s Concurrency Issues with Grumpy
+Opinion: What 2017 Has in Store for Culture & Methods
+Presentation: Micropreneurship - What it Takes to Build a Startup Company on Your Own Dime
+Presentation: Don't Put Me in a Box
+React Alternative Inferno Hits 1.0
+Q&A with Microsoft Azure Lead Architect John Gossman Regarding Joining the Linux Foundation
+Putting EditorConfig to Work in Visual Studio
+Java Enums to Be Enhanced with Sharper Type Support
+Podcast: Mitch Shepard on Managing for Diversity
+Article: Adding Purpose to Scrum with Holacracy
+2017 State of Testing Survey
+Presentation: Spring and Big Data
+Presentation: Data Science-powered Apps for the Internet of Things
+Amazon Introduces Rekognition for Image Analysis
+Presentation: Building Resilient and Evolutionary Data Microservices
+val it : unit = ()
+> 
+
+
+
+#+END_SRC
+
+Output formatted to fit on the screen.
+
+#+BEGIN_SRC fsharp
+  - FXml.FXPath.xpathSelectInnerText "//item/description" doc |> Seq.iter  (printfn "%s\n") ;;
+
+   <img src="http://www.infoq.com/styles/i/logo_bigger.jpg"/><p>Google
+   has solved the concurrency limitations introduced by the Global
+   Interpreter Lock existent in CPython by creating a new Python runtime
+   in Go.</p> <i>By Abel Avram</i>
+
+  <img src="http://www.infoq.com/styles/i/logo_bigger.jpg"/><p>We polled
+  the InfoQ Culture & Methods editors for their takes on what 2017 has
+  in store for the technology industry, what are the trends which we see
+  coming to the fore and what the implications will be for organizations
+  around the globe. </p> <i>By Shane Hastie</i>
+
+  <img src="http://www.infoq.com/resource/presentations/micropreneurship/en/mediumimage/Crabig.JPG"/><p>Craig
+  Tataryn presents techniques useful to evaluate an business idea and
+  determine whether or not it's a good fit for the Micropreneur Startup
+  model.</p> <i>By Craig Tataryn </i>
+
+          ... ... ... ... ...
+
+  val it : unit = ()
+  > 
+
+#+END_SRC
+
+
+Extract Publication Date
+
+#+BEGIN_SRC fsharp 
+- FXml.FXPath.xpathSelectInnerText "//item/pubDate" doc |> Seq.iter  (printfn "%s\n") ;;    
+Wed, 11 Jan 2017 17:00:00 GMT
+
+Wed, 11 Jan 2017 16:00:00 GMT
+
+Wed, 11 Jan 2017 04:18:00 GMT
+
+Wed, 11 Jan 2017 02:22:00 GMT
+
+Tue, 10 Jan 2017 15:40:00 GMT
+
+Tue, 10 Jan 2017 14:30:00 GMT
+
+Tue, 10 Jan 2017 13:00:00 GMT
+
+Tue, 10 Jan 2017 08:00:00 GMT
+
+Tue, 10 Jan 2017 01:22:00 GMT
+
+Mon, 09 Jan 2017 21:08:00 GMT
+
+Mon, 09 Jan 2017 17:25:00 GMT
+
+Mon, 09 Jan 2017 04:06:00 GMT
+
+Mon, 09 Jan 2017 02:26:00 GMT
+
+Mon, 09 Jan 2017 00:54:00 GMT
+
+Mon, 09 Jan 2017 00:25:00 GMT
+
+val it : unit = ()
+> 
+
 #+END_SRC
 
 * Non Categorized
