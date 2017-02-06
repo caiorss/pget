@@ -5,9 +5,9 @@ module FSType =
 
     open System
 
-    type FR = Microsoft.FSharp.Reflection.FSharpType
-    type FV = Microsoft.FSharp.Reflection.FSharpValue
-    type UC = Microsoft.FSharp.Reflection.UnionCaseInfo
+    type private FR = Microsoft.FSharp.Reflection.FSharpType
+    type private FV = Microsoft.FSharp.Reflection.FSharpValue
+    type private UC = Microsoft.FSharp.Reflection.UnionCaseInfo
 
     type tDisp = Type -> String
 
