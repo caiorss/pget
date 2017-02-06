@@ -663,7 +663,7 @@ module AsmDisplay =
         asmFile |> AsmAttr.loadFrom
                 |> AsmAttr.getTypes
                 |> Seq.filter (fun t -> FSType.isFSharpModule t && (not flag || t.IsPublic))
-                |> Seq.iter (TInfo.getName >> printfn "%s")
+                |> Seq.iter (fun t -> printfn "%s" t.FullName)
 
     // let showType (asmFile: string) (typeName: string) =
     //     let errorHandler1 () = Console.WriteLine "Error: Assembly file doesn't exist"
