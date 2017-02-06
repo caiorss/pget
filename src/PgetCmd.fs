@@ -445,6 +445,8 @@ module Main =
         // Show all F# modules private and public
         | ["asm"; "--fsharp" ; "modules"; "all"; asmFile ]  -> AsmDisplay.showFsharpModules asmFile false
 
+        // Show only public F# modules
+        | ["asm"; "--fsharp" ; "modules";  asmFile ]        -> AsmDisplay.showFsharpModules asmFile true
 
         // Print a report with all types categorized by namespace. 
         | ["asm"; "--docgen" ; asmFile]                     -> AsmDisplay.showExportedTypesReport2 asmFile
