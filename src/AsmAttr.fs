@@ -107,7 +107,7 @@ module FSType =
 
     let showOption (fn: tDisp) (t: Type) =
         let param = fn t.GenericTypeArguments.[0]
-        param + " option"
+        sprintf "(%s) option" param
 
     let showList (fn: tDisp) (t: Type) =
         let param = fn t.GenericTypeArguments.[0]
