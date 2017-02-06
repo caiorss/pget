@@ -442,8 +442,9 @@ module Main =
         // Show all abstract classes 
         | ["asm"; "--abstract" ; asmFile]                   -> AsmDisplay.showAbstractClasses asmFile
 
-        // Show all F# modules
-        | ["asm"; "--fsharp" ; "modules"; asmFile ]         -> AsmDisplay.showFsharpModules asmFile true
+        // Show all F# modules private and public
+        | ["asm"; "--fsharp" ; "modules"; "all"; asmFile ]  -> AsmDisplay.showFsharpModules asmFile false
+
 
         // Print a report with all types categorized by namespace. 
         | ["asm"; "--docgen" ; asmFile]                     -> AsmDisplay.showExportedTypesReport2 asmFile
