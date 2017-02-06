@@ -1,5 +1,121 @@
 namespace Pget
 
+/// FSharp Types
+module FSType =
+
+    open System
+
+    type FR = Microsoft.FSharp.Reflection.FSharpType
+    type FV = Microsoft.FSharp.Reflection.FSharpValue
+    type UC = Microsoft.FSharp.Reflection.UnionCaseInfo
+
+    type tDisp = Type -> String
+
+
+    let joinString sep (xs: string seq) =
+        System.String.Join(sep, xs)
+
+    let getType obj = obj.GetType()
+
+    let (|FSTuple|FSFun|FSUnion|FSModule|FSRecord|SomeType|)  (t: Type) =
+        match t with
+        | _ when FR.IsTuple t    -> FSTuple
+        | _ when FR.IsModule t   -> FSModule
+        | _ when FR.IsFunction t -> FSFun
+        | _ when FR.IsUnion t    -> FSUnion
+        | _ when FR.IsRecord t   -> FSRecord
+        | _                      -> SomeType
+
+    /// Test if type is a FSharp type like function, module, tuple and so on.
+    let isFSharpType (t: Type) =
+        FR.IsFunction t
+        || FR.IsModule t
+        || FR.IsExceptionRepresentation t
+        || FR.IsTuple t
+        || FR.IsRecord t
+        || FR.IsUnion t
+
+    /// Convert a C# type to F# type equivalent
+    let rec formatType (t: Type) =
+        match t.FullName with
+        | "System.Byte"    ->  "byte"
+        | "System.SByte"   ->  "sbyte"
+        | "System.Int16"   ->  "int16"
+        | "System.Int32"   ->  "int"
+        | "System.UInt32"  ->  "uint"
+        | "System.Int64"   ->  "int64"
+        | "System.IntPtr"  ->  "nativeint"
+        | "System.Char"    ->  "char"
+        | "System.String"  ->  "string"
+        | "System.Decimal" ->  "decimal"
+        | "System.Single"  ->  "float32"
+        | "System.Double"  ->  "float"
+        | _                ->  t.FullName
+
+
+    let showTupleType (fn: tDisp) (t: Type)  =
+        t |> FR.GetTupleElements
+          |> Array.map fn
+          |>  joinString " * "
+
+
+    let getFunTypeList (t: Type) =
+        let rec aux acc (t: Type) =
+            match t with
+            | FSFun -> let (ret, cont) = FR.GetFunctionElements t
+                       aux (ret::acc) cont
+            | _     -> t::acc
+
+        List.rev <| aux [] t
+
+
+    let showFnType (fn: tDisp) (t: Type) =
+        t |> getFunTypeList
+          |> List.map fn
+          |> joinString " -> "
+
+
+    let showUnionDeclarion (fn: tDisp) (t: Type)  =
+        let showFields   (t: Reflection.UnionCaseInfo) =
+            let fields = Array.map (fun (field: Reflection.PropertyInfo) ->
+                                    fn field.PropertyType) <| t.GetFields()
+            t.Name + " of " + (joinString " * " fields)
+
+        let tname = "type " + t.Name
+        let n = tname.Length
+        let spaces = String.Concat(Seq.replicate n " ") + "  "
+
+        FR.GetUnionCases t
+        |> Array.map showFields
+        |> joinString ("\n" + spaces + "| ")
+        |> (fun s -> "type " + t.Name + " = " + s)
+
+    let showUnion (fn: tDisp) (t: Type) =
+        let argTypes = t.GenericTypeArguments
+                       |> Seq.map fn
+                       |> joinString ","
+        t.Name + "<" + argTypes + ">"
+
+
+    let showOption (fn: tDisp) (t: Type) =
+        let param = fn t.GenericTypeArguments.[0]
+        param + " option"
+
+    let showList (fn: tDisp) (t: Type) =
+        let param = fn t.GenericTypeArguments.[0]
+        param + " list"
+
+    let rec showType  (t: Type) =
+        match t with
+        | _ when t.Name = "FSharpOption`1" -> showOption showType t
+        | _ when t.Name = "FSharpList`1"   -> showList showType t
+        | FSTuple                          -> showTupleType showType t
+        | FSUnion                          -> showUnion showType t
+        | FSFun                            -> showFnType showType t
+        | SomeType                         -> formatType t
+        | _                                -> failwith "Not implemented"
+
+
 /// Parameter info - Wrapper around ParameterInfo class
 module PInfo =
     open System.Reflection
