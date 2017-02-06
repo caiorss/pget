@@ -858,3 +858,7 @@ module AsmDisplay =
                                                                       a.FullName
                                                                       a.GlobalAssemblyCache
                       )
+
+    let showAssemblyPath (asmName: string) =
+        try   printfn "%s" (Reflection.Assembly.Load asmName).Location
+        with  :? System.IO.FileNotFoundException -> printfn "Error: I can't find or load assembly %s" asmName
