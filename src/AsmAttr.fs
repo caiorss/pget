@@ -111,7 +111,7 @@ module FSType =
 
     let showList (fn: tDisp) (t: Type) =
         let param = fn t.GenericTypeArguments.[0]
-        param + " list"
+        sprintf "(%s) list" param
 
     let rec showType  (t: Type) =
         match t with
