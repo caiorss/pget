@@ -652,6 +652,12 @@ module AsmDisplay =
         | None    -> errorFn ()
         | Some x  -> actionFn x
 
+    /// Test if assembly contains any F# type
+    let isFsharpAssembly asmFile =
+        asmFile |> AsmAttr.loadFrom
+                |> AsmAttr.getTypes
+                |> Seq.exists FSType.isFSharpType
+
     // let showType (asmFile: string) (typeName: string) =
     //     let errorHandler1 () = Console.WriteLine "Error: Assembly file doesn't exist"
     //     let errorHandler2 () = Console.WriteLine "Error: Type not found in assembly."
