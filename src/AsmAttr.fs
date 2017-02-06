@@ -17,6 +17,12 @@ module FSType =
 
     let getType obj = obj.GetType()
 
+    let isFSharpModule = FR.IsModule
+    let isFSharpTuple  = FR.IsTuple
+    let isFSharpFun    = FR.IsFunction
+    let isFSharpRecord = FR.IsRecord
+    let isFSharpUnion  = FR.IsUnion
+
     let (|FSTuple|FSFun|FSUnion|FSModule|FSRecord|SomeType|)  (t: Type) =
         match t with
         | _ when FR.IsTuple t    -> FSTuple
