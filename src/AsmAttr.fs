@@ -847,3 +847,14 @@ module AsmDisplay =
                                         an.Version,
                                         an.CultureInfo.Name
                                        ))
+    let showLoadedAssemblies () =
+        AppDomain.CurrentDomain.GetAssemblies()
+        |> Seq.iter (fun a ->
+                     try  printfn "Fullname = %s\nIn GAC   = %O\nCodebase = %s\n" a.FullName
+                                                                                  a.GlobalAssemblyCache
+                                                                                  a.CodeBase
+
+                     with :? System.NotSupportedException -> printfn "Fullname = %s\nIn GAC   = %O\nCodebase =\n"
+                                                                      a.FullName
+                                                                      a.GlobalAssemblyCache
+                      )
