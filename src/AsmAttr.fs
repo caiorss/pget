@@ -658,6 +658,13 @@ module AsmDisplay =
                 |> AsmAttr.getTypes
                 |> Seq.exists FSType.isFSharpType
 
+    /// Show all F# modules with
+    let showFsharpModules asmFile flag =
+        asmFile |> AsmAttr.loadFrom
+                |> AsmAttr.getTypes
+                |> Seq.filter (fun t -> FSType.isFSharpModule t && (not flag || t.IsPublic))
+                |> Seq.iter (TInfo.getName >> printfn "%s")
+
     // let showType (asmFile: string) (typeName: string) =
     //     let errorHandler1 () = Console.WriteLine "Error: Assembly file doesn't exist"
     //     let errorHandler2 () = Console.WriteLine "Error: Type not found in assembly."
