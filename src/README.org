@@ -52,6 +52,30 @@ future reference.
 
  - Generate Documentation
   
+** Find where is the GAC 
+
+Objective find the Global Assembly Cache Location: 
+
+#+BEGIN_SRC fsharp
+let gacPath () =
+    let asm = System.Reflection.Assembly.Load("System")
+    System.IO.Path.GetFullPath <| System.IO.Path.Combine(asm.Location, "../../..")
+    
+> gacPath () ;;
+val it : string = "/usr/lib/mono/gac"
+> 
+#+END_SRC
+
+References:
+
+ - [[http://www.tuicode.com/question/571f8db74b0ea77e2dbeab2a][enumerating assemblies in GAC - 推Code]]
+
+ - [[http://blog.differentpla.net/blog/2013/04/17/how-to-do-net-reflection-in-powershell][How to do .NET Reflection in PowerShell]]
+
+ - [[https://www.codeproject.com/Articles/38870/Examining-an-Assembly-at-Runtime][Examining an Assembly at Runtime - CodeProject]]
+
+ - 
+
 * Modules 
 ** Module AsmAttr.fs 
 *** Overview 
