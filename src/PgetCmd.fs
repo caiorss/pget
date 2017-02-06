@@ -409,6 +409,12 @@ module Main =
         | ["asm" ; "--refs" ; asmFile ]                     -> AsmDisplay.showAsmReferences asmFile         
         | ["asm" ; "--resources"; asmFile ]                 -> AsmDisplay.showResurces asmFile
 
+        /// Show all loaded assemblies and paths by current application
+        | ["asm" ; "--show-loaded"]                         -> AsmDisplay.showLoadedAssemblies()
+
+        /// Show location of GAC assembly
+        | ["asm" ; "--show-path"; asmName]                  -> AsmDisplay.showAssemblyPath asmName
+
         // Show Exported namespaces
         | ["asm" ; "--namespace"; asmFile]                  -> AsmDisplay.showExportedNS asmFile
         | ["asm" ; "-ns"; asmFile]                          -> AsmDisplay.showExportedNS asmFile
