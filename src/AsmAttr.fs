@@ -11,7 +11,6 @@ module FSType =
 
     type tDisp = Type -> String
 
-
     let joinString sep (xs: string seq) =
         System.String.Join(sep, xs)
 
@@ -23,6 +22,17 @@ module FSType =
     let isFSharpRecord = FR.IsRecord
     let isFSharpUnion  = FR.IsUnion
 
+    /// Test if type is a FSharp type like function, module, tuple and so on.
+    let isFSharpType (t: Type) =
+        FR.IsFunction t
+        || FR.IsModule t
+        || FR.IsExceptionRepresentation t
+        || FR.IsTuple t
+        || FR.IsRecord t
+        || FR.IsUnion t
+
+
+
     let (|FSTuple|FSFun|FSUnion|FSModule|FSRecord|SomeType|)  (t: Type) =
         match t with
         | _ when FR.IsTuple t    -> FSTuple
@@ -32,14 +42,6 @@ module FSType =
         | _ when FR.IsRecord t   -> FSRecord
         | _                      -> SomeType
 
-    /// Test if type is a FSharp type like function, module, tuple and so on.
-    let isFSharpType (t: Type) =
-        FR.IsFunction t
-        || FR.IsModule t
-        || FR.IsExceptionRepresentation t
-        || FR.IsTuple t
-        || FR.IsRecord t
-        || FR.IsUnion t
 
     /// Convert a C# type to F# type equivalent
     let rec formatType (t: Type) =
