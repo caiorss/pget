@@ -476,6 +476,9 @@ module AsmAttr =
     let loadFrom (assemblyFile: string) =
         Assembly.LoadFrom assemblyFile
 
+    let loadFile (asmFile: string) =
+        Assembly.LoadFile asmFile
+
     let reflectionOnlyLoad (asmFile: string) =
         Assembly.ReflectionOnlyLoad asmFile
 
