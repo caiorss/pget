@@ -773,9 +773,9 @@ module AsmDisplay =
 
     /// Print all exported namespaces
     let showExportedNS (asmFile: string) =
-        asmFile |> AsmAttr.load
-                |> AsmAttr.getExportedNS
-                |> Seq.iter Console.WriteLine
+        AsmAttr.loadSafe asmFile ( AsmAttr.getExportedNS
+                                   >> Seq.iter Console.WriteLine
+                                 )
 
     /// Show all types within a exported namespace
     let showTypesWithinNS asmFile nspace =
