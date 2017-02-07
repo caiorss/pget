@@ -837,11 +837,12 @@ module AsmDisplay =
 
 
     let showMethods bindingFlags (asmFile: string) (className: string) =
-        AsmAttr.load asmFile
-        |> AsmAttr.getType className
-        |> Option.map(TInfo.getMethodsFlags bindingFlags)
-        |> Option.iter (Seq.iter (fun m -> Console.WriteLine("")
-                                           Console.WriteLine m))
+        let aux asm =
+            asm |> AsmAttr.getType className
+                |> Option.map(TInfo.getMethodsFlags bindingFlags)
+                |> Option.iter (Seq.iter (fun m -> Console.WriteLine("")
+                                                   Console.WriteLine m))
+        AsmAttr.loadSafe asmFile aux
 
     let showPublicMethods  (asmFile: string) (className: string) =
         let flags = BindingFlags.Public
