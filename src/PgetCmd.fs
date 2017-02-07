@@ -427,6 +427,8 @@ module Main =
         // Show all exported types 
         | ["asm";  "--type" ; asmFile]                     -> AsmDisplay.showTypes asmFile
 
+        | ["asm";  "--type-info" ; tname]                  -> AsmDisplay.showTypeInfo tname 
+
         // Show information about type exported by an assembly
         | ["asm";  "--type" ; asmFile ; atype]             -> AsmDisplay.showType asmFile atype
 
