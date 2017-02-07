@@ -3472,7 +3472,28 @@ Windows:
 Linux: 
 
 #+BEGIN_SRC text 
+  $ bin/pget.exe --system
+  System Information
 
+    System Version            v4.0.30319
+    System Directory          
+    Runtime Directory         /usr/lib/mono/4.5
+    System Configuration File /etc/mono/4.5/machine.config
+    OS Version                Unix 4.8.17.1
+    Machine Name              arch-pc
+    64-bit Operating system   True
+    Number of processors      4
+
+  Special Directories
+
+    System.Environment.SpecialFolder.CommonApplicationData 
+    /usr/share
+
+    System.Environment.SpecialFolder.ApplicationData       
+    /home/arch/.config
+
+    System.Environment.SpecialFolder.LocalApplicationData  
+    /home/arch/.local/share
 #+END_SRC
 **** Generate GUID
 
