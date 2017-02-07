@@ -724,11 +724,10 @@ module AsmDisplay =
                                   )
 
     let showTypeSelector (asmFile: string) predicate =
-        asmFile
-        |> AsmAttr.load
-        |> AsmAttr.getExportedTypes
-        |> Seq.filter predicate
-        |> Seq.iter  Console.WriteLine
+        AsmAttr.loadSafe asmFile ( AsmAttr.getExportedTypes
+                                   >> Seq.filter predicate
+                                   >> Seq.iter  Console.WriteLine
+                                  )
 
     /// Print all types exported by an assembly file      
     let showTypes (asmFile: string) =
