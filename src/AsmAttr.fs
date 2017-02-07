@@ -271,6 +271,10 @@ module TInfo =
     /// Get all constructors of a type (class)
     let getConstructors (t: T) = t.GetConstructors()
 
+    /// Get a single method from a type
+    let getMethod (methodName: string) (t: T) =
+        Option.ofObj <| t.GetMethod(methodName)
+
     /// Get all non-static methods
     let getPublicInstanceMethods (t: T) =
         t.GetMethods()
