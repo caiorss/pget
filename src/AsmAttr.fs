@@ -658,7 +658,7 @@ module AsmDisplay =
     /// Test if assembly contains any F# type
     let isFsharpAssembly asmFile =
         try
-            asmFile |> AsmAttr.load
+            asmFile |> AsmAttr.loadFrom
                     |> AsmAttr.getTypes
                     |> Seq.exists FSType.isFSharpType
         with
