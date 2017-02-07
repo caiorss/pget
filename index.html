@@ -4,13 +4,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Pget .NET Command Line toolbox and Interface for NuGet.Core and F#</title>
-<!-- 2017-01-09 seg 16:03 -->
+<!-- 2017-02-07 ter 15:05 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
 <meta  name="description" content="F# Command line interface to NuGet API."
  />
-<meta  name="keywords" content="NuGet F# fsharp csharp .net dotnet tool cli command line toolbox cross-platform" />
+<meta  name="keywords" content="NuGet F# fsharp csharp .net dotnet tool cli command line toolbox cross-platform package manager xml assembly metadata" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -261,42 +261,52 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1-5-5-3">1.5.5.3. Show package files</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-5-6">1.5.6. Assembly metadata</a>
+<li><a href="#sec-1-5-6">1.5.6. Assembly metadata and .NET types</a>
 <ul>
 <li><a href="#sec-1-5-6-1">1.5.6.1. Show Assembly commands help&#xa0;&#xa0;&#xa0;<span class="tag"><span class="help">help</span></span></a></li>
-<li><a href="#sec-1-5-6-2">1.5.6.2. Show Assembly Attributes</a></li>
-<li><a href="#sec-1-5-6-3">1.5.6.3. Show assembly references</a></li>
-<li><a href="#sec-1-5-6-4">1.5.6.4. Show Assembly Resources</a></li>
-<li><a href="#sec-1-5-6-5">1.5.6.5. Show all exported types</a></li>
-<li><a href="#sec-1-5-6-6">1.5.6.6. Show type information</a></li>
-<li><a href="#sec-1-5-6-7">1.5.6.7. Show all exported classes</a></li>
-<li><a href="#sec-1-5-6-8">1.5.6.8. Show all exported non-abstract classes</a></li>
-<li><a href="#sec-1-5-6-9">1.5.6.9. Show all exported abstract classes</a></li>
-<li><a href="#sec-1-5-6-10">1.5.6.10. Show all exported interfaces</a></li>
-<li><a href="#sec-1-5-6-11">1.5.6.11. Show all exported namespaces</a></li>
-<li><a href="#sec-1-5-6-12">1.5.6.12. Show all types within an exported namespace</a></li>
-<li><a href="#sec-1-5-6-13">1.5.6.13. Generate documentation about all exported namespaces</a></li>
+<li><a href="#sec-1-5-6-2">1.5.6.2. Show .NET type information</a></li>
+<li><a href="#sec-1-5-6-3">1.5.6.3. Show Assembly Attributes</a></li>
+<li><a href="#sec-1-5-6-4">1.5.6.4. Show assembly references</a></li>
+<li><a href="#sec-1-5-6-5">1.5.6.5. Show Assembly Resources</a></li>
+<li><a href="#sec-1-5-6-6">1.5.6.6. Show all exported types</a></li>
+<li><a href="#sec-1-5-6-7">1.5.6.7. Show type information</a></li>
+<li><a href="#sec-1-5-6-8">1.5.6.8. Search type methods wich contains a given string</a></li>
+<li><a href="#sec-1-5-6-9">1.5.6.9. Show all exported classes</a></li>
+<li><a href="#sec-1-5-6-10">1.5.6.10. Show all exported non-abstract classes</a></li>
+<li><a href="#sec-1-5-6-11">1.5.6.11. Show all exported abstract classes</a></li>
+<li><a href="#sec-1-5-6-12">1.5.6.12. Show all exported interfaces</a></li>
+<li><a href="#sec-1-5-6-13">1.5.6.13. Show all exported namespaces</a></li>
+<li><a href="#sec-1-5-6-14">1.5.6.14. Show all types within an exported namespace</a></li>
+<li><a href="#sec-1-5-6-15">1.5.6.15. Generate documentation about all exported namespaces</a></li>
 </ul>
 </li>
 <li><a href="#sec-1-5-7">1.5.7. Fsproj Helpers</a></li>
-<li><a href="#sec-1-5-8">1.5.8. XML tools</a>
+<li><a href="#sec-1-5-8">1.5.8. F# FSharp Assembly Introspection</a>
 <ul>
-<li><a href="#sec-1-5-8-1">1.5.8.1. Display help for xml commands&#xa0;&#xa0;&#xa0;<span class="tag"><span class="help">help</span></span></a></li>
-<li><a href="#sec-1-5-8-2">1.5.8.2. Display XML in human-readable format from URI/URL or file</a></li>
-<li><a href="#sec-1-5-8-3">1.5.8.3. Save XML in human-readable format from file or URI to a new file.</a></li>
-<li><a href="#sec-1-5-8-4">1.5.8.4. Show XML all namespaces</a></li>
-<li><a href="#sec-1-5-8-5">1.5.8.5. Show XML tags hierarchy</a></li>
-<li><a href="#sec-1-5-8-6">1.5.8.6. Show XML tags hierarchy with attribute names</a></li>
-<li><a href="#sec-1-5-8-7">1.5.8.7. Show XML tags hintpath with namespaces</a></li>
-<li><a href="#sec-1-5-8-8">1.5.8.8. Query xml nodes using xpath and show its texts</a></li>
-<li><a href="#sec-1-5-8-9">1.5.8.9. Query xml nodes using xpath and show a node attribute</a></li>
-<li><a href="#sec-1-5-8-10">1.5.8.10. Query xml nodes using xpath and show a node attribute ignoring namespaces</a></li>
+<li><a href="#sec-1-5-8-1">1.5.8.1. Find F# assemblies in a given path</a></li>
+<li><a href="#sec-1-5-8-2">1.5.8.2. Display all F# public modules</a></li>
+<li><a href="#sec-1-5-8-3">1.5.8.3. Display F# public and private modules</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-5-9">1.5.9. Misc</a>
+<li><a href="#sec-1-5-9">1.5.9. XML tools</a>
 <ul>
-<li><a href="#sec-1-5-9-1">1.5.9.1. Show System Information</a></li>
-<li><a href="#sec-1-5-9-2">1.5.9.2. Generate GUID</a></li>
+<li><a href="#sec-1-5-9-1">1.5.9.1. Display help for xml commands&#xa0;&#xa0;&#xa0;<span class="tag"><span class="help">help</span></span></a></li>
+<li><a href="#sec-1-5-9-2">1.5.9.2. Display XML in human-readable format from URI/URL or file</a></li>
+<li><a href="#sec-1-5-9-3">1.5.9.3. Save XML in human-readable format from file or URI to a new file.</a></li>
+<li><a href="#sec-1-5-9-4">1.5.9.4. Show XML all namespaces</a></li>
+<li><a href="#sec-1-5-9-5">1.5.9.5. Show XML tags hierarchy</a></li>
+<li><a href="#sec-1-5-9-6">1.5.9.6. Show XML tags hierarchy with attribute names</a></li>
+<li><a href="#sec-1-5-9-7">1.5.9.7. Show XML tags hintpath with namespaces</a></li>
+<li><a href="#sec-1-5-9-8">1.5.9.8. Query xml nodes using xpath and show its texts</a></li>
+<li><a href="#sec-1-5-9-9">1.5.9.9. Query xml nodes using xpath and show a node attribute</a></li>
+<li><a href="#sec-1-5-9-10">1.5.9.10. Query xml nodes using xpath and show a node attribute ignoring namespaces</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5-10">1.5.10. Misc - Tools</a>
+<ul>
+<li><a href="#sec-1-5-10-1">1.5.10.1. Show System Information</a></li>
+<li><a href="#sec-1-5-10-2">1.5.10.2. Generate GUID - Global Unique Identifier</a></li>
+<li><a href="#sec-1-5-10-3">1.5.10.3. Open Online Documentation</a></li>
 </ul>
 </li>
 </ul>
@@ -316,14 +326,35 @@ for the JavaScript code in this tag.
 <h3 id="sec-1-1"><span class="section-number-3">1.1</span> Overview</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-Pget.exe is high level wrapper to NuGet.core package which provides
-command line tools to manage dependencies in F# projects or .NET projects.
+Pget.exe is a .NET command line toolbox inspired by git and <a href="https://en.wikipedia.org/wiki/BusyBox">BusyBox</a>
+that exposes .NET api through intuitive commands and a high level
+API. It provides commands to install, query and expose NuGet packages,
+explore .NuGet pacakge archives, explore .NET assemblies files or in
+GAC - Global Assembly files, generate library or assembly
+documentation with XML comments and query assemblies in GAC. In
+addition to that it provides tools for generate GUID and query XML.
 </p>
 
 <p>
-Objective: Provide NuGet.Core integration with external tools, text editors
-like Emacs and VIM and also command line integration with NuGet API. 
+Objective: 
 </p>
+
+<ul class="org-ul">
+<li>Provide NuGet.Core.dll integration with external tools, text
+editors like Emacs and VIM and also command line integration with NuGet API.
+</li>
+
+<li>Expose as much as possible of .NET API through command line.
+</li>
+
+<li>Make .NET command line friendly tools
+</li>
+
+<li>Create tools to make development easier in Unix-like OS like
+Linux, OSX and FreeBSD. Inspired by busybox it provides many
+command line tools in a single self-contained executable.
+</li>
+</ul>
 
 
 <p>
@@ -331,11 +362,13 @@ like Emacs and VIM and also command line integration with NuGet API.
 </p>
 
 <p>
-I create pget because existing command line tools doesn't have all
+Pget was created because existing command line tools doesn't have all
 functionality provided by Visual Studio and Package Manager Console
 like display package metadata, search packages in NuGet repository,
 display packages' metadata from local repository or project repository
-./packages and show Nuget package file metadata and files.
+./packages and show Nuget package file metadata and files. Pget also
+provides compeling features to explore and browse .NET assemblies and
+xml. 
 </p>
 
 
@@ -350,7 +383,7 @@ display packages' metadata from local repository or project repository
 
 
 <ul class="org-ul">
-<li>Install NuGet packages
+<li>Install and query NuGet packages
 </li>
 </ul>
 
@@ -362,22 +395,27 @@ display packages' metadata from local repository or project repository
 
 
 <ul class="org-ul">
-<li>Generate assembly references from all repository or single package
+<li><span class="underline">Generate assembly references from all repository</span> or single package
 for F# scripts. 
 </li>
 </ul>
 
 
 <ul class="org-ul">
-<li>Show packages' metadata like description, summary, web site and so on.
+<li><span class="underline">Show packages' metadata</span> like description, summary, web site, open
+package web site and so on.
 </li>
 </ul>
 
 
 <ul class="org-ul">
-<li>Inspect .NET assemblies.
+<li><span class="underline">Inspect .NET assemblies</span> *.exe, *.dll or assemblies in GAC - Global
+Assembly Cache.
 
 <ul class="org-ul">
+<li>Inspect .NET types, methods, interfaces 
+</li>
+
 <li>Show .NET assemblies metadata
 </li>
 
@@ -396,7 +434,7 @@ for F# scripts.
 <li>Show class methods
 </li>
 
-<li>Show type information with xml comments like summary, methods,
+<li><span class="underline">Show type information with xml comments</span> like summary, methods,
 fields, constructors and properties.
 </li>
 
@@ -413,8 +451,9 @@ xml comments from library (*.dll) xml files.
 repository (./packages) for F# scripts.
 </li>
 
-<li>Query XML, show xml namespace, query xml using xpath, show xml tag
-structure. 
+<li><span class="underline">Query XML</span>, show xml namespace, query xml using xpath, show xml tag
+structure. It is useful test xml data extraction with x-path
+expressions and XML tree navigation and ensure that it works.
 </li>
 </ul>
 
@@ -600,15 +639,16 @@ Example:
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ bin/pget.exe -v
+<pre class="src src-text">$ mono obj/Debug/pget.exe --version
 
- Pget - Package Get - Version 2.0.0.0 
+ Pget - Package Get - Version 2.5.0.0 
  2016 Public Domain Software
  Repository - https://github.com/caiorss/pget
 </pre>
 </div>
 </div>
 </div>
+
 <div id="outline-container-sec-1-5-2" class="outline-4">
 <h4 id="sec-1-5-2"><span class="section-number-4">1.5.2</span> Print help&#xa0;&#xa0;&#xa0;<span class="tag"><span class="help">help</span></span></h4>
 <div class="outline-text-4" id="text-1-5-2">
@@ -623,7 +663,7 @@ Example:
 
 <div class="org-src-container">
 
-<pre class="src src-text">$ bin/pget.exe 
+<pre class="src src-text">$ mono obj/Debug/pget.exe 
 Pget - Package Get - Enhanced command line interface to NuGet.Core
 
   pget.exe repo                                Show help for repo commands.
@@ -707,14 +747,20 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
 
   Assembly files: *.exe or *.dll
 
-    asm --info [file]                                    Show all assembly attributes from an assembly [file].
-    asm --refs [file]                                    Show all assembly references from an assembly [file].
+    asm --info [file]                                    Show all assembly attributes from an assembly [file] or GAC.
+    asm --refs [file]                                    Show all assembly references from an assembly [file] or GAC.
     asm --resources  [file]                              Show resources from an assembly file.
     asm --namespace|-ns [file]                           Show all exported namespaces.
     asm --namespace|-ns [file] [nspace]                  Show all types within an exported namespace from an assembly [file].
 
-    asm --type [file]                                    Show all types exported by assembly [file]
-    asm --type [file] [type]                             Show information about [type] exported by assembly [file].
+    asm --type [file]                                    Show all types exported by an assembly [file] or assembly in GAC.
+    asm --type [file] [type]                             Show information about [type] exported by assembly [file] or GAC.
+
+    asm --type-info [type]                               Try to find a type and show its information.
+
+    asm --search-method [file] [type] [method]           Search and display all methods of type [type] which contains [method].
+
+
     asm --interface [file]                               Show all interfaces exported by assembly [file]. 
     asm --abstract  [file]                               Show all abstract classes exported by assembly [file].
 
@@ -735,7 +781,7 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     xml --struct [xmluri] ns       Show xml structure tags hierarchy with namespaces
 
 
-    xml -ns                                  Show all XML namespaces 
+    xml -ns                                  Show all XML namespaces
     xml --namespace                          Show all XML namespaces
 
 
@@ -743,7 +789,7 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     xml --xtext  [xpath] [xmluri]                 Query xml nodes using xpath and show its texts.
     xml --xtext --nons [xpath] [xmluri]           Query xml nodes using xpath and show its texts ignoring namespaces.
     xml --xattr  [xpath] [attr] [xmluri]          Query xml nodes using xpath and show the values of a node attribute.
-    xml --xattr  --nons [xpath] [attr] [xmluri]   Similar to command above but ignore namespaces.       
+    xml --xattr  --nons [xpath] [attr] [xmluri]   Similar to command above but ignore namespaces.
 
 
 
@@ -751,6 +797,10 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
 
     fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
 
+
+  Open pget online documentation:  https://caiorss.github.io/pget
+
+    --doc 
 
   Show system information
 
@@ -775,7 +825,7 @@ Pget - Package Get - Enhanced command line interface to NuGet.Core
     --show               -sh
 
 
- Pget - Package Get - Version 2.0.0.0 
+ Pget - Package Get - Version 2.5.0.0 
  2016 Public Domain Software
  Repository - https://github.com/caiorss/pget
 </pre>
@@ -1892,7 +1942,7 @@ lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.XML
 </div>
 </div>
 <div id="outline-container-sec-1-5-6" class="outline-4">
-<h4 id="sec-1-5-6"><span class="section-number-4">1.5.6</span> Assembly metadata</h4>
+<h4 id="sec-1-5-6"><span class="section-number-4">1.5.6</span> Assembly metadata and .NET types</h4>
 <div class="outline-text-4" id="text-1-5-6">
 </div><div id="outline-container-sec-1-5-6-1" class="outline-5">
 <h5 id="sec-1-5-6-1"><span class="section-number-5">1.5.6.1</span> Show Assembly commands help&#xa0;&#xa0;&#xa0;<span class="tag"><span class="help">help</span></span></h5>
@@ -1932,17 +1982,103 @@ lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.XML
 </div>
 </div>
 </div>
-
 <div id="outline-container-sec-1-5-6-2" class="outline-5">
-<h5 id="sec-1-5-6-2"><span class="section-number-5">1.5.6.2</span> Show Assembly Attributes</h5>
+<h5 id="sec-1-5-6-2"><span class="section-number-5">1.5.6.2</span> Show .NET type information</h5>
 <div class="outline-text-5" id="text-1-5-6-2">
 <ul class="org-ul">
-<li><code>$ pget.exe asm --info [assembly-file]</code>
+<li><code>$ pget.exe asm --type-info [type name]</code>
 </li>
 </ul>
 
 <p>
 Example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ pget.exe asm --type-info System.IO.Directory
+
+**** Type Info
+
+ - Name:           Directory
+ - Full Name:      System.IO.Directory
+ - Namespace:      System.IO
+ - Module:         mscorlib.dll
+ - Base Type:      System.Object
+
+*Predicates*
+
+ - Class:          True
+ - Abstract Class: True
+ - Primitive       False
+ - Array:          False
+ - Interface       False
+ - Enum            False
+ - Public          True
+ - Visible         True
+
+
+**** Fields
+
+
+**** Properties
+
+
+**** Constructors
+
+
+**** Instance Methods
+
+ - Public  System.Boolean Equals (System.Object obj)
+
+ - Public  System.Int32 GetHashCode ()
+
+ - Public  System.Type GetType ()
+
+ - Public  System.String ToString ()
+
+....  
+
+**** Static Methods
+
+ - Public Static System.IO.DirectoryInfo CreateDirectory (System.String path)
+
+ - Public Static System.IO.DirectoryInfo CreateDirectory (System.String path, System.Security.AccessControl.DirectorySecurity directorySecurity)
+
+ - Public Static System.Void Delete (System.String path)
+
+ - Public Static System.Void Delete (System.String path, System.Boolean recursive)
+
+ - Public Static System.Boolean Exists (System.String path)
+
+ - Public Static System.DateTime GetLastAccessTime (System.String path)
+
+ - Public Static System.DateTime GetLastAccessTimeUtc (System.String path)
+
+ - Public Static System.DateTime GetLastWriteTime (System.String path)
+
+ - Public Static System.DateTime GetLastWriteTimeUtc (System.String path)
+
+... ...
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-5-6-3" class="outline-5">
+<h5 id="sec-1-5-6-3"><span class="section-number-5">1.5.6.3</span> Show Assembly Attributes</h5>
+<div class="outline-text-5" id="text-1-5-6-3">
+<ul class="org-ul">
+<li><code>$ pget.exe asm --info [assembly-file or asm-gac]</code>
+</li>
+</ul>
+
+<p>
+Show assembly attribute of assembly file or assembly in GAC.
+</p>
+
+<p>
+<b>Example:</b>
 </p>
 
 <div class="org-src-container">
@@ -1986,12 +2122,35 @@ Com Visible  False
 Codebase     file:///home/arch/nuget/FSharp.Core.3.1.2.5/lib/net40/FSharp.Core.dll
 </pre>
 </div>
+
+<p>
+Example 3: Show information about assembly in GAC (System.Xml.dll)
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ mono bin/Debug/Pget.exe asm --info System.Xml
+Assembly Attributes
+-------------------------------------------
+Name         System.Xml
+Version      4.0.0.0
+CLR Version  v4.0.30319
+Product      Mono Common Language Infrastructure
+Culture      
+Company      Mono development team
+Description  System.Xml.dll
+<span class="org-function-name">Copyright</span>    (c) Various Mono authors
+GUID         
+Com Visible  False
+Codebase     file:///usr/lib/mono/gac/System.Xml/4.0.0.0__b77a5c561934e089/System.Xml.dll
+</pre>
+</div>
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-6-3" class="outline-5">
-<h5 id="sec-1-5-6-3"><span class="section-number-5">1.5.6.3</span> Show assembly references</h5>
-<div class="outline-text-5" id="text-1-5-6-3">
+<div id="outline-container-sec-1-5-6-4" class="outline-5">
+<h5 id="sec-1-5-6-4"><span class="section-number-5">1.5.6.4</span> Show assembly references</h5>
+<div class="outline-text-5" id="text-1-5-6-4">
 <p>
 Show assemblies referenced by an assembly file
 </p>
@@ -2035,9 +2194,9 @@ Name = System.Net.Http.WebRequest       Version = 4.0.0.0       Culture =
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-6-4" class="outline-5">
-<h5 id="sec-1-5-6-4"><span class="section-number-5">1.5.6.4</span> Show Assembly Resources</h5>
-<div class="outline-text-5" id="text-1-5-6-4">
+<div id="outline-container-sec-1-5-6-5" class="outline-5">
+<h5 id="sec-1-5-6-5"><span class="section-number-5">1.5.6.5</span> Show Assembly Resources</h5>
+<div class="outline-text-5" id="text-1-5-6-5">
 <ul class="org-ul">
 <li><code>$ pget.exe asm --resources [asmfile]</code> 
 </li>
@@ -2061,16 +2220,16 @@ NuGet.Authoring.nuspec.xsd
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-6-5" class="outline-5">
-<h5 id="sec-1-5-6-5"><span class="section-number-5">1.5.6.5</span> Show all exported types</h5>
-<div class="outline-text-5" id="text-1-5-6-5">
+<div id="outline-container-sec-1-5-6-6" class="outline-5">
+<h5 id="sec-1-5-6-6"><span class="section-number-5">1.5.6.6</span> Show all exported types</h5>
+<div class="outline-text-5" id="text-1-5-6-6">
 <ul class="org-ul">
 <li><code>$ pget.exe asm --type [asmFile]</code> 
 </li>
 </ul>
 
 <p>
-Example: 
+Example 1: Show exported type by assembly file.
 </p>
 
 <div class="org-src-container">
@@ -2117,12 +2276,40 @@ NuGet.VersionUtility
 NuGet.XElementExtensions
 </pre>
 </div>
+
+<p>
+Example 2: Show exported types by assembly in GAC. 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ mono bin/Debug/Pget.exe asm --type System.Xml
+
+System.Xml.Xsl.Runtime.ContentIterator
+System.Xml.Xsl.Runtime.ElementContentIterator
+System.Xml.Xsl.Runtime.NodeKindContentIterator
+System.Xml.Xsl.Runtime.AttributeIterator
+System.Xml.Xsl.Runtime.NamespaceIterator
+System.Xml.Xsl.Runtime.AttributeContentIterator
+System.Xml.Xsl.Runtime.ContentMergeIterator
+System.Xml.Xsl.Runtime.DodSequenceMerge
+System.Xml.Xsl.Runtime.SetIteratorResult
+
+... ... ...
+
+System.Xml.Xsl.XsltContext
+System.Xml.Xsl.XsltException
+System.Xml.Xsl.XsltCompileException
+System.Xml.Xsl.XslTransform
+System.Xml.Xsl.XsltSettings
+</pre>
+</div>
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-6-6" class="outline-5">
-<h5 id="sec-1-5-6-6"><span class="section-number-5">1.5.6.6</span> Show type information</h5>
-<div class="outline-text-5" id="text-1-5-6-6">
+<div id="outline-container-sec-1-5-6-7" class="outline-5">
+<h5 id="sec-1-5-6-7"><span class="section-number-5">1.5.6.7</span> Show type information</h5>
+<div class="outline-text-5" id="text-1-5-6-7">
 <ul class="org-ul">
 <li><code>$ pget.exe asm --type [asmFile] [TypeName]</code>
 </li>
@@ -2621,41 +2808,137 @@ Converts a point from control space to screen space
 
 Converts a rectangle from screen space to control space.
 
- - Eto.Drawing.RectangleF RectangleFromScreen(Eto.Drawing.RectangleF)
+   ... ... ...
+</pre>
+</div>
 
-Converts a rectangle from control space to screen space
+<p>
+Example: Show type information by assembly in GAC 
+</p>
 
- - T FindParent[T](System.String)
+<div class="org-src-container">
 
-Finds a control in the parent hierarchy with the specified type and  if specified
+<pre class="src src-sh">$ pget.exe asm --type mscorlib System.IO.Path
 
- - Eto.Widget FindParent(System.Type, System.String)
+**** Type Info
 
-Finds a control in the parent hierarchy with the specified type and  if specified
+ - Name:           Path
+ - Full Name:      System.IO.Path
+ - Namespace:      System.IO
+ - Module:         mscorlib.dll
+ - Base Type:      System.Object
 
- - Eto.Widget FindParent(System.String)
+*Predicates*
 
-Finds a control in the parent hierarchy with the specified type and  if specified
+ - Class:          True
+ - Abstract Class: True
+ - Primitive       False
+ - Array:          False
+ - Interface       False
+ - Enum            False
+ - Public          True
+ - Visible         True
 
- - Void Dispose()
 
-Disposes of this widget, supressing the finalizer
 
- - Boolean Equals(System.Object)
+**** Fields
 
- - Int32 GetHashCode()
+ - System.Char[] InvalidPathChars
 
- - System.Type GetType()
+ - System.Char AltDirectorySeparatorChar
 
- - System.String ToString()
+ - System.Char DirectorySeparatorChar
+
+ - System.Char PathSeparator
+
+ - System.Char VolumeSeparatorChar
+
+ .. ... ... ...
+
+
+**** Properties
+
+
+**** Constructors
+
+
+**** Instance Methods
+
+ - Public  System.Boolean Equals (System.Object obj)
+
+ - Public  System.Int32 GetHashCode ()
+
+ - Public  System.Type GetType ()
+
+ - Public  System.String ToString ()
+
+
+**** Static Methods
+
+ - Public Static System.String ChangeExtension (System.String path, System.String extension)
+
+ - Public Static System.String Combine (System.String path1, System.String path2)
+
+ - Public Static System.String GetDirectoryName (System.String path)
+
+ - Public Static System.String GetExtension (System.String path)
+
+ - Public Static System.String GetFileName (System.String path)
+
+ ...  ...  ... ... ...
+
+
+ - Public Static System.String Combine (System.String[] paths)
+
+ - Public Static System.String Combine (System.String path1, System.String path2, System.String path3)
+
+ - Public Static System.String Combine (System.String path1, System.String path2, System.String path3, System.String path4)
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-6-7" class="outline-5">
-<h5 id="sec-1-5-6-7"><span class="section-number-5">1.5.6.7</span> Show all exported classes</h5>
-<div class="outline-text-5" id="text-1-5-6-7">
+<div id="outline-container-sec-1-5-6-8" class="outline-5">
+<h5 id="sec-1-5-6-8"><span class="section-number-5">1.5.6.8</span> Search type methods wich contains a given string</h5>
+<div class="outline-text-5" id="text-1-5-6-8">
+<ul class="org-ul">
+<li><code>$ pget.exe asm --search-method [asmFile] [type] [method]</code>
+</li>
+</ul>
+
+<p>
+Example: Search all System.IO.File methods which contains the word 'read': 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">$ bin/pget.exe asm --search-method mscorlib System.IO.File line
+
+Public Static System.String[] ReadAllLines (System.String path)
+Public Static System.String[] ReadAllLines (System.String path, System.Text.Encoding encoding)
+Public Static System.Void WriteAllLines (System.String path, System.String[] contents)
+Public Static System.Void WriteAllLines (System.String path, System.String[] contents, System.Text.Encoding encoding)
+Public Static System.Collections.Generic.IEnumerable`1[System.String] ReadLines (System.String path)
+Public Static System.Collections.Generic.IEnumerable`1[System.String] ReadLines (System.String path, System.Text.Encoding encoding)
+Public Static System.Void AppendAllLines (System.String path, System.Collections.Generic.IEnumerable`1[System.String] contents)
+Public Static System.Void AppendAllLines (System.String path, System.Collections.Generic.IEnumerable`1[System.String] contents, System.Text.Encoding encoding)
+Public Static System.Void WriteAllLines (System.String path, System.Collections.Generic.IEnumerable`1[System.String] contents)
+Public Static System.Void WriteAllLines (System.String path, System.Collections.Generic.IEnumerable`1[System.String] contents, System.Text.Encoding encoding)
+
+
+$ bin/pget.exe asm --search-method mscordsflib System.IO.File line
+Error: I can't find the file: mscordsflib
+
+$ bin/pget.exe asm --search-method /etc/fstab System.IO.File line
+Error: File /etc/fstab is not a .NET assembl
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-5-6-9" class="outline-5">
+<h5 id="sec-1-5-6-9"><span class="section-number-5">1.5.6.9</span> Show all exported classes</h5>
+<div class="outline-text-5" id="text-1-5-6-9">
 <ul class="org-ul">
 <li><code>$ pget.exe --class [asmFile]</code>
 </li>
@@ -2714,9 +2997,9 @@ OxyPlot.Reporting.TableOfContents+ContentItem
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-6-8" class="outline-5">
-<h5 id="sec-1-5-6-8"><span class="section-number-5">1.5.6.8</span> Show all exported non-abstract classes</h5>
-<div class="outline-text-5" id="text-1-5-6-8">
+<div id="outline-container-sec-1-5-6-10" class="outline-5">
+<h5 id="sec-1-5-6-10"><span class="section-number-5">1.5.6.10</span> Show all exported non-abstract classes</h5>
+<div class="outline-text-5" id="text-1-5-6-10">
 <ul class="org-ul">
 <li><code>$ pget.exe --classn [asmFile]</code>
 </li>
@@ -2756,9 +3039,9 @@ OxyPlot.Reporting.TableOfContents+ContentItem
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-6-9" class="outline-5">
-<h5 id="sec-1-5-6-9"><span class="section-number-5">1.5.6.9</span> Show all exported abstract classes</h5>
-<div class="outline-text-5" id="text-1-5-6-9">
+<div id="outline-container-sec-1-5-6-11" class="outline-5">
+<h5 id="sec-1-5-6-11"><span class="section-number-5">1.5.6.11</span> Show all exported abstract classes</h5>
+<div class="outline-text-5" id="text-1-5-6-11">
 <ul class="org-ul">
 <li><code>$ pget.exe --abstract [asmFile]</code>
 </li>
@@ -2801,9 +3084,9 @@ OxyPlot.Annotations.PathAnnotation
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-6-10" class="outline-5">
-<h5 id="sec-1-5-6-10"><span class="section-number-5">1.5.6.10</span> Show all exported interfaces</h5>
-<div class="outline-text-5" id="text-1-5-6-10">
+<div id="outline-container-sec-1-5-6-12" class="outline-5">
+<h5 id="sec-1-5-6-12"><span class="section-number-5">1.5.6.12</span> Show all exported interfaces</h5>
+<div class="outline-text-5" id="text-1-5-6-12">
 <ul class="org-ul">
 <li><code>$ pget.exe --interface [asmFile]</code>
 </li>
@@ -2837,9 +3120,9 @@ OxyPlot.Axes.IColorAxis
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-6-11" class="outline-5">
-<h5 id="sec-1-5-6-11"><span class="section-number-5">1.5.6.11</span> Show all exported namespaces</h5>
-<div class="outline-text-5" id="text-1-5-6-11">
+<div id="outline-container-sec-1-5-6-13" class="outline-5">
+<h5 id="sec-1-5-6-13"><span class="section-number-5">1.5.6.13</span> Show all exported namespaces</h5>
+<div class="outline-text-5" id="text-1-5-6-13">
 <ul class="org-ul">
 <li><code>pget.exe asm --namespace [asmFile]</code>
 </li>
@@ -2889,9 +3172,18 @@ System.Xml.Xsl
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-6-12" class="outline-5">
-<h5 id="sec-1-5-6-12"><span class="section-number-5">1.5.6.12</span> Show all types within an exported namespace</h5>
-<div class="outline-text-5" id="text-1-5-6-12">
+<div id="outline-container-sec-1-5-6-14" class="outline-5">
+<h5 id="sec-1-5-6-14"><span class="section-number-5">1.5.6.14</span> Show all types within an exported namespace</h5>
+<div class="outline-text-5" id="text-1-5-6-14">
+<ul class="org-ul">
+<li><code>$ pget.exe asm --namespace [assembly-file or GAC] [namespace]</code>
+</li>
+</ul>
+
+<p>
+Example: Query assembly file.
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-text">$ bin/pget.exe asm  --namespace /usr/lib/mono/4.5-api/System.Xml.dll
@@ -2976,12 +3268,74 @@ Methods
 ...
 </pre>
 </div>
+
+<p>
+Example: Query assembly in GAC
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">Show all namespaces </span>
+<span class="org-comment-delimiter">#</span>
+$ mono bin/Debug/Pget.exe asm --namespace mscorlib
+System.Runtime.ConstrainedExecution
+Microsoft.Win32.SafeHandles
+System
+System.Collections.Concurrent
+System.Collections
+System.Collections.Generic
+System.Collections.ObjectModel
+System.Diagnostics.CodeAnalysis
+System.Diagnostics
+System.Diagnostics.Contracts
+System.Diagnostics.Contracts.Internal
+System.Runtime.CompilerServices
+System.Diagnostics.Tracing
+System.Globalization
+System.IO
+System.Reflection
+System.Reflection.Emit
+
+... ... ...
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Show all types exported by namespace </span>
+<span class="org-comment-delimiter"># </span>
+$ mono bin/Debug/Pget.exe asm --namespace mscorlib System.IO
+System.IO.BinaryReader
+System.IO.BinaryWriter
+System.IO.BufferedStream
+System.IO.DirectoryNotFoundException
+System.IO.DriveNotFoundException
+System.IO.EndOfStreamException
+System.IO.FileInfo
+System.IO.FileLoadException
+System.IO.FileNotFoundException
+System.IO.FileSystemInfo
+System.IO.IOException
+System.IO.MemoryStream
+System.IO.PathTooLongException
+System.IO.Stream
+
+... ... ... ...
+
+System.IO.File
+System.IO.FileAccess
+System.IO.FileAttributes
+System.IO.FileMode
+System.IO.FileOptions
+System.IO.FileShare
+System.IO.FileStream
+System.IO.Path
+System.IO.SearchOption
+System.IO.SeekOrigin
+</pre>
+</div>
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-6-13" class="outline-5">
-<h5 id="sec-1-5-6-13"><span class="section-number-5">1.5.6.13</span> Generate documentation about all exported namespaces</h5>
-<div class="outline-text-5" id="text-1-5-6-13">
+<div id="outline-container-sec-1-5-6-15" class="outline-5">
+<h5 id="sec-1-5-6-15"><span class="section-number-5">1.5.6.15</span> Generate documentation about all exported namespaces</h5>
+<div class="outline-text-5" id="text-1-5-6-15">
 <p>
 This command generates documentation in org-mode markdown format with
 all types methods, constructors, fields, properties categorized by
@@ -3164,11 +3518,90 @@ Where framework can be
 </div>
 
 <div id="outline-container-sec-1-5-8" class="outline-4">
-<h4 id="sec-1-5-8"><span class="section-number-4">1.5.8</span> XML tools</h4>
+<h4 id="sec-1-5-8"><span class="section-number-4">1.5.8</span> F# FSharp Assembly Introspection</h4>
 <div class="outline-text-4" id="text-1-5-8">
 </div><div id="outline-container-sec-1-5-8-1" class="outline-5">
-<h5 id="sec-1-5-8-1"><span class="section-number-5">1.5.8.1</span> Display help for xml commands&#xa0;&#xa0;&#xa0;<span class="tag"><span class="help">help</span></span></h5>
+<h5 id="sec-1-5-8-1"><span class="section-number-5">1.5.8.1</span> Find F# assemblies in a given path</h5>
 <div class="outline-text-5" id="text-1-5-8-1">
+<ul class="org-ul">
+<li><code>$ pget.exe fsh --find-dll [path]</code>
+</li>
+</ul>
+
+<p>
+It searches all assemblies (*.dll files) in a given Path which contains at least a
+F# module.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">$ mono obj/Debug/Pget.exe fsh --find-dll .
+./bin/Debug/FSharp.Core.dll
+./packages/FParsec.1.0.2/lib/net40-client/FParsec.dll
+./packages/FParsec.1.0.2/lib/net40-client/FParsecCS.dll
+./packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll
+./packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll
+./packages/FS.INIReader.1.0.3/lib/net45/FS.INIReader.dll
+./src/dummy.dll
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-5-8-2" class="outline-5">
+<h5 id="sec-1-5-8-2"><span class="section-number-5">1.5.8.2</span> Display all F# public modules</h5>
+<div class="outline-text-5" id="text-1-5-8-2">
+<ul class="org-ul">
+<li><code>$ pget.exe fsh --modules [asmFile]</code>
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-text">$ mono obj/Debug/Pget.exe fsh --modules ./packages/FParsec.1.0.2/lib/net40-client/FParsec.dll
+
+FParsec.CharParsers
+FParsec.Primitives
+FParsec.Error
+FParsec.StaticMapping
+FParsec.InternalsModule
+
+$ mono obj/Debug/Pget.exe fsh --modules /home/arch/nuget/FSharp.Charting.Gtk.0.90.14/lib/net40/FSharp.Charting.Gtk.dll
+
+FSharp.Charting._ChartStyleExtensions
+FSharp.Charting.ChartTypes
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-5-8-3" class="outline-5">
+<h5 id="sec-1-5-8-3"><span class="section-number-5">1.5.8.3</span> Display F# public and private modules</h5>
+<div class="outline-text-5" id="text-1-5-8-3">
+<div class="org-src-container">
+
+<pre class="src src-text">$ mono obj/Debug/Pget.exe fsh  --modules /home/arch/nuget/FSharp.Charting.Gtk.0.90.14/lib/net40/FSharp.Charting.Gtk.dll
+FSharp.Charting._ChartStyleExtensions
+FSharp.Charting.ChartTypes
+
+$ mono obj/Debug/Pget.exe fsh  --modules all /home/arch/nuget/FSharp.Charting.Gtk.0.90.14/lib/net40/FSharp.Charting.Gtk.dll
+System.AssemblyVersionInformation
+FSharp.Charting._ChartStyleExtensions
+FSharp.Charting.ChartTypes
+FSharp.Charting.KeyConversions
+FSharp.Charting.NotifySeq
+FSharp.Charting.Seq
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-5-9" class="outline-4">
+<h4 id="sec-1-5-9"><span class="section-number-4">1.5.9</span> XML tools</h4>
+<div class="outline-text-4" id="text-1-5-9">
+</div><div id="outline-container-sec-1-5-9-1" class="outline-5">
+<h5 id="sec-1-5-9-1"><span class="section-number-5">1.5.9.1</span> Display help for xml commands&#xa0;&#xa0;&#xa0;<span class="tag"><span class="help">help</span></span></h5>
+<div class="outline-text-5" id="text-1-5-9-1">
 <ul class="org-ul">
 <li><code>$ pget.exe xml</code>
 </li>
@@ -3202,9 +3635,9 @@ Where framework can be
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-8-2" class="outline-5">
-<h5 id="sec-1-5-8-2"><span class="section-number-5">1.5.8.2</span> Display XML in human-readable format from URI/URL or file</h5>
-<div class="outline-text-5" id="text-1-5-8-2">
+<div id="outline-container-sec-1-5-9-2" class="outline-5">
+<h5 id="sec-1-5-9-2"><span class="section-number-5">1.5.9.2</span> Display XML in human-readable format from URI/URL or file</h5>
+<div class="outline-text-5" id="text-1-5-9-2">
 <ul class="org-ul">
 <li><code>$ pget.exe xml --show [xmluri]</code>
 </li>
@@ -3302,9 +3735,9 @@ Display XML from URL:
 </div>
 </div>
 </div>
-<div id="outline-container-sec-1-5-8-3" class="outline-5">
-<h5 id="sec-1-5-8-3"><span class="section-number-5">1.5.8.3</span> Save XML in human-readable format from file or URI to a new file.</h5>
-<div class="outline-text-5" id="text-1-5-8-3">
+<div id="outline-container-sec-1-5-9-3" class="outline-5">
+<h5 id="sec-1-5-9-3"><span class="section-number-5">1.5.9.3</span> Save XML in human-readable format from file or URI to a new file.</h5>
+<div class="outline-text-5" id="text-1-5-9-3">
 <ul class="org-ul">
 <li><code>$ pget.exe --show xmluri xmlfile</code>
 </li>
@@ -3384,9 +3817,9 @@ $ bin/pget.exe xml --show infoq.rss
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-8-4" class="outline-5">
-<h5 id="sec-1-5-8-4"><span class="section-number-5">1.5.8.4</span> Show XML all namespaces</h5>
-<div class="outline-text-5" id="text-1-5-8-4">
+<div id="outline-container-sec-1-5-9-4" class="outline-5">
+<h5 id="sec-1-5-9-4"><span class="section-number-5">1.5.9.4</span> Show XML all namespaces</h5>
+<div class="outline-text-5" id="text-1-5-9-4">
 <ul class="org-ul">
 <li><code>$ pget.exe --namespace [xmluri]</code>
 </li>
@@ -3475,9 +3908,9 @@ $ bin/pget.exe xml --show eurofxref-daily.xml
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-8-5" class="outline-5">
-<h5 id="sec-1-5-8-5"><span class="section-number-5">1.5.8.5</span> Show XML tags hierarchy</h5>
-<div class="outline-text-5" id="text-1-5-8-5">
+<div id="outline-container-sec-1-5-9-5" class="outline-5">
+<h5 id="sec-1-5-9-5"><span class="section-number-5">1.5.9.5</span> Show XML tags hierarchy</h5>
+<div class="outline-text-5" id="text-1-5-9-5">
 <ul class="org-ul">
 <li><code>$ pget.exe xml --struct [xmluri]</code>
 </li>
@@ -3692,9 +4125,9 @@ $ bin/pget.exe xml --show eurofxref-daily.xml
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-8-6" class="outline-5">
-<h5 id="sec-1-5-8-6"><span class="section-number-5">1.5.8.6</span> Show XML tags hierarchy with attribute names</h5>
-<div class="outline-text-5" id="text-1-5-8-6">
+<div id="outline-container-sec-1-5-9-6" class="outline-5">
+<h5 id="sec-1-5-9-6"><span class="section-number-5">1.5.9.6</span> Show XML tags hierarchy with attribute names</h5>
+<div class="outline-text-5" id="text-1-5-9-6">
 <ul class="org-ul">
 <li><code>$ pget.exe xml --struct attr [xmlfile]</code>
 </li>
@@ -3811,9 +4244,9 @@ $ bin/pget.exe xml --show eurofxref-daily.xml
 </div>
 </div>
 
-<div id="outline-container-sec-1-5-8-7" class="outline-5">
-<h5 id="sec-1-5-8-7"><span class="section-number-5">1.5.8.7</span> Show XML tags hintpath with namespaces</h5>
-<div class="outline-text-5" id="text-1-5-8-7">
+<div id="outline-container-sec-1-5-9-7" class="outline-5">
+<h5 id="sec-1-5-9-7"><span class="section-number-5">1.5.9.7</span> Show XML tags hintpath with namespaces</h5>
+<div class="outline-text-5" id="text-1-5-9-7">
 <ul class="org-ul">
 <li><code>$ pget.exe xml --struct ns [xmluri]</code>
 </li>
@@ -3929,9 +4362,9 @@ $ bin/pget.exe xml --show eurofxref-daily.xml
 </div>
 </div>
 </div>
-<div id="outline-container-sec-1-5-8-8" class="outline-5">
-<h5 id="sec-1-5-8-8"><span class="section-number-5">1.5.8.8</span> Query xml nodes using xpath and show its texts</h5>
-<div class="outline-text-5" id="text-1-5-8-8">
+<div id="outline-container-sec-1-5-9-8" class="outline-5">
+<h5 id="sec-1-5-9-8"><span class="section-number-5">1.5.9.8</span> Query xml nodes using xpath and show its texts</h5>
+<div class="outline-text-5" id="text-1-5-9-8">
 <ul class="org-ul">
 <li><code>$ xml --xtext  [xpath] [xmluri]</code>
 </li>
@@ -4012,9 +4445,9 @@ http://www.infoq.com/presentations/microservices-kubernetes?utm_campaign=infoq_c
 </div>
 </div>
 </div>
-<div id="outline-container-sec-1-5-8-9" class="outline-5">
-<h5 id="sec-1-5-8-9"><span class="section-number-5">1.5.8.9</span> Query xml nodes using xpath and show a node attribute</h5>
-<div class="outline-text-5" id="text-1-5-8-9">
+<div id="outline-container-sec-1-5-9-9" class="outline-5">
+<h5 id="sec-1-5-9-9"><span class="section-number-5">1.5.9.9</span> Query xml nodes using xpath and show a node attribute</h5>
+<div class="outline-text-5" id="text-1-5-9-9">
 <ul class="org-ul">
 <li><code>$ pget.exe xml --xattr [xpath] [attribute] [xmluri]</code>
 </li>
@@ -4106,9 +4539,9 @@ Galos, Mike
 </div>
 </div>
 </div>
-<div id="outline-container-sec-1-5-8-10" class="outline-5">
-<h5 id="sec-1-5-8-10"><span class="section-number-5">1.5.8.10</span> Query xml nodes using xpath and show a node attribute ignoring namespaces</h5>
-<div class="outline-text-5" id="text-1-5-8-10">
+<div id="outline-container-sec-1-5-9-10" class="outline-5">
+<h5 id="sec-1-5-9-10"><span class="section-number-5">1.5.9.10</span> Query xml nodes using xpath and show a node attribute ignoring namespaces</h5>
+<div class="outline-text-5" id="text-1-5-9-10">
 <ul class="org-ul">
 <li><code>$ pget.exe xml --xattr --nons [xpath] [attribute] [xmluri]</code>
 </li>
@@ -4223,12 +4656,12 @@ $ bin/pget.exe xml --xattr --nons  "//Cube//Cube[@currency]" rate xml/eurofxref-
 </div>
 </div>
 </div>
-<div id="outline-container-sec-1-5-9" class="outline-4">
-<h4 id="sec-1-5-9"><span class="section-number-4">1.5.9</span> Misc</h4>
-<div class="outline-text-4" id="text-1-5-9">
-</div><div id="outline-container-sec-1-5-9-1" class="outline-5">
-<h5 id="sec-1-5-9-1"><span class="section-number-5">1.5.9.1</span> Show System Information</h5>
-<div class="outline-text-5" id="text-1-5-9-1">
+<div id="outline-container-sec-1-5-10" class="outline-4">
+<h4 id="sec-1-5-10"><span class="section-number-4">1.5.10</span> Misc - Tools</h4>
+<div class="outline-text-4" id="text-1-5-10">
+</div><div id="outline-container-sec-1-5-10-1" class="outline-5">
+<h5 id="sec-1-5-10-1"><span class="section-number-5">1.5.10.1</span> Show System Information</h5>
+<div class="outline-text-5" id="text-1-5-10-1">
 <ul class="org-ul">
 <li><code>$ pget.exe --system</code>
 </li>
@@ -4271,13 +4704,35 @@ Linux:
 
 <div class="org-src-container">
 
-<pre class="src src-text"></pre>
+<pre class="src src-text">$ bin/pget.exe --system
+System Information
+
+  System Version            v4.0.30319
+  System Directory          
+  Runtime Directory         /usr/lib/mono/4.5
+  System Configuration File /etc/mono/4.5/machine.config
+  OS Version                Unix 4.8.17.1
+  Machine Name              arch-pc
+  64-bit Operating system   True
+  Number of processors      4
+
+Special Directories
+
+  System.Environment.SpecialFolder.CommonApplicationData 
+  /usr/share
+
+  System.Environment.SpecialFolder.ApplicationData       
+  /home/arch/.config
+
+  System.Environment.SpecialFolder.LocalApplicationData  
+  /home/arch/.local/share
+</pre>
 </div>
 </div>
 </div>
-<div id="outline-container-sec-1-5-9-2" class="outline-5">
-<h5 id="sec-1-5-9-2"><span class="section-number-5">1.5.9.2</span> Generate GUID</h5>
-<div class="outline-text-5" id="text-1-5-9-2">
+<div id="outline-container-sec-1-5-10-2" class="outline-5">
+<h5 id="sec-1-5-10-2"><span class="section-number-5">1.5.10.2</span> Generate GUID - Global Unique Identifier</h5>
+<div class="outline-text-5" id="text-1-5-10-2">
 <ul class="org-ul">
 <li><code>$ pget.exe --guid</code>
 </li>
@@ -4295,8 +4750,22 @@ c4969f50-7a17-4f8f-ac9d-d783a9a8f8d4
 </div>
 </div>
 </div>
+<div id="outline-container-sec-1-5-10-3" class="outline-5">
+<h5 id="sec-1-5-10-3"><span class="section-number-5">1.5.10.3</span> Open Online Documentation</h5>
+<div class="outline-text-5" id="text-1-5-10-3">
+<ul class="org-ul">
+<li><code>$ pget.exe --doc</code> 
+</li>
+</ul>
+
+<p>
+It opens pget web site.
+</p>
 </div>
 </div>
+</div>
+</div>
+
 <div id="outline-container-sec-1-6" class="outline-3">
 <h3 id="sec-1-6"><span class="section-number-3">1.6</span> <span class="todo TODO">TODO</span> Todolist</h3>
 <div class="outline-text-3" id="text-1-6">
@@ -4305,13 +4774,13 @@ c4969f50-7a17-4f8f-ac9d-d783a9a8f8d4
 </li>
 <li><code>[&#xa0;]</code> - Improve command line argument handling.
 </li>
-<li><code>[&#xa0;]</code> - Improve error handling - Exceptions and result types.
+<li><code>[X]</code> - Improve error handling - Exceptions and result types.
 </li>
 <li><code>[X]</code> - Query types and XML documentation.
 </li>
-<li><code>[&#xa0;]</code> - Add more xml query commands
+<li><code>[X]</code> - Add more xml query commands
 </li>
-<li><code>[&#xa0;]</code> - Add commands to query GAC - Global Assembly Cache libraries 
+<li><code>[X]</code> - Add commands to query GAC - Global Assembly Cache libraries 
 </li>
 <li><code>[&#xa0;]</code> - Add commands to search types and namespaces
 </li>
@@ -4346,7 +4815,7 @@ functional wrappers to NuGet.Core API.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2017-01-09 seg 16:03</p>
+<p class="date">Created: 2017-02-07 ter 15:05</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
