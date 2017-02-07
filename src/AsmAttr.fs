@@ -479,6 +479,14 @@ module AsmAttr =
     let loadFile (asmFile: string) =
         Assembly.LoadFile asmFile
 
+    /// Try load assembly from GAC, if its not in GAC, then it loads the dll file.
+    let load (asmFile: string) =
+        try // try load from GAC
+            Assembly.Load asmFile
+        with
+            // Load from dll file
+            :? System.IO.FileNotFoundException -> Assembly.LoadFile asmFile
+
     let reflectionOnlyLoad (asmFile: string) =
         Assembly.ReflectionOnlyLoad asmFile
 
