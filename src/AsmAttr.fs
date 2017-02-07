@@ -636,7 +636,7 @@ module AsmDisplay =
     /// Test if assembly contains any F# type
     let isFsharpAssembly asmFile =
         try
-            asmFile |> AsmAttr.loadFrom
+            asmFile |> AsmAttr.load
                     |> AsmAttr.getTypes
                     |> Seq.exists FSType.isFSharpType
         with
@@ -681,7 +681,7 @@ module AsmDisplay =
 
     /// Show all F# modules with
     let showFsharpModules asmFile flag =
-        asmFile |> AsmAttr.loadFrom
+        asmFile |> AsmAttr.load
                 |> AsmAttr.getTypes
                 |> Seq.filter (fun t -> FSType.isFSharpModule t && (not flag || t.IsPublic))
                 |> Seq.iter (fun t -> printfn "%s" t.FullName)
@@ -701,13 +701,13 @@ module AsmDisplay =
                   then Some (FXml.Doc.loadFile xmlFile)
                   else None
                   
-        asmFile |> AsmAttr.loadFrom
+        asmFile |> AsmAttr.load
                 |> AsmAttr.getType typeName
                 |> Option.iter (TInfo.show2 doc)
 
     let showTypeSelector (asmFile: string) predicate =
         asmFile
-        |> AsmAttr.loadFrom
+        |> AsmAttr.load
         |> AsmAttr.getExportedTypes
         |> Seq.filter predicate
         |> Seq.iter  Console.WriteLine
@@ -735,7 +735,7 @@ module AsmDisplay =
     /// Print assembly file attributes
     ///
     let showFile (asmFile: string) =
-        let asm = AsmAttr.loadFrom asmFile
+        let asm = AsmAttr.load asmFile
         printfn "Assembly Attributes"
         printfn "-------------------------------------------"
         printfn "Name         %s" (AsmInfo.getName asm)
@@ -755,25 +755,25 @@ module AsmDisplay =
 
     /// Print all exported namespaces
     let showExportedNS (asmFile: string) =
-        asmFile |> AsmAttr.loadFrom
+        asmFile |> AsmAttr.load
                 |> AsmAttr.getExportedNS
                 |> Seq.iter Console.WriteLine
 
     /// Show all types within a exported namespace
     let showTypesWithinNS asmFile nspace =
-        asmFile |> AsmAttr.loadFrom
+        asmFile |> AsmAttr.load
                 |> AsmAttr.getTypesWithinExportedNS nspace (fun t -> true)
                 |> Seq.iter Console.WriteLine
 
     /// Print all namespaces from an assembly (.exe or .dll)
     let showNamespaces (asmFile: string) =
-        let asm = AsmAttr.loadFrom asmFile 
+        let asm = AsmAttr.load asmFile 
         asm.GetTypes() |> Seq.distinctBy (fun t -> t.Namespace)
                        |> Seq.iter (fun t -> Console.WriteLine(t.Namespace))        
 
     /// Show all detailed exported types grouped by namespace
     let showExportedTypesReport asmFile =
-        let asm = asmFile |> AsmAttr.loadFrom
+        let asm = asmFile |> AsmAttr.load
         asm   |> AsmAttr.getExportedNS
               |> Seq.iter (fun ns ->
                            Console.WriteLine ("** {0}", ns);
@@ -787,7 +787,7 @@ module AsmDisplay =
 
     /// Show all detailed exported types grouped by namespace
     let showExportedTypesReport2 asmFile =
-        let asm = asmFile |> AsmAttr.loadFrom
+        let asm = asmFile |> AsmAttr.load
 
         let xmlFile = System.IO.Path.ChangeExtension(asmFile, "xml")
         let doc = if System.IO.File.Exists xmlFile
@@ -816,7 +816,7 @@ module AsmDisplay =
 
 
     let showMethods bindingFlags (asmFile: string) (className: string) =
-        AsmAttr.loadFrom asmFile
+        AsmAttr.load asmFile
         |> AsmAttr.getType className
         |> Option.map(TInfo.getMethodsFlags bindingFlags)
         |> Option.iter (Seq.iter (fun m -> Console.WriteLine("")
@@ -856,11 +856,11 @@ module AsmDisplay =
         
     /// Display resources from an .NET assembly file 
     let showResurces (asmFile: string) =
-        let asm = AsmAttr.loadFrom asmFile
+        let asm = AsmAttr.load asmFile
         asm.GetManifestResourceNames() |> Seq.iter Console.WriteLine
 
     let showAsmReferences (asmFile: string) =
-        let asm = AsmAttr.loadFrom asmFile
+        let asm = AsmAttr.load asmFile
         asm.GetReferencedAssemblies ()
         |> Seq.iter (fun an ->
                      Console.WriteLine("Name = {0}\t\tVersion = {1}\t\tCulture = {2}",
