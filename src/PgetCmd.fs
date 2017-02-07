@@ -281,6 +281,10 @@ module Main =
     fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
                             
 
+  Open pget online documentation 
+
+    --doc 
+
   Show system information
 
     --system 
