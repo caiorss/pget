@@ -464,13 +464,14 @@ module Main =
         // =================== F# introspection ====================
 
         // Show all F# modules private and public
-        | ["fsharp"; "--modules"; "all"; asmFile ]    -> AsmDisplay.showFsharpModules asmFile false
+        | ["fsh"; "--modules"; "all"; asmFile ]    -> AsmDisplay.showFsharpModules asmFile false
 
         // Show only public F# modules
-        | ["fsharp";  "--modules";  asmFile ]          -> AsmDisplay.showFsharpModules asmFile true
+        | ["fsh";  "--modules";  asmFile ]          -> AsmDisplay.showFsharpModules asmFile true
 
         // Find all F# related Dll assemblies - It will search for all dlls containing F# modules.
-        | ["fsharp";  "--find-dll"; path ]             -> AsmDisplay.findFsharpDlls path
+        | ["fsh";  "--find-dll"; path ]             -> AsmDisplay.findFsharpDlls path
+
 
         // ===================  XML tools ==========================
         | ["xml"]                                                      -> showXmlHelp()
