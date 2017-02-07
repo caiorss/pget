@@ -491,7 +491,7 @@ module AsmAttr =
             // Load from dll file
             :? System.IO.FileNotFoundException -> Assembly.LoadFile asmFile
 
-    let loadSafe (asmFile: string) cont =
+    let loadCont (asmFile: string) cont =
         try // try load from GAC
             cont <| Assembly.Load asmFile
         with
@@ -719,12 +719,12 @@ module AsmDisplay =
                   then Some (FXml.Doc.loadFile xmlFile)
                   else None
 
-        AsmAttr.loadSafe asmFile (AsmAttr.getType typeName
+        AsmAttr.loadCont asmFile (AsmAttr.getType typeName
                                   >> Option.iter (TInfo.show2 doc)
                                   )
 
     let showTypeSelector (asmFile: string) predicate =
-        AsmAttr.loadSafe asmFile ( AsmAttr.getExportedTypes
+        AsmAttr.loadCont asmFile ( AsmAttr.getExportedTypes
                                    >> Seq.filter predicate
                                    >> Seq.iter  Console.WriteLine
                                   )
@@ -768,12 +768,12 @@ module AsmDisplay =
             printfn "Com Visible  %s" (optDefault ""  <| (AsmInfo.getComVisible asm
                                                           |> Option.map (fun e -> e.ToString())))
             printfn "Codebase     %s" asm.CodeBase
-        AsmAttr.loadSafe asmFile aux
+        AsmAttr.loadCont asmFile aux
     
 
     /// Print all exported namespaces
     let showExportedNS (asmFile: string) =
-        AsmAttr.loadSafe asmFile ( AsmAttr.getExportedNS
+        AsmAttr.loadCont asmFile ( AsmAttr.getExportedNS
                                    >> Seq.iter Console.WriteLine
                                  )
 
@@ -782,7 +782,7 @@ module AsmDisplay =
         let aux asm = asm
                      |> AsmAttr.getTypesWithinExportedNS nspace (fun t -> true)
                      |> Seq.iter Console.WriteLine
-        AsmAttr.loadSafe asmFile aux
+        AsmAttr.loadCont asmFile aux
 
     /// Print all namespaces from an assembly (.exe or .dll)
     let showNamespaces (asmFile: string) =
@@ -790,7 +790,7 @@ module AsmDisplay =
             asm.GetTypes() |> Seq.distinctBy (fun t -> t.Namespace)
                            |> Seq.iter (fun t -> Console.WriteLine(t.Namespace))
 
-        AsmAttr.loadSafe asmFile aux
+        AsmAttr.loadCont asmFile aux
 
     /// Show all detailed exported types grouped by namespace
     let showExportedTypesReport asmFile =
@@ -824,7 +824,7 @@ module AsmDisplay =
                                             TInfo.show2 doc t;
                                             ))
 
-        AsmAttr.loadSafe asmFile aux
+        AsmAttr.loadCont asmFile aux
 
 
     let genExportedTypesReport asmFile outputFile =
@@ -841,7 +841,7 @@ module AsmDisplay =
                 |> Option.map(TInfo.getMethodsFlags bindingFlags)
                 |> Option.iter (Seq.iter (fun m -> Console.WriteLine("")
                                                    Console.WriteLine m))
-        AsmAttr.loadSafe asmFile aux
+        AsmAttr.loadCont asmFile aux
 
     let showPublicMethods  (asmFile: string) (className: string) =
         let flags = BindingFlags.Public
@@ -877,7 +877,7 @@ module AsmDisplay =
         
     /// Display resources from an .NET assembly file 
     let showResurces (asmFile: string) =
-        AsmAttr.loadSafe asmFile (fun asm ->  asm.GetManifestResourceNames()
+        AsmAttr.loadCont asmFile (fun asm ->  asm.GetManifestResourceNames()
                                               |> Seq.iter Console.WriteLine
                                   )
 
