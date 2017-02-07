@@ -669,6 +669,13 @@ module AsmDisplay =
         files |> Seq.filter isFsharpAssembly
               |> Seq.iter (printfn "%s")
 
+    /// Show all F# modules with
+    let showFsharpModules asmFile flag =
+       AsmAttr.loadCont asmFile (AsmAttr.getTypes
+                                 >> Seq.filter (fun t -> FSType.isFSharpModule t && (not flag || t.IsPublic))
+                                 >> Seq.iter (fun t -> printfn "%s" t.FullName)
+                                 )
+
     /// Redirect stdout print to a file.
     let withStdoutFile (file: string) fn  =
         let stdout = Console.Out
@@ -700,13 +707,6 @@ module AsmDisplay =
         | None    -> errorFn ()
         | Some x  -> actionFn x
 
-
-    /// Show all F# modules with
-    let showFsharpModules asmFile flag =
-        asmFile |> AsmAttr.load
-                |> AsmAttr.getTypes
-                |> Seq.filter (fun t -> FSType.isFSharpModule t && (not flag || t.IsPublic))
-                |> Seq.iter (fun t -> printfn "%s" t.FullName)
 
     // let showType (asmFile: string) (typeName: string) =
     //     let errorHandler1 () = Console.WriteLine "Error: Assembly file doesn't exist"
