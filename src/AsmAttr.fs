@@ -491,6 +491,20 @@ module AsmAttr =
             // Load from dll file
             :? System.IO.FileNotFoundException -> Assembly.LoadFile asmFile
 
+    let loadSafe (asmFile: string) cont =
+        try // try load from GAC
+            cont <| Assembly.Load asmFile
+        with
+            // Load from dll file
+            :? System.IO.FileNotFoundException
+            ->
+                try
+                    cont <| Assembly.LoadFile asmFile
+                with
+                    | :? System.IO.FileNotFoundException -> printfn "Error: I can't find the file: %s" asmFile
+                    | :? System.BadImageFormatException  -> printfn "Error: File %s is not a .NET assembly" asmFile
+
+
     let reflectionOnlyLoad (asmFile: string) =
         Assembly.ReflectionOnlyLoad asmFile
 
