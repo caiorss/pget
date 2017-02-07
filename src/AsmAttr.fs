@@ -786,9 +786,11 @@ module AsmDisplay =
 
     /// Print all namespaces from an assembly (.exe or .dll)
     let showNamespaces (asmFile: string) =
-        let asm = AsmAttr.load asmFile 
-        asm.GetTypes() |> Seq.distinctBy (fun t -> t.Namespace)
-                       |> Seq.iter (fun t -> Console.WriteLine(t.Namespace))        
+        let aux (asm: Assembly) =
+            asm.GetTypes() |> Seq.distinctBy (fun t -> t.Namespace)
+                           |> Seq.iter (fun t -> Console.WriteLine(t.Namespace))
+
+        AsmAttr.loadSafe asmFile aux
 
     /// Show all detailed exported types grouped by namespace
     let showExportedTypesReport asmFile =
