@@ -718,10 +718,10 @@ module AsmDisplay =
         let doc = if System.IO.File.Exists xmlFile
                   then Some (FXml.Doc.loadFile xmlFile)
                   else None
-                  
-        asmFile |> AsmAttr.load
-                |> AsmAttr.getType typeName
-                |> Option.iter (TInfo.show2 doc)
+
+        AsmAttr.loadSafe asmFile (AsmAttr.getType typeName
+                                  >> Option.iter (TInfo.show2 doc)
+                                  )
 
     let showTypeSelector (asmFile: string) predicate =
         asmFile
