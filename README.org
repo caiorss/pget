@@ -2,7 +2,7 @@
 #+AUTHOR: Caio Rodrigues
 #+EMAIL:  caiorss [DOT] rodrigues [DOT] gmail [DOT] com
 #+DESCRIPTION: F# Command line interface to NuGet API.
-#+KEYWORDS: NuGet F# fsharp csharp .net dotnet tool cli command line toolbox cross-platform
+#+KEYWORDS: NuGet F# fsharp csharp .net dotnet tool cli command line toolbox cross-platform package manager xml assembly metadata
 
 #+STARTUP: content
 #+LANGUAGE: en
@@ -3495,7 +3495,7 @@ Linux:
     System.Environment.SpecialFolder.LocalApplicationData  
     /home/arch/.local/share
 #+END_SRC
-**** Generate GUID
+**** Generate GUID - Global Unique Identifier
 
  - =$ pget.exe --guid=
 
@@ -3505,6 +3505,12 @@ Example:
   $ bin/pget.exe --guid
   c4969f50-7a17-4f8f-ac9d-d783a9a8f8d4
 #+END_SRC
+**** Open Online Documentation 
+
+ - =$ pget.exe --doc= 
+
+It opens pget web site.
+
 ** TODO Todolist 
 
  - [ ] - Improve display of F# types.
