@@ -214,6 +214,10 @@ module TInfo =
     /// Get type information about object
     let typeOf obj = obj.GetType()
 
+    /// Try to find type by name
+    let getType typeName =
+         Option.ofObj <| Type.GetType(typeName)
+
     /// Get name of a type
     let getName (t: T) = t.Name
 
