@@ -209,176 +209,187 @@ $ cd obj/Release && ./Pget.exe -v
 
 Example:
 
-#+BEGIN_SRC sh
-  $ bin/pget.exe -v
+#+BEGIN_SRC text
+  $ mono obj/Debug/pget.exe --version
 
-   Pget - Package Get - Version 2.0.0.0 
+   Pget - Package Get - Version 2.5.0.0 
    2016 Public Domain Software
    Repository - https://github.com/caiorss/pget
+
 #+END_SRC
+
 *** Print help                                                         :help:
 
  - =$ pget.exe=
 
 Example:
 
-#+BEGIN_SRC text 
-$ bin/pget.exe 
-Pget - Package Get - Enhanced command line interface to NuGet.Core
+#+BEGIN_SRC text
+  $ mono obj/Debug/pget.exe 
+  Pget - Package Get - Enhanced command line interface to NuGet.Core
 
-  pget.exe repo                                Show help for repo commands.
-  pget.exe nuget                               Show help for nuget related commands                           
-  pget.exe asm                                 Show help for assembly related commands.
-  pget.exe nupkg                               Show help for Nuget packages related commands.
-  pget.exe xml                                 Show help for xml related commands
+    pget.exe repo                                Show help for repo commands.
+    pget.exe nuget                               Show help for nuget related commands                           
+    pget.exe asm                                 Show help for assembly related commands.
+    pget.exe nupkg                               Show help for Nuget packages related commands.
+    pget.exe xml                                 Show help for xml related commands
 
-  --version | -v                               Show version
-  --help    | -h                               Show help
-  --doc                                        Open online documentation.                          
-                          
-                          
-
-  List Repository
-
-    repo --list                                 List all packages in current repository ./package
-    repo [path] --list                          List all package in [path] repository.
-
-  Show repository 
- 
-    repo --show                                 Show all packages in current ./packages repository
-    repo [path] --show                          Show all packages in [path] repository.
-  
-  Show package metadata
-
-    repo --show  [pack]                         Show the package [pack] in ./packages directory
-    repo [path] --show [pack]                   Show the package [pack] in [repo] directory.
-
-  Show package files 
-
-    repo --files [pack]                    Show content files of package [pack] in ./packages
-    repo [path] --files [pack]             Show content files of package [pack] in [repo]
-
-  Install package to repository  
-
-    repo --install [pack]                       Install the latest version of package [pack] to ./packages
-    repo --install [pack] [ver]                 Install the version [ver] of package [pack]
-    repo [path] --install [pack]                Install the latest version of package [pack] to a repository [path] i.e: ~/nuget
-    repo [path] --install [pack] [ver]          Install the version [ver] of package [pack] to a repository [path]
-
-
-  Install a list of packages passed as argument
-    repo --install-list FParsec NuGet.Core-2.0.0               Install those packages to ./packages
-    repo /tmp/repo --install-list FParsec NuGet.Core-2.0.0     Install those packages to /tmp/repository
-
-  Install a list of packages listed in a file
-
-    repo --install-from-file                    Install all packages listed in the file ./packages.list to ./packages directory.
-    repo --install-from-file [file]             Install all packages listed in the file ./packages.list to ./packages directory.
-    repo [path] --install-from-file [file]      Install all packages listed in the file [file] to [path]
-
-
-  Open package project URL or Licence URL
-
-    repo --url [pack]                           Browse project URL of a package [pack] in ./packages.
-    repo --license [pack]                       Browse licence URL of a package [pack] in ./packages.
-    repo [path] --url [pack]                    Browse project URL of a package [pack] in [path]
-    repo [path] --license [pack]                Browse licence URL of a package [pack] in [path]
-
-  Show references for F# *.fsx scripts:        [frm]:  .NET Framework  net40 | net45   
-
-    repo --ref [frm]                            Show all assembly references from current ./packages.
-    repo --ref  --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
-    repo [path] --ref [frm]                     Show all assembly references from current [repo] directory.
-    repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory        
-        
-
-  Nuget commands:
-
-    nuget --search [package]                    Search a package by name.  
-    nuget --show   [package]                    Show package information (metadata).
-    nuget --open                                Open NuGet web site - https://www.nuget.org       
-        
-
-  Nupkg Files:
-
-    nupkg --show  [file]                        Show metadata of a *.nupkg file
-    nupkg --files [file]                        Show files in nupkg [file]        
-        
-
-  Assembly files: *.exe or *.dll
-
-    asm --info [file]                                    Show all assembly attributes from an assembly [file].
-    asm --refs [file]                                    Show all assembly references from an assembly [file].
-    asm --resources  [file]                              Show resources from an assembly file.
-    asm --namespace|-ns [file]                           Show all exported namespaces.
-    asm --namespace|-ns [file] [nspace]                  Show all types within an exported namespace from an assembly [file].
-
-    asm --type [file]                                    Show all types exported by assembly [file]
-    asm --type [file] [type]                             Show information about [type] exported by assembly [file].
-    asm --interface [file]                               Show all interfaces exported by assembly [file]. 
-    asm --abstract  [file]                               Show all abstract classes exported by assembly [file].
-   
-    asm --class  [file]                                  Show all classes exported by assembly [file].
-    asm --classn [file]                                  Show all non-abstract classes exported by assembly [file]
-
-    asm --docgen [file]                                  Print all types documentation on screen
-    asm --docgen [file] [output-file]                    Export all types documentation to org-mode file.
-        
-
-  XML query commands.
-
-    xml --show [xmluri]            Show formatted xml human-readable output from uri or file.
-    xml --show [xmluri] [file]     Export [xmluri] (file or url) to a xml human-readable file.
-
-    xml --struct [xmluri]          Show xml structure - tags hierarchy
-    xml --struct [xmluri] attr     Show xml structure tags hierarchy with attributes names.
-    xml --struct [xmluri] ns       Show xml structure tags hierarchy with namespaces
-
-
-    xml -ns                                  Show all XML namespaces 
-    xml --namespace                          Show all XML namespaces
-
-
-    xml --xvalue [xpath] [xmluri]                 Query xml nodes using xpath and show its values.
-    xml --xtext  [xpath] [xmluri]                 Query xml nodes using xpath and show its texts.
-    xml --xtext --nons [xpath] [xmluri]           Query xml nodes using xpath and show its texts ignoring namespaces.
-    xml --xattr  [xpath] [attr] [xmluri]          Query xml nodes using xpath and show the values of a node attribute.
-    xml --xattr  --nons [xpath] [attr] [xmluri]   Similar to command above but ignore namespaces.       
-        
-    
-
-  Fsproj - Helpers for fsproj files.
-
-    fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
+    --version | -v                               Show version
+    --help    | -h                               Show help
+    --doc                                        Open online documentation.                          
+                            
                             
 
-  Show system information
+    List Repository
 
-    --system 
+      repo --list                                 List all packages in current repository ./package
+      repo [path] --list                          List all package in [path] repository.
 
-  Generate Guid - Globally Unique Identifier 
+    Show repository 
+   
+      repo --show                                 Show all packages in current ./packages repository
+      repo [path] --show                          Show all packages in [path] repository.
+    
+    Show package metadata
 
-    --guid 
+      repo --show  [pack]                         Show the package [pack] in ./packages directory
+      repo [path] --show [pack]                   Show the package [pack] in [repo] directory.
 
-  --------------------------------------------
+    Show package files 
 
-  Command abbreviations:
+      repo --files [pack]                    Show content files of package [pack] in ./packages
+      repo [path] --files [pack]             Show content files of package [pack] in [repo]
 
-    --install            -i
-    --install-from-file  -if
-    --install-list       -il
-    --help               -h
-    --version            -v
-    --ver                -v
-    --list               -l
-    --search             -s
-    --show               -sh
-         
+    Install package to repository  
 
- Pget - Package Get - Version 2.0.0.0 
- 2016 Public Domain Software
- Repository - https://github.com/caiorss/pget
-       
+      repo --install [pack]                       Install the latest version of package [pack] to ./packages
+      repo --install [pack] [ver]                 Install the version [ver] of package [pack]
+      repo [path] --install [pack]                Install the latest version of package [pack] to a repository [path] i.e: ~/nuget
+      repo [path] --install [pack] [ver]          Install the version [ver] of package [pack] to a repository [path]
+
+
+    Install a list of packages passed as argument
+      repo --install-list FParsec NuGet.Core-2.0.0               Install those packages to ./packages
+      repo /tmp/repo --install-list FParsec NuGet.Core-2.0.0     Install those packages to /tmp/repository
+
+    Install a list of packages listed in a file
+
+      repo --install-from-file                    Install all packages listed in the file ./packages.list to ./packages directory.
+      repo --install-from-file [file]             Install all packages listed in the file ./packages.list to ./packages directory.
+      repo [path] --install-from-file [file]      Install all packages listed in the file [file] to [path]
+
+
+    Open package project URL or Licence URL
+
+      repo --url [pack]                           Browse project URL of a package [pack] in ./packages.
+      repo --license [pack]                       Browse licence URL of a package [pack] in ./packages.
+      repo [path] --url [pack]                    Browse project URL of a package [pack] in [path]
+      repo [path] --license [pack]                Browse licence URL of a package [pack] in [path]
+
+    Show references for F# *.fsx scripts:        [frm]:  .NET Framework  net40 | net45   
+
+      repo --ref [frm]                            Show all assembly references from current ./packages.
+      repo --ref  --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
+      repo [path] --ref [frm]                     Show all assembly references from current [repo] directory.
+      repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory        
+          
+
+    Nuget commands:
+
+      nuget --search [package]                    Search a package by name.  
+      nuget --show   [package]                    Show package information (metadata).
+      nuget --open                                Open NuGet web site - https://www.nuget.org       
+          
+
+    Nupkg Files:
+
+      nupkg --show  [file]                        Show metadata of a *.nupkg file
+      nupkg --files [file]                        Show files in nupkg [file]        
+          
+
+    Assembly files: *.exe or *.dll
+
+      asm --info [file]                                    Show all assembly attributes from an assembly [file] or GAC.
+      asm --refs [file]                                    Show all assembly references from an assembly [file] or GAC.
+      asm --resources  [file]                              Show resources from an assembly file.
+      asm --namespace|-ns [file]                           Show all exported namespaces.
+      asm --namespace|-ns [file] [nspace]                  Show all types within an exported namespace from an assembly [file].
+
+      asm --type [file]                                    Show all types exported by an assembly [file] or assembly in GAC.
+      asm --type [file] [type]                             Show information about [type] exported by assembly [file] or GAC.
+
+      asm --type-info [type]                               Try to find a type and show its information.
+
+      asm --search-method [file] [type] [method]           Search and display all methods of type [type] which contains [method].
+
+
+      asm --interface [file]                               Show all interfaces exported by assembly [file]. 
+      asm --abstract  [file]                               Show all abstract classes exported by assembly [file].
+     
+      asm --class  [file]                                  Show all classes exported by assembly [file].
+      asm --classn [file]                                  Show all non-abstract classes exported by assembly [file]
+
+      asm --docgen [file]                                  Print all types documentation on screen
+      asm --docgen [file] [output-file]                    Export all types documentation to org-mode file.
+          
+
+    XML query commands.
+
+      xml --show [xmluri]            Show formatted xml human-readable output from uri or file.
+      xml --show [xmluri] [file]     Export [xmluri] (file or url) to a xml human-readable file.
+
+      xml --struct [xmluri]          Show xml structure - tags hierarchy
+      xml --struct [xmluri] attr     Show xml structure tags hierarchy with attributes names.
+      xml --struct [xmluri] ns       Show xml structure tags hierarchy with namespaces
+
+
+      xml -ns                                  Show all XML namespaces
+      xml --namespace                          Show all XML namespaces
+
+
+      xml --xvalue [xpath] [xmluri]                 Query xml nodes using xpath and show its values.
+      xml --xtext  [xpath] [xmluri]                 Query xml nodes using xpath and show its texts.
+      xml --xtext --nons [xpath] [xmluri]           Query xml nodes using xpath and show its texts ignoring namespaces.
+      xml --xattr  [xpath] [attr] [xmluri]          Query xml nodes using xpath and show the values of a node attribute.
+      xml --xattr  --nons [xpath] [attr] [xmluri]   Similar to command above but ignore namespaces.
+
+      
+
+    Fsproj - Helpers for fsproj files.
+
+      fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
+                              
+
+    Open pget online documentation:  https://caiorss.github.io/pget
+
+      --doc 
+
+    Show system information
+
+      --system 
+
+    Generate Guid - Globally Unique Identifier 
+
+      --guid 
+
+    --------------------------------------------
+
+    Command abbreviations:
+
+      --install            -i
+      --install-from-file  -if
+      --install-list       -il
+      --help               -h
+      --version            -v
+      --ver                -v
+      --list               -l
+      --search             -s
+      --show               -sh
+           
+
+   Pget - Package Get - Version 2.5.0.0 
+   2016 Public Domain Software
+   Repository - https://github.com/caiorss/pget
 #+END_SRC
 
 *** Local Repository
