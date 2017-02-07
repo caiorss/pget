@@ -779,9 +779,10 @@ module AsmDisplay =
 
     /// Show all types within a exported namespace
     let showTypesWithinNS asmFile nspace =
-        asmFile |> AsmAttr.load
-                |> AsmAttr.getTypesWithinExportedNS nspace (fun t -> true)
-                |> Seq.iter Console.WriteLine
+        let aux asm = asm
+                     |> AsmAttr.getTypesWithinExportedNS nspace (fun t -> true)
+                     |> Seq.iter Console.WriteLine
+        AsmAttr.loadSafe asmFile aux
 
     /// Print all namespaces from an assembly (.exe or .dll)
     let showNamespaces (asmFile: string) =
