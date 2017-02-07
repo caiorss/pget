@@ -211,14 +211,17 @@ module Main =
         Console.WriteLine """
   Assembly files: *.exe or *.dll
 
-    asm --info [file]                                    Show all assembly attributes from an assembly [file].
-    asm --refs [file]                                    Show all assembly references from an assembly [file].
+    asm --info [file]                                    Show all assembly attributes from an assembly [file] or GAC.
+    asm --refs [file]                                    Show all assembly references from an assembly [file] or GAC.
     asm --resources  [file]                              Show resources from an assembly file.
     asm --namespace|-ns [file]                           Show all exported namespaces.
     asm --namespace|-ns [file] [nspace]                  Show all types within an exported namespace from an assembly [file].
 
-    asm --type [file]                                    Show all types exported by assembly [file]
-    asm --type [file] [type]                             Show information about [type] exported by assembly [file].
+    asm --type [file]                                    Show all types exported by an assembly [file] or assembly in GAC.
+    asm --type [file] [type]                             Show information about [type] exported by assembly [file] or GAC.
+
+    asm --type-info [type]                               Try to find a type and show its information. 
+
     asm --interface [file]                               Show all interfaces exported by assembly [file]. 
     asm --abstract  [file]                               Show all abstract classes exported by assembly [file].
    
@@ -461,38 +464,38 @@ module Main =
         | ["fsharp";  "--find-dll"; path ]             -> AsmDisplay.findFsharpDlls path
 
         // ===================  XML tools ==========================
-        | ["xml"]                                           -> showXmlHelp()
+        | ["xml"]                                                      -> showXmlHelp()
         
         // Pretty print XML 
-        | ["xml"; "--show" ; xmlUri ]                       -> FXml.File.show xmlUri
-        | ["xml"; "--show" ; xmlUri ; xmlFile]              -> FXml.File.save xmlUri xmlFile
+        | ["xml"; "--show" ; xmlUri ]                                  -> FXml.File.show xmlUri
+        | ["xml"; "--show" ; xmlUri ; xmlFile]                         -> FXml.File.save xmlUri xmlFile
 
                       
         // Show XML nodes structure 
-        | ["xml"; "--struct" ;  xmlUri]                     -> FXml.File.showStruct xmlUri
+        | ["xml"; "--struct" ;  xmlUri]                                -> FXml.File.showStruct xmlUri
         // Show XML nodes structure 
-        | ["xml"; "--struct" ; "attr" ; xmlUri]              -> FXml.File.showStructAttr xmlUri
+        | ["xml"; "--struct" ; "attr" ; xmlUri]                        -> FXml.File.showStructAttr xmlUri
         // Show XML nodes structure 
-        | ["xml"; "--struct" ; "ns";  xmlUri]                -> FXml.File.showStructNs xmlUri
+        | ["xml"; "--struct" ; "ns";  xmlUri]                          -> FXml.File.showStructNs xmlUri
 
         // Show XML Namespaces
-        | ["xml"; "-ns"; xmlUri]                             -> FXml.File.showNamespaces xmlUri
-        | ["xml"; "--namespace"; xmlUri]                     -> FXml.File.showNamespaces xmlUri 
+        | ["xml"; "-ns"; xmlUri]                                       -> FXml.File.showNamespaces xmlUri
+        | ["xml"; "--namespace"; xmlUri]                               -> FXml.File.showNamespaces xmlUri 
         
         // Select multiple nodes by xpath and show its values
-        | ["xml"; "--xvalue" ; xpath ; xmluri]                        -> FXml.File.showXPathValue xmluri xpath
+        | ["xml"; "--xvalue" ; xpath ; xmluri]                         -> FXml.File.showXPathValue xmluri xpath
 
         // Select multiple modes by xpath and show its inner texts
-        | ["xml"; "--xtext" ; xpath ; xmluri]                            -> FXml.File.showXPathInnerText xmluri xpath
-        | ["xml"; "--xtext" ; "--nons"; xpath ; xmluri]                 -> FXml.File.showXPathInnerTextNoNS xmluri xpath
+        | ["xml"; "--xtext" ; xpath ; xmluri]                          -> FXml.File.showXPathInnerText xmluri xpath
+        | ["xml"; "--xtext" ; "--nons"; xpath ; xmluri]                -> FXml.File.showXPathInnerTextNoNS xmluri xpath
 
-        | ["xml"; "-ns" ; prefix ; uri ; "--xtext" ; xpath ; xmluri]     -> FXml.File.showXPathInnerTextNs xmluri (prefix, uri) xpath 
+        | ["xml"; "-ns" ; prefix ; uri ; "--xtext" ; xpath ; xmluri]   -> FXml.File.showXPathInnerTextNs xmluri (prefix, uri) xpath 
 
         // Select multiple nodes by xpath and show its attributes 
-        | ["xml"; "--xattr"; xpath ; attr; xmluri]                       -> FXml.File.showXpathAttr xmluri xpath attr 
-        | ["xml"; "--xattr"; "--nons"; xpath ; attr; xmluri]            -> FXml.File.showXpathAttrNoNS xmluri xpath attr
+        | ["xml"; "--xattr"; xpath ; attr; xmluri]                     -> FXml.File.showXpathAttr xmluri xpath attr 
+        | ["xml"; "--xattr"; "--nons"; xpath ; attr; xmluri]           -> FXml.File.showXpathAttrNoNS xmluri xpath attr
         
-        | ["xml"; "-ns"; prefix; uri ; "--xattr"; xpath; attr; xmluri]   -> FXml.File.showXpathAttrNS xmluri (prefix, uri) xpath attr 
+        | ["xml"; "-ns"; prefix; uri ; "--xattr"; xpath; attr; xmluri] -> FXml.File.showXpathAttrNS xmluri (prefix, uri) xpath attr 
 
 
         // Select nodes by xpath and show them
