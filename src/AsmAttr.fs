@@ -58,6 +58,7 @@ module FSType =
         | "System.Decimal" ->  "decimal"
         | "System.Single"  ->  "float32"
         | "System.Double"  ->  "float"
+        | "System.Void"    ->  "unit"
         | _                ->  t.FullName
 
 
