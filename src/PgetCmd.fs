@@ -220,7 +220,10 @@ module Main =
     asm --type [file]                                    Show all types exported by an assembly [file] or assembly in GAC.
     asm --type [file] [type]                             Show information about [type] exported by assembly [file] or GAC.
 
-    asm --type-info [type]                               Try to find a type and show its information. 
+    asm --type-info [type]                               Try to find a type and show its information.
+
+    asm --search-method [file] [type] [method]           Search and display all methods of type [type] which contains [method].
+
 
     asm --interface [file]                               Show all interfaces exported by assembly [file]. 
     asm --abstract  [file]                               Show all abstract classes exported by assembly [file].
