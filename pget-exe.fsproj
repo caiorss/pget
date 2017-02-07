@@ -9,7 +9,7 @@
     <ProjectGuid>a8d79bc3-f492-4e9b-87a8-62dbdbf13c65</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Pget</RootNamespace>
-    <AssemblyName>Pget</AssemblyName>
+    <AssemblyName>pget</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>2
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>   

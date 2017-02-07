@@ -2,7 +2,7 @@
 #+AUTHOR: Caio Rodrigues
 #+EMAIL:  caiorss [DOT] rodrigues [DOT] gmail [DOT] com
 #+DESCRIPTION: F# Command line interface to NuGet API.
-#+KEYWORDS: NuGet F# fsharp csharp .net dotnet tool cli command line toolbox cross-platform
+#+KEYWORDS: NuGet F# fsharp csharp .net dotnet tool cli command line toolbox cross-platform package manager xml assembly metadata
 
 #+STARTUP: content
 #+LANGUAGE: en
@@ -14,20 +14,37 @@
 * Pget.exe - Package Get
 ** Overview
 
-Pget.exe is high level wrapper to NuGet.core package which provides
-command line tools to manage dependencies in F# projects or .NET projects.
+Pget.exe is a .NET command line toolbox inspired by git and [[https://en.wikipedia.org/wiki/BusyBox][BusyBox]]
+that exposes .NET api through intuitive commands and a high level
+API. It provides commands to install, query and expose NuGet packages,
+explore .NuGet pacakge archives, explore .NET assemblies files or in
+GAC - Global Assembly files, generate library or assembly
+documentation with XML comments and query assemblies in GAC. In
+addition to that it provides tools for generate GUID and query XML.
 
-Objective: Provide NuGet.Core integration with external tools, text editors
-like Emacs and VIM and also command line integration with NuGet API. 
+Objective: 
+
+  - Provide NuGet.Core.dll integration with external tools, text
+    editors like Emacs and VIM and also command line integration with NuGet API.
+
+  - Expose as much as possible of .NET API through command line.
+
+  - Make .NET command line friendly tools
+
+  - Create tools to make development easier in Unix-like OS like
+    Linux, OSX and FreeBSD. Inspired by busybox it provides many
+    command line tools in a single self-contained executable.
 
 
 *WHY pget ?* 
 
-I create pget because existing command line tools doesn't have all
+Pget was created because existing command line tools doesn't have all
 functionality provided by Visual Studio and Package Manager Console
 like display package metadata, search packages in NuGet repository,
 display packages' metadata from local repository or project repository
-./packages and show Nuget package file metadata and files.
+./packages and show Nuget package file metadata and files. Pget also
+provides compeling features to explore and browse .NET assemblies and
+xml. 
 
 
 *Feature*
@@ -35,20 +52,24 @@ display packages' metadata from local repository or project repository
  - Search  packages in Nuget repository
 
 
- - Install NuGet packages
+ - Install and query NuGet packages
 
 
  - Display all assembly references in a repository
 
 
- - Generate assembly references from all repository or single package
+ - _Generate assembly references from all repository_ or single package
    for F# scripts. 
 
 
- - Show packages' metadata like description, summary, web site and so on.
+ - _Show packages' metadata_ like description, summary, web site, open
+   package web site and so on.
 
 
- - Inspect .NET assemblies.
+ - _Inspect .NET assemblies_ *.exe, *.dll or assemblies in GAC - Global
+   Assembly Cache.
+
+   - Inspect .NET types, methods, interfaces 
 
    - Show .NET assemblies metadata
 
@@ -62,7 +83,7 @@ display packages' metadata from local repository or project repository
 
    - Show class methods
 
-   - Show type information with xml comments like summary, methods,
+   - _Show type information with xml comments_ like summary, methods,
      fields, constructors and properties.
 
    - Generate assembly documentation in org-mode markdown and extract
@@ -73,8 +94,9 @@ display packages' metadata from local repository or project repository
  - Get packages' assembly references from local repository and project
    repository (./packages) for F# scripts.
 
- - Query XML, show xml namespace, query xml using xpath, show xml tag
-   structure. 
+ - _Query XML_, show xml namespace, query xml using xpath, show xml tag
+   structure. It is useful test xml data extraction with x-path
+   expressions and XML tree navigation and ensure that it works.
 
 *Repository:*
 
@@ -187,176 +209,187 @@ $ cd obj/Release && ./Pget.exe -v
 
 Example:
 
-#+BEGIN_SRC sh
-  $ bin/pget.exe -v
+#+BEGIN_SRC text
+  $ mono obj/Debug/pget.exe --version
 
-   Pget - Package Get - Version 2.0.0.0 
+   Pget - Package Get - Version 2.5.0.0 
    2016 Public Domain Software
    Repository - https://github.com/caiorss/pget
+
 #+END_SRC
+
 *** Print help                                                         :help:
 
  - =$ pget.exe=
 
 Example:
 
-#+BEGIN_SRC text 
-$ bin/pget.exe 
-Pget - Package Get - Enhanced command line interface to NuGet.Core
+#+BEGIN_SRC text
+  $ mono obj/Debug/pget.exe 
+  Pget - Package Get - Enhanced command line interface to NuGet.Core
 
-  pget.exe repo                                Show help for repo commands.
-  pget.exe nuget                               Show help for nuget related commands                           
-  pget.exe asm                                 Show help for assembly related commands.
-  pget.exe nupkg                               Show help for Nuget packages related commands.
-  pget.exe xml                                 Show help for xml related commands
+    pget.exe repo                                Show help for repo commands.
+    pget.exe nuget                               Show help for nuget related commands                           
+    pget.exe asm                                 Show help for assembly related commands.
+    pget.exe nupkg                               Show help for Nuget packages related commands.
+    pget.exe xml                                 Show help for xml related commands
 
-  --version | -v                               Show version
-  --help    | -h                               Show help
-  --doc                                        Open online documentation.                          
-                          
-                          
-
-  List Repository
-
-    repo --list                                 List all packages in current repository ./package
-    repo [path] --list                          List all package in [path] repository.
-
-  Show repository 
- 
-    repo --show                                 Show all packages in current ./packages repository
-    repo [path] --show                          Show all packages in [path] repository.
-  
-  Show package metadata
-
-    repo --show  [pack]                         Show the package [pack] in ./packages directory
-    repo [path] --show [pack]                   Show the package [pack] in [repo] directory.
-
-  Show package files 
-
-    repo --files [pack]                    Show content files of package [pack] in ./packages
-    repo [path] --files [pack]             Show content files of package [pack] in [repo]
-
-  Install package to repository  
-
-    repo --install [pack]                       Install the latest version of package [pack] to ./packages
-    repo --install [pack] [ver]                 Install the version [ver] of package [pack]
-    repo [path] --install [pack]                Install the latest version of package [pack] to a repository [path] i.e: ~/nuget
-    repo [path] --install [pack] [ver]          Install the version [ver] of package [pack] to a repository [path]
-
-
-  Install a list of packages passed as argument
-    repo --install-list FParsec NuGet.Core-2.0.0               Install those packages to ./packages
-    repo /tmp/repo --install-list FParsec NuGet.Core-2.0.0     Install those packages to /tmp/repository
-
-  Install a list of packages listed in a file
-
-    repo --install-from-file                    Install all packages listed in the file ./packages.list to ./packages directory.
-    repo --install-from-file [file]             Install all packages listed in the file ./packages.list to ./packages directory.
-    repo [path] --install-from-file [file]      Install all packages listed in the file [file] to [path]
-
-
-  Open package project URL or Licence URL
-
-    repo --url [pack]                           Browse project URL of a package [pack] in ./packages.
-    repo --license [pack]                       Browse licence URL of a package [pack] in ./packages.
-    repo [path] --url [pack]                    Browse project URL of a package [pack] in [path]
-    repo [path] --license [pack]                Browse licence URL of a package [pack] in [path]
-
-  Show references for F# *.fsx scripts:        [frm]:  .NET Framework  net40 | net45   
-
-    repo --ref [frm]                            Show all assembly references from current ./packages.
-    repo --ref  --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
-    repo [path] --ref [frm]                     Show all assembly references from current [repo] directory.
-    repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory        
-        
-
-  Nuget commands:
-
-    nuget --search [package]                    Search a package by name.  
-    nuget --show   [package]                    Show package information (metadata).
-    nuget --open                                Open NuGet web site - https://www.nuget.org       
-        
-
-  Nupkg Files:
-
-    nupkg --show  [file]                        Show metadata of a *.nupkg file
-    nupkg --files [file]                        Show files in nupkg [file]        
-        
-
-  Assembly files: *.exe or *.dll
-
-    asm --info [file]                                    Show all assembly attributes from an assembly [file].
-    asm --refs [file]                                    Show all assembly references from an assembly [file].
-    asm --resources  [file]                              Show resources from an assembly file.
-    asm --namespace|-ns [file]                           Show all exported namespaces.
-    asm --namespace|-ns [file] [nspace]                  Show all types within an exported namespace from an assembly [file].
-
-    asm --type [file]                                    Show all types exported by assembly [file]
-    asm --type [file] [type]                             Show information about [type] exported by assembly [file].
-    asm --interface [file]                               Show all interfaces exported by assembly [file]. 
-    asm --abstract  [file]                               Show all abstract classes exported by assembly [file].
-   
-    asm --class  [file]                                  Show all classes exported by assembly [file].
-    asm --classn [file]                                  Show all non-abstract classes exported by assembly [file]
-
-    asm --docgen [file]                                  Print all types documentation on screen
-    asm --docgen [file] [output-file]                    Export all types documentation to org-mode file.
-        
-
-  XML query commands.
-
-    xml --show [xmluri]            Show formatted xml human-readable output from uri or file.
-    xml --show [xmluri] [file]     Export [xmluri] (file or url) to a xml human-readable file.
-
-    xml --struct [xmluri]          Show xml structure - tags hierarchy
-    xml --struct [xmluri] attr     Show xml structure tags hierarchy with attributes names.
-    xml --struct [xmluri] ns       Show xml structure tags hierarchy with namespaces
-
-
-    xml -ns                                  Show all XML namespaces 
-    xml --namespace                          Show all XML namespaces
-
-
-    xml --xvalue [xpath] [xmluri]                 Query xml nodes using xpath and show its values.
-    xml --xtext  [xpath] [xmluri]                 Query xml nodes using xpath and show its texts.
-    xml --xtext --nons [xpath] [xmluri]           Query xml nodes using xpath and show its texts ignoring namespaces.
-    xml --xattr  [xpath] [attr] [xmluri]          Query xml nodes using xpath and show the values of a node attribute.
-    xml --xattr  --nons [xpath] [attr] [xmluri]   Similar to command above but ignore namespaces.       
-        
-    
-
-  Fsproj - Helpers for fsproj files.
-
-    fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
+    --version | -v                               Show version
+    --help    | -h                               Show help
+    --doc                                        Open online documentation.                          
+                            
                             
 
-  Show system information
+    List Repository
 
-    --system 
+      repo --list                                 List all packages in current repository ./package
+      repo [path] --list                          List all package in [path] repository.
 
-  Generate Guid - Globally Unique Identifier 
+    Show repository 
+   
+      repo --show                                 Show all packages in current ./packages repository
+      repo [path] --show                          Show all packages in [path] repository.
+    
+    Show package metadata
 
-    --guid 
+      repo --show  [pack]                         Show the package [pack] in ./packages directory
+      repo [path] --show [pack]                   Show the package [pack] in [repo] directory.
 
-  --------------------------------------------
+    Show package files 
 
-  Command abbreviations:
+      repo --files [pack]                    Show content files of package [pack] in ./packages
+      repo [path] --files [pack]             Show content files of package [pack] in [repo]
 
-    --install            -i
-    --install-from-file  -if
-    --install-list       -il
-    --help               -h
-    --version            -v
-    --ver                -v
-    --list               -l
-    --search             -s
-    --show               -sh
-         
+    Install package to repository  
 
- Pget - Package Get - Version 2.0.0.0 
- 2016 Public Domain Software
- Repository - https://github.com/caiorss/pget
-       
+      repo --install [pack]                       Install the latest version of package [pack] to ./packages
+      repo --install [pack] [ver]                 Install the version [ver] of package [pack]
+      repo [path] --install [pack]                Install the latest version of package [pack] to a repository [path] i.e: ~/nuget
+      repo [path] --install [pack] [ver]          Install the version [ver] of package [pack] to a repository [path]
+
+
+    Install a list of packages passed as argument
+      repo --install-list FParsec NuGet.Core-2.0.0               Install those packages to ./packages
+      repo /tmp/repo --install-list FParsec NuGet.Core-2.0.0     Install those packages to /tmp/repository
+
+    Install a list of packages listed in a file
+
+      repo --install-from-file                    Install all packages listed in the file ./packages.list to ./packages directory.
+      repo --install-from-file [file]             Install all packages listed in the file ./packages.list to ./packages directory.
+      repo [path] --install-from-file [file]      Install all packages listed in the file [file] to [path]
+
+
+    Open package project URL or Licence URL
+
+      repo --url [pack]                           Browse project URL of a package [pack] in ./packages.
+      repo --license [pack]                       Browse licence URL of a package [pack] in ./packages.
+      repo [path] --url [pack]                    Browse project URL of a package [pack] in [path]
+      repo [path] --license [pack]                Browse licence URL of a package [pack] in [path]
+
+    Show references for F# *.fsx scripts:        [frm]:  .NET Framework  net40 | net45   
+
+      repo --ref [frm]                            Show all assembly references from current ./packages.
+      repo --ref  --pack [pack]                   Show all assembly references from a package [pack] at ./packages.              
+      repo [path] --ref [frm]                     Show all assembly references from current [repo] directory.
+      repo [path] --ref [frm] [pack]              Show all assembly references from a package at [repo] directory        
+          
+
+    Nuget commands:
+
+      nuget --search [package]                    Search a package by name.  
+      nuget --show   [package]                    Show package information (metadata).
+      nuget --open                                Open NuGet web site - https://www.nuget.org       
+          
+
+    Nupkg Files:
+
+      nupkg --show  [file]                        Show metadata of a *.nupkg file
+      nupkg --files [file]                        Show files in nupkg [file]        
+          
+
+    Assembly files: *.exe or *.dll
+
+      asm --info [file]                                    Show all assembly attributes from an assembly [file] or GAC.
+      asm --refs [file]                                    Show all assembly references from an assembly [file] or GAC.
+      asm --resources  [file]                              Show resources from an assembly file.
+      asm --namespace|-ns [file]                           Show all exported namespaces.
+      asm --namespace|-ns [file] [nspace]                  Show all types within an exported namespace from an assembly [file].
+
+      asm --type [file]                                    Show all types exported by an assembly [file] or assembly in GAC.
+      asm --type [file] [type]                             Show information about [type] exported by assembly [file] or GAC.
+
+      asm --type-info [type]                               Try to find a type and show its information.
+
+      asm --search-method [file] [type] [method]           Search and display all methods of type [type] which contains [method].
+
+
+      asm --interface [file]                               Show all interfaces exported by assembly [file]. 
+      asm --abstract  [file]                               Show all abstract classes exported by assembly [file].
+     
+      asm --class  [file]                                  Show all classes exported by assembly [file].
+      asm --classn [file]                                  Show all non-abstract classes exported by assembly [file]
+
+      asm --docgen [file]                                  Print all types documentation on screen
+      asm --docgen [file] [output-file]                    Export all types documentation to org-mode file.
+          
+
+    XML query commands.
+
+      xml --show [xmluri]            Show formatted xml human-readable output from uri or file.
+      xml --show [xmluri] [file]     Export [xmluri] (file or url) to a xml human-readable file.
+
+      xml --struct [xmluri]          Show xml structure - tags hierarchy
+      xml --struct [xmluri] attr     Show xml structure tags hierarchy with attributes names.
+      xml --struct [xmluri] ns       Show xml structure tags hierarchy with namespaces
+
+
+      xml -ns                                  Show all XML namespaces
+      xml --namespace                          Show all XML namespaces
+
+
+      xml --xvalue [xpath] [xmluri]                 Query xml nodes using xpath and show its values.
+      xml --xtext  [xpath] [xmluri]                 Query xml nodes using xpath and show its texts.
+      xml --xtext --nons [xpath] [xmluri]           Query xml nodes using xpath and show its texts ignoring namespaces.
+      xml --xattr  [xpath] [attr] [xmluri]          Query xml nodes using xpath and show the values of a node attribute.
+      xml --xattr  --nons [xpath] [attr] [xmluri]   Similar to command above but ignore namespaces.
+
+      
+
+    Fsproj - Helpers for fsproj files.
+
+      fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
+                              
+
+    Open pget online documentation:  https://caiorss.github.io/pget
+
+      --doc 
+
+    Show system information
+
+      --system 
+
+    Generate Guid - Globally Unique Identifier 
+
+      --guid 
+
+    --------------------------------------------
+
+    Command abbreviations:
+
+      --install            -i
+      --install-from-file  -if
+      --install-list       -il
+      --help               -h
+      --version            -v
+      --ver                -v
+      --list               -l
+      --search             -s
+      --show               -sh
+           
+
+   Pget - Package Get - Version 2.5.0.0 
+   2016 Public Domain Software
+   Repository - https://github.com/caiorss/pget
 #+END_SRC
 
 *** Local Repository
@@ -1140,7 +1173,7 @@ Example:
   lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll
   lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.XML
 #+END_SRC
-*** Assembly metadata
+*** Assembly metadata and .NET types 
 **** Show Assembly commands help                                       :help:
 
  - =$ pget.exe asm=
@@ -1172,12 +1205,87 @@ $ bin/pget.exe asm
 
 
 #+END_SRC
+**** Show .NET type information 
+
+ - =$ pget.exe asm --type-info [type name]=
+
+Example:
+
+#+BEGIN_SRC sh 
+  $ pget.exe asm --type-info System.IO.Directory
+
+  ,**** Type Info
+
+   - Name:           Directory
+   - Full Name:      System.IO.Directory
+   - Namespace:      System.IO
+   - Module:         mscorlib.dll
+   - Base Type:      System.Object
+
+  ,*Predicates*
+
+   - Class:          True
+   - Abstract Class: True
+   - Primitive       False
+   - Array:          False
+   - Interface       False
+   - Enum            False
+   - Public          True
+   - Visible         True
+                          
+
+  ,**** Fields
+
+
+  ,**** Properties
+
+
+  ,**** Constructors
+
+
+  ,**** Instance Methods
+
+   - Public  System.Boolean Equals (System.Object obj)
+
+   - Public  System.Int32 GetHashCode ()
+
+   - Public  System.Type GetType ()
+
+   - Public  System.String ToString ()
+
+  ....  
+
+  ,**** Static Methods
+
+   - Public Static System.IO.DirectoryInfo CreateDirectory (System.String path)
+
+   - Public Static System.IO.DirectoryInfo CreateDirectory (System.String path, System.Security.AccessControl.DirectorySecurity directorySecurity)
+
+   - Public Static System.Void Delete (System.String path)
+
+   - Public Static System.Void Delete (System.String path, System.Boolean recursive)
+
+   - Public Static System.Boolean Exists (System.String path)
+
+   - Public Static System.DateTime GetLastAccessTime (System.String path)
+
+   - Public Static System.DateTime GetLastAccessTimeUtc (System.String path)
+
+   - Public Static System.DateTime GetLastWriteTime (System.String path)
+
+   - Public Static System.DateTime GetLastWriteTimeUtc (System.String path)
+
+  ... ... 
+
+#+END_SRC
 
 **** Show Assembly Attributes
 
- - =$ pget.exe asm --info [assembly-file]=
+ - =$ pget.exe asm --info [assembly-file or asm-gac]=
 
-Example:
+Show assembly attribute of assembly file or assembly in GAC.
+
+*Example:*
 
 #+BEGIN_SRC sh
   $ bin/pget.exe asm --info ~/bin/nuget.exe
@@ -1213,6 +1321,27 @@ Example 2:
   GUID
   Com Visible  False
   Codebase     file:///home/arch/nuget/FSharp.Core.3.1.2.5/lib/net40/FSharp.Core.dll
+#+END_SRC
+
+Example 3: Show information about assembly in GAC (System.Xml.dll)
+
+#+BEGIN_SRC sh
+  $ mono bin/Debug/Pget.exe asm --info System.Xml
+  Assembly Attributes
+  -------------------------------------------
+  Name         System.Xml
+  Version      4.0.0.0
+  CLR Version  v4.0.30319
+  Product      Mono Common Language Infrastructure
+  Culture      
+  Company      Mono development team
+  Description  System.Xml.dll
+  Copyright    (c) Various Mono authors
+  GUID         
+  Com Visible  False
+  Codebase     file:///usr/lib/mono/gac/System.Xml/4.0.0.0__b77a5c561934e089/System.Xml.dll
+
+
 #+END_SRC
 
 **** Show assembly references
@@ -1269,7 +1398,7 @@ Example:
 
  - =$ pget.exe asm --type [asmFile]= 
 
-Example: 
+Example 1: Show exported type by assembly file.
 
 #+BEGIN_SRC sh
 $ bin/pget.exe repo --files NuGet.Core
@@ -1312,6 +1441,31 @@ NuGet.Constants
 NuGet.PackageDependency
 NuGet.VersionUtility
 NuGet.XElementExtensions
+#+END_SRC
+
+Example 2: Show exported types by assembly in GAC. 
+
+#+BEGIN_SRC sh 
+  $ mono bin/Debug/Pget.exe asm --type System.Xml
+
+  System.Xml.Xsl.Runtime.ContentIterator
+  System.Xml.Xsl.Runtime.ElementContentIterator
+  System.Xml.Xsl.Runtime.NodeKindContentIterator
+  System.Xml.Xsl.Runtime.AttributeIterator
+  System.Xml.Xsl.Runtime.NamespaceIterator
+  System.Xml.Xsl.Runtime.AttributeContentIterator
+  System.Xml.Xsl.Runtime.ContentMergeIterator
+  System.Xml.Xsl.Runtime.DodSequenceMerge
+  System.Xml.Xsl.Runtime.SetIteratorResult
+
+  ... ... ...
+
+  System.Xml.Xsl.XsltContext
+  System.Xml.Xsl.XsltException
+  System.Xml.Xsl.XsltCompileException
+  System.Xml.Xsl.XslTransform
+  System.Xml.Xsl.XsltSettings
+
 #+END_SRC
 
 **** Show type information 
@@ -1803,34 +1957,118 @@ from file Eto.xml
 
   Converts a rectangle from screen space to control space.
 
-   - Eto.Drawing.RectangleF RectangleFromScreen(Eto.Drawing.RectangleF)
+     ... ... ... 
+#+END_SRC
 
-  Converts a rectangle from control space to screen space
+Example: Show type information by assembly in GAC 
 
-   - T FindParent[T](System.String)
+#+BEGIN_SRC sh 
+  $ pget.exe asm --type mscorlib System.IO.Path
 
-  Finds a control in the parent hierarchy with the specified type and  if specified
+  ,**** Type Info
 
-   - Eto.Widget FindParent(System.Type, System.String)
+   - Name:           Path
+   - Full Name:      System.IO.Path
+   - Namespace:      System.IO
+   - Module:         mscorlib.dll
+   - Base Type:      System.Object
 
-  Finds a control in the parent hierarchy with the specified type and  if specified
+  ,*Predicates*
 
-   - Eto.Widget FindParent(System.String)
+   - Class:          True
+   - Abstract Class: True
+   - Primitive       False
+   - Array:          False
+   - Interface       False
+   - Enum            False
+   - Public          True
+   - Visible         True
 
-  Finds a control in the parent hierarchy with the specified type and  if specified
+                          
 
-   - Void Dispose()
+  ,**** Fields
 
-  Disposes of this widget, supressing the finalizer
+   - System.Char[] InvalidPathChars
 
-   - Boolean Equals(System.Object)
+   - System.Char AltDirectorySeparatorChar
 
-   - Int32 GetHashCode()
+   - System.Char DirectorySeparatorChar
 
-   - System.Type GetType()
+   - System.Char PathSeparator
 
-   - System.String ToString()
+   - System.Char VolumeSeparatorChar
 
+   .. ... ... ...
+
+
+  ,**** Properties
+
+
+  ,**** Constructors
+
+
+  ,**** Instance Methods
+
+   - Public  System.Boolean Equals (System.Object obj)
+
+   - Public  System.Int32 GetHashCode ()
+
+   - Public  System.Type GetType ()
+
+   - Public  System.String ToString ()
+
+
+  ,**** Static Methods
+
+   - Public Static System.String ChangeExtension (System.String path, System.String extension)
+
+   - Public Static System.String Combine (System.String path1, System.String path2)
+
+   - Public Static System.String GetDirectoryName (System.String path)
+
+   - Public Static System.String GetExtension (System.String path)
+
+   - Public Static System.String GetFileName (System.String path)
+
+   ...  ...  ... ... ...
+
+
+   - Public Static System.String Combine (System.String[] paths)
+
+   - Public Static System.String Combine (System.String path1, System.String path2, System.String path3)
+
+   - Public Static System.String Combine (System.String path1, System.String path2, System.String path3, System.String path4)
+
+   
+   
+#+END_SRC
+
+**** Search type methods wich contains a given string 
+
+ - =$ pget.exe asm --search-method [asmFile] [type] [method]=
+
+Example: Search all System.IO.File methods which contains the word 'read': 
+
+#+BEGIN_SRC text 
+  $ bin/pget.exe asm --search-method mscorlib System.IO.File line
+
+  Public Static System.String[] ReadAllLines (System.String path)
+  Public Static System.String[] ReadAllLines (System.String path, System.Text.Encoding encoding)
+  Public Static System.Void WriteAllLines (System.String path, System.String[] contents)
+  Public Static System.Void WriteAllLines (System.String path, System.String[] contents, System.Text.Encoding encoding)
+  Public Static System.Collections.Generic.IEnumerable`1[System.String] ReadLines (System.String path)
+  Public Static System.Collections.Generic.IEnumerable`1[System.String] ReadLines (System.String path, System.Text.Encoding encoding)
+  Public Static System.Void AppendAllLines (System.String path, System.Collections.Generic.IEnumerable`1[System.String] contents)
+  Public Static System.Void AppendAllLines (System.String path, System.Collections.Generic.IEnumerable`1[System.String] contents, System.Text.Encoding encoding)
+  Public Static System.Void WriteAllLines (System.String path, System.Collections.Generic.IEnumerable`1[System.String] contents)
+  Public Static System.Void WriteAllLines (System.String path, System.Collections.Generic.IEnumerable`1[System.String] contents, System.Text.Encoding encoding)
+
+
+  $ bin/pget.exe asm --search-method mscordsflib System.IO.File line
+  Error: I can't find the file: mscordsflib
+
+  $ bin/pget.exe asm --search-method /etc/fstab System.IO.File line
+  Error: File /etc/fstab is not a .NET assembl
 #+END_SRC
 
 **** Show all exported classes 
@@ -2022,6 +2260,10 @@ Example:
 
 **** Show all types within an exported namespace
 
+ - =$ pget.exe asm --namespace [assembly-file or GAC] [namespace]=
+
+Example: Query assembly file.
+
 #+BEGIN_SRC text 
   $ bin/pget.exe asm  --namespace /usr/lib/mono/4.5-api/System.Xml.dll
   System.Xml.Xsl.Runtime
@@ -2103,6 +2345,65 @@ Example:
       System.Xml.XmlNode SelectSingleNode(System.String, System.Xml.XmlNamespaceManager)
 
   ...
+#+END_SRC
+
+Example: Query assembly in GAC
+
+#+BEGIN_SRC sh 
+  # Show all namespaces 
+  #
+  $ mono bin/Debug/Pget.exe asm --namespace mscorlib
+  System.Runtime.ConstrainedExecution
+  Microsoft.Win32.SafeHandles
+  System
+  System.Collections.Concurrent
+  System.Collections
+  System.Collections.Generic
+  System.Collections.ObjectModel
+  System.Diagnostics.CodeAnalysis
+  System.Diagnostics
+  System.Diagnostics.Contracts
+  System.Diagnostics.Contracts.Internal
+  System.Runtime.CompilerServices
+  System.Diagnostics.Tracing
+  System.Globalization
+  System.IO
+  System.Reflection
+  System.Reflection.Emit
+
+  ... ... ...
+
+  # Show all types exported by namespace 
+  # 
+  $ mono bin/Debug/Pget.exe asm --namespace mscorlib System.IO
+  System.IO.BinaryReader
+  System.IO.BinaryWriter
+  System.IO.BufferedStream
+  System.IO.DirectoryNotFoundException
+  System.IO.DriveNotFoundException
+  System.IO.EndOfStreamException
+  System.IO.FileInfo
+  System.IO.FileLoadException
+  System.IO.FileNotFoundException
+  System.IO.FileSystemInfo
+  System.IO.IOException
+  System.IO.MemoryStream
+  System.IO.PathTooLongException
+  System.IO.Stream
+
+  ... ... ... ...
+
+  System.IO.File
+  System.IO.FileAccess
+  System.IO.FileAttributes
+  System.IO.FileMode
+  System.IO.FileOptions
+  System.IO.FileShare
+  System.IO.FileStream
+  System.IO.Path
+  System.IO.SearchOption
+  System.IO.SeekOrigin
+
 #+END_SRC
 
 **** Generate documentation about all exported namespaces 
@@ -2219,6 +2520,62 @@ Where framework can be
   ...
 #+END_SRC
 
+*** F# FSharp Assembly Introspection 
+**** Find F# assemblies in a given path 
+
+ - =$ pget.exe fsh --find-dll [path]=
+
+It searches all assemblies (*.dll files) in a given Path which contains at least a
+F# module.
+
+#+BEGIN_SRC text 
+  $ mono obj/Debug/Pget.exe fsh --find-dll .
+  ./bin/Debug/FSharp.Core.dll
+  ./packages/FParsec.1.0.2/lib/net40-client/FParsec.dll
+  ./packages/FParsec.1.0.2/lib/net40-client/FParsecCS.dll
+  ./packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll
+  ./packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll
+  ./packages/FS.INIReader.1.0.3/lib/net45/FS.INIReader.dll
+  ./src/dummy.dll
+
+#+END_SRC
+
+**** Display all F# public modules 
+
+ - =$ pget.exe fsh --modules [asmFile]=
+
+#+BEGIN_SRC text 
+  $ mono obj/Debug/Pget.exe fsh --modules ./packages/FParsec.1.0.2/lib/net40-client/FParsec.dll
+
+  FParsec.CharParsers
+  FParsec.Primitives
+  FParsec.Error
+  FParsec.StaticMapping
+  FParsec.InternalsModule
+
+  $ mono obj/Debug/Pget.exe fsh --modules /home/arch/nuget/FSharp.Charting.Gtk.0.90.14/lib/net40/FSharp.Charting.Gtk.dll
+
+  FSharp.Charting._ChartStyleExtensions
+  FSharp.Charting.ChartTypes
+
+#+END_SRC
+
+**** Display F# public and private modules 
+
+#+BEGIN_SRC text 
+  $ mono obj/Debug/Pget.exe fsh  --modules /home/arch/nuget/FSharp.Charting.Gtk.0.90.14/lib/net40/FSharp.Charting.Gtk.dll
+  FSharp.Charting._ChartStyleExtensions
+  FSharp.Charting.ChartTypes
+
+  $ mono obj/Debug/Pget.exe fsh  --modules all /home/arch/nuget/FSharp.Charting.Gtk.0.90.14/lib/net40/FSharp.Charting.Gtk.dll
+  System.AssemblyVersionInformation
+  FSharp.Charting._ChartStyleExtensions
+  FSharp.Charting.ChartTypes
+  FSharp.Charting.KeyConversions
+  FSharp.Charting.NotifySeq
+  FSharp.Charting.Seq
+
+#+END_SRC
 *** XML tools 
 **** Display help for xml commands                                     :help:
 
@@ -3173,7 +3530,7 @@ or
   14.4127
 
 #+END_SRC
-*** Misc 
+*** Misc - Tools 
 **** Show System Information 
 
  - =$ pget.exe --system=
@@ -3209,9 +3566,30 @@ Windows:
 Linux: 
 
 #+BEGIN_SRC text 
+  $ bin/pget.exe --system
+  System Information
 
+    System Version            v4.0.30319
+    System Directory          
+    Runtime Directory         /usr/lib/mono/4.5
+    System Configuration File /etc/mono/4.5/machine.config
+    OS Version                Unix 4.8.17.1
+    Machine Name              arch-pc
+    64-bit Operating system   True
+    Number of processors      4
+
+  Special Directories
+
+    System.Environment.SpecialFolder.CommonApplicationData 
+    /usr/share
+
+    System.Environment.SpecialFolder.ApplicationData       
+    /home/arch/.config
+
+    System.Environment.SpecialFolder.LocalApplicationData  
+    /home/arch/.local/share
 #+END_SRC
-**** Generate GUID
+**** Generate GUID - Global Unique Identifier
 
  - =$ pget.exe --guid=
 
@@ -3221,14 +3599,20 @@ Example:
   $ bin/pget.exe --guid
   c4969f50-7a17-4f8f-ac9d-d783a9a8f8d4
 #+END_SRC
+**** Open Online Documentation 
+
+ - =$ pget.exe --doc= 
+
+It opens pget web site.
+
 ** TODO Todolist 
 
  - [ ] - Improve display of F# types.
  - [ ] - Improve command line argument handling.
- - [ ] - Improve error handling - Exceptions and result types.
+ - [X] - Improve error handling - Exceptions and result types.
  - [X] - Query types and XML documentation.
- - [ ] - Add more xml query commands
- - [ ] - Add commands to query GAC - Global Assembly Cache libraries 
+ - [X] - Add more xml query commands
+ - [X] - Add commands to query GAC - Global Assembly Cache libraries 
  - [ ] - Add commands to search types and namespaces
  - [ ] - Add more commands to manipulate and query fsproj files.
  - [ ] - Create an Emacs client for pget.exe. 
