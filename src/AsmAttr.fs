@@ -625,6 +625,20 @@ module AsmDisplay =
     open System
     open System.Reflection 
 
+    /// Test if assembly contains any F# type
+    let isFsharpAssembly asmFile =
+        try
+            asmFile |> AsmAttr.loadFrom
+                    |> AsmAttr.getTypes
+                    |> Seq.exists FSType.isFSharpType
+        with
+            :? System.Reflection.ReflectionTypeLoadException -> false
+
+    let findFsharpDlls path =
+        let files = System.IO.Directory.GetFiles(path, "*.dll", System.IO.SearchOption.AllDirectories)
+        files |> Seq.filter isFsharpAssembly
+              |> Seq.iter (printfn "%s")
+
     /// Redirect stdout print to a file.
     let withStdoutFile (file: string) fn  =
         let stdout = Console.Out
@@ -656,11 +670,6 @@ module AsmDisplay =
         | None    -> errorFn ()
         | Some x  -> actionFn x
 
-    /// Test if assembly contains any F# type
-    let isFsharpAssembly asmFile =
-        asmFile |> AsmAttr.loadFrom
-                |> AsmAttr.getTypes
-                |> Seq.exists FSType.isFSharpType
 
     /// Show all F# modules with
     let showFsharpModules asmFile flag =
