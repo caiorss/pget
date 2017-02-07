@@ -1333,7 +1333,6 @@ Example 3: Show information about assembly in GAC (System.Xml.dll)
 
 #+END_SRC
 
-
 **** Show assembly references
 
 Show assemblies referenced by an assembly file
@@ -2031,6 +2030,34 @@ Example: Show type information by assembly in GAC
 
    
    
+#+END_SRC
+
+**** Search type methods wich contains a given string 
+
+ - =$ pget.exe asm --search-method [asmFile] [type] [method]=
+
+Example: Search all System.IO.File methods which contains the word 'read': 
+
+#+BEGIN_SRC text 
+  $ bin/pget.exe asm --search-method mscorlib System.IO.File line
+
+  Public Static System.String[] ReadAllLines (System.String path)
+  Public Static System.String[] ReadAllLines (System.String path, System.Text.Encoding encoding)
+  Public Static System.Void WriteAllLines (System.String path, System.String[] contents)
+  Public Static System.Void WriteAllLines (System.String path, System.String[] contents, System.Text.Encoding encoding)
+  Public Static System.Collections.Generic.IEnumerable`1[System.String] ReadLines (System.String path)
+  Public Static System.Collections.Generic.IEnumerable`1[System.String] ReadLines (System.String path, System.Text.Encoding encoding)
+  Public Static System.Void AppendAllLines (System.String path, System.Collections.Generic.IEnumerable`1[System.String] contents)
+  Public Static System.Void AppendAllLines (System.String path, System.Collections.Generic.IEnumerable`1[System.String] contents, System.Text.Encoding encoding)
+  Public Static System.Void WriteAllLines (System.String path, System.Collections.Generic.IEnumerable`1[System.String] contents)
+  Public Static System.Void WriteAllLines (System.String path, System.Collections.Generic.IEnumerable`1[System.String] contents, System.Text.Encoding encoding)
+
+
+  $ bin/pget.exe asm --search-method mscordsflib System.IO.File line
+  Error: I can't find the file: mscordsflib
+
+  $ bin/pget.exe asm --search-method /etc/fstab System.IO.File line
+  Error: File /etc/fstab is not a .NET assembl
 #+END_SRC
 
 **** Show all exported classes 
