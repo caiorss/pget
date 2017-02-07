@@ -491,6 +491,20 @@ module AsmAttr =
             // Load from dll file
             :? System.IO.FileNotFoundException -> Assembly.LoadFile asmFile
 
+    let loadCont (asmFile: string) cont =
+        try // try load from GAC
+            cont <| Assembly.Load asmFile
+        with
+            // Load from dll file
+            :? System.IO.FileNotFoundException
+            ->
+                try
+                    cont <| Assembly.LoadFile asmFile
+                with
+                    | :? System.IO.FileNotFoundException -> printfn "Error: I can't find the file: %s" asmFile
+                    | :? System.BadImageFormatException  -> printfn "Error: File %s is not a .NET assembly" asmFile
+
+
     let reflectionOnlyLoad (asmFile: string) =
         Assembly.ReflectionOnlyLoad asmFile
 
@@ -704,17 +718,16 @@ module AsmDisplay =
         let doc = if System.IO.File.Exists xmlFile
                   then Some (FXml.Doc.loadFile xmlFile)
                   else None
-                  
-        asmFile |> AsmAttr.load
-                |> AsmAttr.getType typeName
-                |> Option.iter (TInfo.show2 doc)
+
+        AsmAttr.loadCont asmFile (AsmAttr.getType typeName
+                                  >> Option.iter (TInfo.show2 doc)
+                                  )
 
     let showTypeSelector (asmFile: string) predicate =
-        asmFile
-        |> AsmAttr.load
-        |> AsmAttr.getExportedTypes
-        |> Seq.filter predicate
-        |> Seq.iter  Console.WriteLine
+        AsmAttr.loadCont asmFile ( AsmAttr.getExportedTypes
+                                   >> Seq.filter predicate
+                                   >> Seq.iter  Console.WriteLine
+                                  )
 
     /// Print all types exported by an assembly file      
     let showTypes (asmFile: string) =
@@ -739,41 +752,45 @@ module AsmDisplay =
     /// Print assembly file attributes
     ///
     let showFile (asmFile: string) =
-        let asm = AsmAttr.load asmFile
-        printfn "Assembly Attributes"
-        printfn "-------------------------------------------"
-        printfn "Name         %s" (AsmInfo.getName asm)
-        // printfn "Full Name    $s" (getFullName asm)
-        printfn "Version      %s" <| (AsmInfo.getVersion asm).ToString()
-        printfn "CLR Version  %s" <| AsmInfo.getRuntimeVersion asm
-        printfn "Product      %s" (optDefault ""  <| AsmInfo.getProduct asm)
-        printfn "Culture      %s" (optDefault ""  <| AsmInfo.getCulture asm)
-        printfn "Company      %s" (optDefault ""  <| AsmInfo.getCompany asm)
-        printfn "Description  %s" (optDefault ""  <| AsmInfo.getDescription asm)
-        printfn "Copyright    %s" (optDefault ""  <| AsmInfo.getCopyright asm)
-        printfn "GUID         %s" (optDefault ""  <| AsmInfo.getGuid asm)
-        printfn "Com Visible  %s" (optDefault ""  <| (AsmInfo.getComVisible asm
-                                                      |> Option.map (fun e -> e.ToString())))
-        printfn "Codebase     %s" asm.CodeBase
+        let aux asm =
+            printfn "Assembly Attributes"
+            printfn "-------------------------------------------"
+            printfn "Name         %s" (AsmInfo.getName asm)
+            // printfn "Full Name    $s" (getFullName asm)
+            printfn "Version      %s" <| (AsmInfo.getVersion asm).ToString()
+            printfn "CLR Version  %s" <| AsmInfo.getRuntimeVersion asm
+            printfn "Product      %s" (optDefault ""  <| AsmInfo.getProduct asm)
+            printfn "Culture      %s" (optDefault ""  <| AsmInfo.getCulture asm)
+            printfn "Company      %s" (optDefault ""  <| AsmInfo.getCompany asm)
+            printfn "Description  %s" (optDefault ""  <| AsmInfo.getDescription asm)
+            printfn "Copyright    %s" (optDefault ""  <| AsmInfo.getCopyright asm)
+            printfn "GUID         %s" (optDefault ""  <| AsmInfo.getGuid asm)
+            printfn "Com Visible  %s" (optDefault ""  <| (AsmInfo.getComVisible asm
+                                                          |> Option.map (fun e -> e.ToString())))
+            printfn "Codebase     %s" asm.CodeBase
+        AsmAttr.loadCont asmFile aux
     
 
     /// Print all exported namespaces
     let showExportedNS (asmFile: string) =
-        asmFile |> AsmAttr.load
-                |> AsmAttr.getExportedNS
-                |> Seq.iter Console.WriteLine
+        AsmAttr.loadCont asmFile ( AsmAttr.getExportedNS
+                                   >> Seq.iter Console.WriteLine
+                                 )
 
     /// Show all types within a exported namespace
     let showTypesWithinNS asmFile nspace =
-        asmFile |> AsmAttr.load
-                |> AsmAttr.getTypesWithinExportedNS nspace (fun t -> true)
-                |> Seq.iter Console.WriteLine
+        let aux asm = asm
+                     |> AsmAttr.getTypesWithinExportedNS nspace (fun t -> true)
+                     |> Seq.iter Console.WriteLine
+        AsmAttr.loadCont asmFile aux
 
     /// Print all namespaces from an assembly (.exe or .dll)
     let showNamespaces (asmFile: string) =
-        let asm = AsmAttr.load asmFile 
-        asm.GetTypes() |> Seq.distinctBy (fun t -> t.Namespace)
-                       |> Seq.iter (fun t -> Console.WriteLine(t.Namespace))        
+        let aux (asm: Assembly) =
+            asm.GetTypes() |> Seq.distinctBy (fun t -> t.Namespace)
+                           |> Seq.iter (fun t -> Console.WriteLine(t.Namespace))
+
+        AsmAttr.loadCont asmFile aux
 
     /// Show all detailed exported types grouped by namespace
     let showExportedTypesReport asmFile =
@@ -791,24 +808,23 @@ module AsmDisplay =
 
     /// Show all detailed exported types grouped by namespace
     let showExportedTypesReport2 asmFile =
-        let asm = asmFile |> AsmAttr.load
+        let aux asm =
+            let xmlFile = System.IO.Path.ChangeExtension(asmFile, "xml")
+            let doc = if System.IO.File.Exists xmlFile
+                      then Some (FXml.Doc.loadFile xmlFile)
+                      else None
 
-        let xmlFile = System.IO.Path.ChangeExtension(asmFile, "xml")
-        let doc = if System.IO.File.Exists xmlFile
-                  then Some (FXml.Doc.loadFile xmlFile)
-                  else None
+            asm   |> AsmAttr.getExportedNS
+                  |> Seq.iter (fun ns ->
+                               Console.WriteLine ("** {0}", ns);
 
-        asm   |> AsmAttr.getExportedNS
-              |> Seq.iter (fun ns ->
-                           Console.WriteLine ("** {0}", ns);
+                               AsmAttr.getTypesWithinExportedNS ns (fun t -> true) asm
+                               |> Seq.iter (fun t ->
+                                            Console.WriteLine("*** {0}", t.FullName)
+                                            TInfo.show2 doc t;
+                                            ))
 
-                           AsmAttr.getTypesWithinExportedNS ns (fun t -> true) asm
-                           |> Seq.iter (fun t ->
-                                        Console.WriteLine("*** {0}", t.FullName)
-                                        TInfo.show2 doc t;
-                                        )
-                           )
-
+        AsmAttr.loadCont asmFile aux
 
 
     let genExportedTypesReport asmFile outputFile =
@@ -820,11 +836,12 @@ module AsmDisplay =
 
 
     let showMethods bindingFlags (asmFile: string) (className: string) =
-        AsmAttr.load asmFile
-        |> AsmAttr.getType className
-        |> Option.map(TInfo.getMethodsFlags bindingFlags)
-        |> Option.iter (Seq.iter (fun m -> Console.WriteLine("")
-                                           Console.WriteLine m))
+        let aux asm =
+            asm |> AsmAttr.getType className
+                |> Option.map(TInfo.getMethodsFlags bindingFlags)
+                |> Option.iter (Seq.iter (fun m -> Console.WriteLine("")
+                                                   Console.WriteLine m))
+        AsmAttr.loadCont asmFile aux
 
     let showPublicMethods  (asmFile: string) (className: string) =
         let flags = BindingFlags.Public
@@ -860,8 +877,9 @@ module AsmDisplay =
         
     /// Display resources from an .NET assembly file 
     let showResurces (asmFile: string) =
-        let asm = AsmAttr.load asmFile
-        asm.GetManifestResourceNames() |> Seq.iter Console.WriteLine
+        AsmAttr.loadCont asmFile (fun asm ->  asm.GetManifestResourceNames()
+                                              |> Seq.iter Console.WriteLine
+                                  )
 
     let showAsmReferences (asmFile: string) =
         let asm = AsmAttr.load asmFile
