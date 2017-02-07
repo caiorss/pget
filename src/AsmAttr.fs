@@ -887,3 +887,9 @@ module AsmDisplay =
     let showAssemblyPath (asmName: string) =
         try   printfn "%s" (Reflection.Assembly.Load asmName).Location
         with  :? System.IO.FileNotFoundException -> printfn "Error: I can't find or load assembly %s" asmName
+
+    let showTypeInfo tname =
+        let errHandler () = printfn "Error: I can't find the type: %s" tname 
+        tname |> TInfo.getType
+              |> optIter2 errHandler (TInfo.show2 None)
+              
