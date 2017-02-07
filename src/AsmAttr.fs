@@ -847,6 +847,16 @@ module AsmDisplay =
                                                    Console.WriteLine m))
         AsmAttr.loadCont asmFile aux
 
+    /// Search all methods that contains the methodName
+    let searchMethod asmFile typeName (methodName: string) =
+        let aux =  AsmAttr.getType typeName
+                   >> Option.iter (TInfo.getMethods
+                                   >> Seq.filter (fun (m: MethodInfo) -> m.Name.ToLower().Contains(methodName.ToLower()))
+                                   >> Seq.iter  (MInfo.format >> printfn "%s")
+                                   )
+        AsmAttr.loadCont asmFile aux
+
+    /// Show only public instance methods
     let showPublicMethods  (asmFile: string) (className: string) =
         let flags = BindingFlags.Public
                     ||| BindingFlags.Instance
