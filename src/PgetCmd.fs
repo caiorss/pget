@@ -281,7 +281,7 @@ module Main =
     fsproj --ref [frm]                           Generate include references tags from all packages in ./packages    
                             
 
-  Open pget online documentation 
+  Open pget online documentation:  https://caiorss.github.io/pget
 
     --doc 
 
@@ -452,6 +452,8 @@ module Main =
         | ["asm"; "--abstract" ; asmFile]                   -> AsmDisplay.showAbstractClasses asmFile
 
 
+        | ["asm"; "--search-method"; asmFile; typeName; methodName]   -> AsmDisplay.searchMethod asmFile typeName methodName
+        
         // Print a report with all types categorized by namespace. 
         | ["asm"; "--docgen" ; asmFile]                     -> AsmDisplay.showExportedTypesReport2 asmFile
         | ["asm"; "--docgen" ; asmFile ; reportFile]        -> AsmDisplay.genExportedTypesReport asmFile reportFile
