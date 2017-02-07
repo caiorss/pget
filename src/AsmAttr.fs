@@ -877,8 +877,9 @@ module AsmDisplay =
         
     /// Display resources from an .NET assembly file 
     let showResurces (asmFile: string) =
-        let asm = AsmAttr.load asmFile
-        asm.GetManifestResourceNames() |> Seq.iter Console.WriteLine
+        AsmAttr.loadSafe asmFile (fun asm ->  asm.GetManifestResourceNames()
+                                              |> Seq.iter Console.WriteLine
+                                  )
 
     let showAsmReferences (asmFile: string) =
         let asm = AsmAttr.load asmFile
