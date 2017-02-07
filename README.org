@@ -2509,6 +2509,62 @@ Where framework can be
   ...
 #+END_SRC
 
+*** F# FSharp Assembly Introspection 
+**** Find F# assemblies in a given path 
+
+ - =$ pget.exe fsh --find-dll [path]=
+
+It searches all assemblies (*.dll files) in a given Path which contains at least a
+F# module.
+
+#+BEGIN_SRC text 
+  $ mono obj/Debug/Pget.exe fsh --find-dll .
+  ./bin/Debug/FSharp.Core.dll
+  ./packages/FParsec.1.0.2/lib/net40-client/FParsec.dll
+  ./packages/FParsec.1.0.2/lib/net40-client/FParsecCS.dll
+  ./packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsec.dll
+  ./packages/FParsec.1.0.2/lib/portable-net45+netcore45+wpa81+wp8/FParsecCS.dll
+  ./packages/FS.INIReader.1.0.3/lib/net45/FS.INIReader.dll
+  ./src/dummy.dll
+
+#+END_SRC
+
+**** Display all F# public modules 
+
+ - =$ pget.exe fsh --modules [asmFile]=
+
+#+BEGIN_SRC text 
+  $ mono obj/Debug/Pget.exe fsh --modules ./packages/FParsec.1.0.2/lib/net40-client/FParsec.dll
+
+  FParsec.CharParsers
+  FParsec.Primitives
+  FParsec.Error
+  FParsec.StaticMapping
+  FParsec.InternalsModule
+
+  $ mono obj/Debug/Pget.exe fsh --modules /home/arch/nuget/FSharp.Charting.Gtk.0.90.14/lib/net40/FSharp.Charting.Gtk.dll
+
+  FSharp.Charting._ChartStyleExtensions
+  FSharp.Charting.ChartTypes
+
+#+END_SRC
+
+**** Display F# public and private modules 
+
+#+BEGIN_SRC text 
+  $ mono obj/Debug/Pget.exe fsh  --modules /home/arch/nuget/FSharp.Charting.Gtk.0.90.14/lib/net40/FSharp.Charting.Gtk.dll
+  FSharp.Charting._ChartStyleExtensions
+  FSharp.Charting.ChartTypes
+
+  $ mono obj/Debug/Pget.exe fsh  --modules all /home/arch/nuget/FSharp.Charting.Gtk.0.90.14/lib/net40/FSharp.Charting.Gtk.dll
+  System.AssemblyVersionInformation
+  FSharp.Charting._ChartStyleExtensions
+  FSharp.Charting.ChartTypes
+  FSharp.Charting.KeyConversions
+  FSharp.Charting.NotifySeq
+  FSharp.Charting.Seq
+
+#+END_SRC
 *** XML tools 
 **** Display help for xml commands                                     :help:
 
