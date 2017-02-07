@@ -752,22 +752,23 @@ module AsmDisplay =
     /// Print assembly file attributes
     ///
     let showFile (asmFile: string) =
-        let asm = AsmAttr.load asmFile
-        printfn "Assembly Attributes"
-        printfn "-------------------------------------------"
-        printfn "Name         %s" (AsmInfo.getName asm)
-        // printfn "Full Name    $s" (getFullName asm)
-        printfn "Version      %s" <| (AsmInfo.getVersion asm).ToString()
-        printfn "CLR Version  %s" <| AsmInfo.getRuntimeVersion asm
-        printfn "Product      %s" (optDefault ""  <| AsmInfo.getProduct asm)
-        printfn "Culture      %s" (optDefault ""  <| AsmInfo.getCulture asm)
-        printfn "Company      %s" (optDefault ""  <| AsmInfo.getCompany asm)
-        printfn "Description  %s" (optDefault ""  <| AsmInfo.getDescription asm)
-        printfn "Copyright    %s" (optDefault ""  <| AsmInfo.getCopyright asm)
-        printfn "GUID         %s" (optDefault ""  <| AsmInfo.getGuid asm)
-        printfn "Com Visible  %s" (optDefault ""  <| (AsmInfo.getComVisible asm
-                                                      |> Option.map (fun e -> e.ToString())))
-        printfn "Codebase     %s" asm.CodeBase
+        let aux asm =
+            printfn "Assembly Attributes"
+            printfn "-------------------------------------------"
+            printfn "Name         %s" (AsmInfo.getName asm)
+            // printfn "Full Name    $s" (getFullName asm)
+            printfn "Version      %s" <| (AsmInfo.getVersion asm).ToString()
+            printfn "CLR Version  %s" <| AsmInfo.getRuntimeVersion asm
+            printfn "Product      %s" (optDefault ""  <| AsmInfo.getProduct asm)
+            printfn "Culture      %s" (optDefault ""  <| AsmInfo.getCulture asm)
+            printfn "Company      %s" (optDefault ""  <| AsmInfo.getCompany asm)
+            printfn "Description  %s" (optDefault ""  <| AsmInfo.getDescription asm)
+            printfn "Copyright    %s" (optDefault ""  <| AsmInfo.getCopyright asm)
+            printfn "GUID         %s" (optDefault ""  <| AsmInfo.getGuid asm)
+            printfn "Com Visible  %s" (optDefault ""  <| (AsmInfo.getComVisible asm
+                                                          |> Option.map (fun e -> e.ToString())))
+            printfn "Codebase     %s" asm.CodeBase
+        AsmAttr.loadSafe asmFile aux
     
 
     /// Print all exported namespaces
