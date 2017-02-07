@@ -808,24 +808,23 @@ module AsmDisplay =
 
     /// Show all detailed exported types grouped by namespace
     let showExportedTypesReport2 asmFile =
-        let asm = asmFile |> AsmAttr.load
+        let aux asm =
+            let xmlFile = System.IO.Path.ChangeExtension(asmFile, "xml")
+            let doc = if System.IO.File.Exists xmlFile
+                      then Some (FXml.Doc.loadFile xmlFile)
+                      else None
 
-        let xmlFile = System.IO.Path.ChangeExtension(asmFile, "xml")
-        let doc = if System.IO.File.Exists xmlFile
-                  then Some (FXml.Doc.loadFile xmlFile)
-                  else None
+            asm   |> AsmAttr.getExportedNS
+                  |> Seq.iter (fun ns ->
+                               Console.WriteLine ("** {0}", ns);
 
-        asm   |> AsmAttr.getExportedNS
-              |> Seq.iter (fun ns ->
-                           Console.WriteLine ("** {0}", ns);
+                               AsmAttr.getTypesWithinExportedNS ns (fun t -> true) asm
+                               |> Seq.iter (fun t ->
+                                            Console.WriteLine("*** {0}", t.FullName)
+                                            TInfo.show2 doc t;
+                                            ))
 
-                           AsmAttr.getTypesWithinExportedNS ns (fun t -> true) asm
-                           |> Seq.iter (fun t ->
-                                        Console.WriteLine("*** {0}", t.FullName)
-                                        TInfo.show2 doc t;
-                                        )
-                           )
-
+        AsmAttr.loadSafe asmFile aux
 
 
     let genExportedTypesReport asmFile outputFile =
