@@ -442,6 +442,11 @@ module Main =
         // Show all abstract classes 
         | ["asm"; "--abstract" ; asmFile]                   -> AsmDisplay.showAbstractClasses asmFile
 
+
+        // Print a report with all types categorized by namespace. 
+        | ["asm"; "--docgen" ; asmFile]                     -> AsmDisplay.showExportedTypesReport2 asmFile
+        | ["asm"; "--docgen" ; asmFile ; reportFile]        -> AsmDisplay.genExportedTypesReport asmFile reportFile
+
         // =================== F# introspection ====================
 
         // Show all F# modules private and public
@@ -452,10 +457,6 @@ module Main =
 
         // Find all F# related Dll assemblies - It will search for all dlls containing F# modules.
         | ["fsharp";  "--find-dll"; path ]             -> AsmDisplay.findFsharpDlls path
-
-        // Print a report with all types categorized by namespace. 
-        | ["asm"; "--docgen" ; asmFile]                     -> AsmDisplay.showExportedTypesReport2 asmFile
-        | ["asm"; "--docgen" ; asmFile ; reportFile]        -> AsmDisplay.genExportedTypesReport asmFile reportFile
 
         // ===================  XML tools ==========================
         | ["xml"]                                           -> showXmlHelp()
