@@ -464,6 +464,28 @@ module File =
                 |> FXPath.xpathSelectAttr xpath attribute
                 |> Seq.iter (printfn "%O\n")
 
+    let showXPathAttrAllFn fn xmlUri xpath =
+        let nodes = xmlUri |> Doc.loadFile
+                           |> fn
+                           |> FXPath.selectNodes xpath
+
+        nodes |> Seq.tryItem 0
+              |> Option.iter (fun node -> node |> Node.attributes
+                                               |> Seq.iter (fun (attr, value) ->
+                                                            printf "%s\t" attr
+                                                            )
+                                          printf "\n"
+                             );
+
+        // Print nodes attributes values
+        nodes |> Seq.iter (fun node ->  node |> Node.attributes
+                                             |>  Seq.iter (fun (attr, value) ->
+                                                      printf "%s\t" value
+                                                      );
+                                        printf "\n"
+                            )
+
+
     let showXpathAttrNoNS xmlFile xpath attribute  =
         xmlFile |> Doc.loadFile
                 |> Doc.removeNamespaces
