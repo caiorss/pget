@@ -510,6 +510,8 @@ module Main =
         // Print all xml node attributes in a tabular way
         | ["xml"; "--xattr-all"; xpath; xmluri]                        -> FXml.File.showXPathAttrAll xmluri xpath
 
+        // Print all xml node attributes in a tabular way ignoring Xml namespaces 
+        | ["xml"; "--xattr-all"; "--nons"; xpath; xmluri]              -> FXml.File.showXPathAttrAllNons xmluri xpath 
         
         | ["xml"; "-ns"; prefix; uri ; "--xattr"; xpath; attr; xmluri] -> FXml.File.showXpathAttrNS xmluri (prefix, uri) xpath attr 
 
