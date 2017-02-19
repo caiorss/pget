@@ -486,6 +486,9 @@ module File =
                             )
 
 
+    let showXPathAttrAll xmlUri xpath =
+        showXPathAttrAllFn id xmlUri xpath
+
     let showXpathAttrNoNS xmlFile xpath attribute  =
         xmlFile |> Doc.loadFile
                 |> Doc.removeNamespaces
