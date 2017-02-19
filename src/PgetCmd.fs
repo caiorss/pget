@@ -480,6 +480,8 @@ module Main =
         | ["xml"; "--show" ; xmlUri ]                                  -> FXml.File.show xmlUri
         | ["xml"; "--show" ; xmlUri ; xmlFile]                         -> FXml.File.save xmlUri xmlFile
 
+        // Save xml without namespace to file
+        | ["xml"; "--show-nons"; xmlUri; xmlFile]                 -> FXml.File.saveNoNs xmlUri xmlFile
                       
         // Show XML nodes structure 
         | ["xml"; "--struct" ;  xmlUri]                                -> FXml.File.showStruct xmlUri
@@ -504,6 +506,12 @@ module Main =
         // Select multiple nodes by xpath and show its attributes 
         | ["xml"; "--xattr"; xpath ; attr; xmluri]                     -> FXml.File.showXpathAttr xmluri xpath attr 
         | ["xml"; "--xattr"; "--nons"; xpath ; attr; xmluri]           -> FXml.File.showXpathAttrNoNS xmluri xpath attr
+
+        // Print all xml node attributes in a tabular way
+        | ["xml"; "--xattr-all"; xpath; xmluri]                        -> FXml.File.showXPathAttrAll xmluri xpath
+
+        // Print all xml node attributes in a tabular way ignoring Xml namespaces 
+        | ["xml"; "--xattr-all"; "--nons"; xpath; xmluri]              -> FXml.File.showXPathAttrAllNons xmluri xpath 
         
         | ["xml"; "-ns"; prefix; uri ; "--xattr"; xpath; attr; xmluri] -> FXml.File.showXpathAttrNS xmluri (prefix, uri) xpath attr 
 

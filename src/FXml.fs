@@ -392,6 +392,12 @@ module File =
         let doc = Doc.loadFile xmlUri
         doc.Save(xmlFile)
 
+    /// Save xml from uri or file to xml file without namespace
+    let saveNoNs xmlUri (xmlFile: string) =
+        let doc = xmlUri |> Doc.loadFile
+                         |> Doc.removeNamespaces
+        doc.Save(xmlFile)
+
     /// Display Xml structure             
     let showStruct xmlFile =
         xmlFile |> Doc.loadFile
@@ -457,6 +463,35 @@ module File =
         xmlFile |> Doc.loadFile
                 |> FXPath.xpathSelectAttr xpath attribute
                 |> Seq.iter (printfn "%O\n")
+
+    let showXPathAttrAllFn fn xmlUri xpath =
+        let nodes = xmlUri |> Doc.loadFile
+                           |> fn
+                           |> FXPath.selectNodes xpath
+
+        nodes |> Seq.tryItem 0
+              |> Option.iter (fun node -> node |> Node.attributes
+                                               |> Seq.iter (fun (attr, value) ->
+                                                            printf "%s\t" attr
+                                                            )
+                                          printf "\n"
+                             );
+
+        // Print nodes attributes values
+        nodes |> Seq.iter (fun node ->  node |> Node.attributes
+                                             |>  Seq.iter (fun (attr, value) ->
+                                                      printf "%s\t" value
+                                                      );
+                                        printf "\n"
+                            )
+
+
+    let showXPathAttrAll xmlUri xpath =
+        showXPathAttrAllFn id xmlUri xpath
+
+    let showXPathAttrAllNons xmlUri xpath =
+         showXPathAttrAllFn Doc.removeNamespaces xmlUri xpath
+
 
     let showXpathAttrNoNS xmlFile xpath attribute  =
         xmlFile |> Doc.loadFile
