@@ -392,6 +392,12 @@ module File =
         let doc = Doc.loadFile xmlUri
         doc.Save(xmlFile)
 
+    /// Save xml from uri or file to xml file without namespace
+    let saveNoNs xmlUri (xmlFile: string) =
+        let doc = xmlUri |> Doc.loadFile
+                         |> Doc.removeNamespaces
+        doc.Save(xmlFile)
+
     /// Display Xml structure             
     let showStruct xmlFile =
         xmlFile |> Doc.loadFile
