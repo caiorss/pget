@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Pget .NET Command Line toolbox and Interface for NuGet.Core and F#</title>
-<!-- 2017-02-07 ter 15:05 -->
+<!-- 2017-02-19 dom 13:34 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -300,6 +300,7 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1-5-9-8">1.5.9.8. Query xml nodes using xpath and show its texts</a></li>
 <li><a href="#sec-1-5-9-9">1.5.9.9. Query xml nodes using xpath and show a node attribute</a></li>
 <li><a href="#sec-1-5-9-10">1.5.9.10. Query xml nodes using xpath and show a node attribute ignoring namespaces</a></li>
+<li><a href="#sec-1-5-9-11">1.5.9.11. Query xml nodes using xpath and show all attributes</a></li>
 </ul>
 </li>
 <li><a href="#sec-1-5-10">1.5.10. Misc - Tools</a>
@@ -4655,6 +4656,74 @@ $ bin/pget.exe xml --xattr --nons  "//Cube//Cube[@currency]" rate xml/eurofxref-
 </div>
 </div>
 </div>
+<div id="outline-container-sec-1-5-9-11" class="outline-5">
+<h5 id="sec-1-5-9-11"><span class="section-number-5">1.5.9.11</span> Query xml nodes using xpath and show all attributes</h5>
+<div class="outline-text-5" id="text-1-5-9-11">
+<ul class="org-ul">
+<li><code>$ pget.exe xml --xattr-all [xpath] [xmluri]</code> 
+</li>
+</ul>
+
+<p>
+or 
+</p>
+
+<ul class="org-ul">
+<li><code>$ pget.exe xml --xattr-all --nons [xpath] [xmluri]</code> - To ignore XML namespaces.
+</li>
+</ul>
+
+
+
+<p>
+Example: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ cat xml/eurofxref-daily.xml
+
+&lt;?xml <span class="org-variable-name">version</span>=<span class="org-string">"1.0"</span> <span class="org-variable-name">encoding</span>=<span class="org-string">"UTF-8"</span>?&gt;
+&lt;gesmes:Envelope xmlns:<span class="org-variable-name">gesmes</span>=<span class="org-string">"http://www.gesmes.org/xml/2002-08-01"</span> <span class="org-variable-name">xmlns</span>=<span class="org-string">"http://www.ecb.int/vocabulary/2002-08-01/eurofxref"</span>&gt;
+  &lt;gesmes:subject&gt;Reference rates&lt;/gesmes:subject&gt;
+  &lt;gesmes:Sender&gt;
+    &lt;gesmes:name&gt;European Central Bank&lt;/gesmes:name&gt;
+  &lt;/gesmes:Sender&gt;
+  &lt;Cube&gt;
+    &lt;Cube <span class="org-variable-name">time</span>=<span class="org-string">"2017-01-09"</span>&gt;
+      &lt;Cube <span class="org-variable-name">currency</span>=<span class="org-string">"USD"</span> <span class="org-variable-name">rate</span>=<span class="org-string">"1.0516"</span> /&gt;
+      &lt;Cube <span class="org-variable-name">currency</span>=<span class="org-string">"JPY"</span> <span class="org-variable-name">rate</span>=<span class="org-string">"122.66"</span> /&gt;
+      &lt;Cube <span class="org-variable-name">currency</span>=<span class="org-string">"BGN"</span> <span class="org-variable-name">rate</span>=<span class="org-string">"1.9558"</span> /&gt;
+      &lt;Cube <span class="org-variable-name">currency</span>=<span class="org-string">"CZK"</span> <span class="org-variable-name">rate</span>=<span class="org-string">"27.021"</span> /&gt;
+            ...   ... ... ... ... ...
+      &lt;Cube <span class="org-variable-name">currency</span>=<span class="org-string">"THB"</span> <span class="org-variable-name">rate</span>=<span class="org-string">"37.574"</span> /&gt;
+      &lt;Cube <span class="org-variable-name">currency</span>=<span class="org-string">"ZAR"</span> <span class="org-variable-name">rate</span>=<span class="org-string">"14.4127"</span> /&gt;
+    &lt;/Cube&gt;
+  &lt;/Cube&gt;
+  &lt;/gesmes:Envelope&gt;
+
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">It doesn't work beacause XML namespaces</span>
+<span class="org-comment-delimiter">#</span>
+$ bin/pget.exe xml --xattr-all <span class="org-string">"//Cube//Cube[@currency]"</span> xml/eurofxref-daily.xml 
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Ignore XML namespace </span>
+$ bin/pget.exe xml --xattr-all --nons <span class="org-string">"//Cube//Cube[@currency]"</span> xml/eurofxref-daily.xml 
+currency    rate    
+USD 1.0516  
+JPY 122.66  
+BGN 1.9558  
+CZK 27.021  
+DKK 7.4339  
+GBP 0.86660 
+HUF 308.21  
+... ... ... 
+THB 37.574  
+ZAR 14.4127
+</pre>
+</div>
+</div>
+</div>
 </div>
 <div id="outline-container-sec-1-5-10" class="outline-4">
 <h4 id="sec-1-5-10"><span class="section-number-4">1.5.10</span> Misc - Tools</h4>
@@ -4815,7 +4884,7 @@ functional wrappers to NuGet.Core API.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2017-02-07 ter 15:05</p>
+<p class="date">Created: 2017-02-19 dom 13:34</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
