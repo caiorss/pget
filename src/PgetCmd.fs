@@ -480,6 +480,8 @@ module Main =
         | ["xml"; "--show" ; xmlUri ]                                  -> FXml.File.show xmlUri
         | ["xml"; "--show" ; xmlUri ; xmlFile]                         -> FXml.File.save xmlUri xmlFile
 
+        // Save xml without namespace to file
+        | ["xml"; "--show-nons"; xmlUri; xmlFile]                 -> FXml.File.saveNoNs xmlUri xmlFile
                       
         // Show XML nodes structure 
         | ["xml"; "--struct" ;  xmlUri]                                -> FXml.File.showStruct xmlUri
