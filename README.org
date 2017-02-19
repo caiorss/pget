@@ -3530,6 +3530,60 @@ or
   14.4127
 
 #+END_SRC
+**** Query xml nodes using xpath and show all attributes 
+
+ - =$ pget.exe xml --xattr-all [xpath] [xmluri]= 
+
+or 
+
+ - =$ pget.exe xml --xattr-all --nons [xpath] [xmluri]= - To ignore XML namespaces.
+
+
+
+Example: 
+
+#+BEGIN_SRC sh 
+  $ cat xml/eurofxref-daily.xml
+
+  <?xml version="1.0" encoding="UTF-8"?>
+  <gesmes:Envelope xmlns:gesmes="http://www.gesmes.org/xml/2002-08-01" xmlns="http://www.ecb.int/vocabulary/2002-08-01/eurofxref">
+    <gesmes:subject>Reference rates</gesmes:subject>
+    <gesmes:Sender>
+      <gesmes:name>European Central Bank</gesmes:name>
+    </gesmes:Sender>
+    <Cube>
+      <Cube time="2017-01-09">
+        <Cube currency="USD" rate="1.0516" />
+        <Cube currency="JPY" rate="122.66" />
+        <Cube currency="BGN" rate="1.9558" />
+        <Cube currency="CZK" rate="27.021" />
+              ...   ... ... ... ... ...
+        <Cube currency="THB" rate="37.574" />
+        <Cube currency="ZAR" rate="14.4127" />
+      </Cube>
+    </Cube>
+    </gesmes:Envelope>
+
+
+  # It doesn't work beacause XML namespaces
+  #
+  $ bin/pget.exe xml --xattr-all "//Cube//Cube[@currency]" xml/eurofxref-daily.xml 
+
+  # Ignore XML namespace 
+  $ bin/pget.exe xml --xattr-all --nons "//Cube//Cube[@currency]" xml/eurofxref-daily.xml 
+  currency    rate    
+  USD 1.0516  
+  JPY 122.66  
+  BGN 1.9558  
+  CZK 27.021  
+  DKK 7.4339  
+  GBP 0.86660 
+  HUF 308.21  
+  ... ... ... 
+  THB 37.574  
+  ZAR 14.4127 
+
+#+END_SRC
 *** Misc - Tools 
 **** Show System Information 
 
