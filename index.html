@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Pget .NET Command Line toolbox and Interface for NuGet.Core and F#</title>
-<!-- 2017-02-19 dom 13:34 -->
+<!-- 2017-03-06 seg 13:22 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -4707,7 +4707,7 @@ Example:
 <span class="org-comment-delimiter">#</span>
 $ bin/pget.exe xml --xattr-all <span class="org-string">"//Cube//Cube[@currency]"</span> xml/eurofxref-daily.xml 
 
-<span class="org-comment-delimiter"># </span><span class="org-comment">Ignore XML namespace </span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">Now it works. Ignore XML namespace </span>
 $ bin/pget.exe xml --xattr-all --nons <span class="org-string">"//Cube//Cube[@currency]"</span> xml/eurofxref-daily.xml 
 currency    rate    
 USD 1.0516  
@@ -4719,7 +4719,44 @@ GBP 0.86660
 HUF 308.21  
 ... ... ... 
 THB 37.574  
-ZAR 14.4127
+ZAR 14.4127 
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Extract directly from URL </span>
+<span class="org-comment-delimiter">#</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">------------------------------------------</span>
+$ bin/pget.exe xml --xattr-all --nons <span class="org-string">"//Cube//Cube[@currency]"</span> https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml
+currency    rate    
+USD 1.0592  
+JPY 120.55  
+BGN 1.9558  
+CZK 27.021  
+DKK 7.4337  
+GBP 0.86300 
+HUF 309.55  
+PLN 4.3091  
+RON 4.5290  
+SEK 9.5335  
+CHF 1.0694  
+NOK 8.9673  
+HRK 7.4090  
+RUB 61.5602 
+TRY 3.9328  
+AUD 1.3937  
+BRL 3.2896  
+CAD 1.4183  
+CNY 7.3050  
+HKD 8.2235  
+IDR 14138.32    
+ILS 3.8950  
+INR 70.5955 
+KRW 1222.76 
+MXN 20.6859 
+MYR 4.7113  
+NZD 1.5079  
+PHP 53.251  
+SGD 1.4936  
+THB 37.104  
+ZAR 13.7644
 </pre>
 </div>
 </div>
@@ -4884,7 +4921,7 @@ functional wrappers to NuGet.Core API.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2017-02-19 dom 13:34</p>
+<p class="date">Created: 2017-03-06 seg 13:22</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.1.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
