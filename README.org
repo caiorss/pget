@@ -3569,7 +3569,7 @@ Example:
   #
   $ bin/pget.exe xml --xattr-all "//Cube//Cube[@currency]" xml/eurofxref-daily.xml 
 
-  # Ignore XML namespace 
+  # Now it works. Ignore XML namespace 
   $ bin/pget.exe xml --xattr-all --nons "//Cube//Cube[@currency]" xml/eurofxref-daily.xml 
   currency    rate    
   USD 1.0516  
@@ -3582,6 +3582,43 @@ Example:
   ... ... ... 
   THB 37.574  
   ZAR 14.4127 
+
+  # Extract directly from URL 
+  #
+  #------------------------------------------
+  $ bin/pget.exe xml --xattr-all --nons "//Cube//Cube[@currency]" https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml
+  currency    rate    
+  USD 1.0592  
+  JPY 120.55  
+  BGN 1.9558  
+  CZK 27.021  
+  DKK 7.4337  
+  GBP 0.86300 
+  HUF 309.55  
+  PLN 4.3091  
+  RON 4.5290  
+  SEK 9.5335  
+  CHF 1.0694  
+  NOK 8.9673  
+  HRK 7.4090  
+  RUB 61.5602 
+  TRY 3.9328  
+  AUD 1.3937  
+  BRL 3.2896  
+  CAD 1.4183  
+  CNY 7.3050  
+  HKD 8.2235  
+  IDR 14138.32    
+  ILS 3.8950  
+  INR 70.5955 
+  KRW 1222.76 
+  MXN 20.6859 
+  MYR 4.7113  
+  NZD 1.5079  
+  PHP 53.251  
+  SGD 1.4936  
+  THB 37.104  
+  ZAR 13.7644
 
 #+END_SRC
 *** Misc - Tools 
